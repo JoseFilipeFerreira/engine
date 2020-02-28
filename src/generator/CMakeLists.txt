@@ -7,7 +7,6 @@ add_executable(generator main.cpp plane.cpp ../utils/point.cpp)
 
 find_package(OpenGL REQUIRED)
 include_directories(${OpenGL_INCLUDE_DIRS})
-include_directories(../utils/)
 link_directories(${OpenGL_LIBRARY_DIRS})
 add_definitions(${OpenGL_DEFINITIONS})
 

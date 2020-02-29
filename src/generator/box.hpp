@@ -1,5 +1,5 @@
-#ifndef PLANE_H
-#define PLANE_H
+#ifndef BOX_H
+#define BOX_H
 #include "primitives.hpp"
 
 class Box : public Primitive {

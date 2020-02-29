@@ -1,8 +1,9 @@
 #ifndef PLANE_H
 #define PLANE_H
-#include "primitives.hpp"
+#include <vector>
+#include "../utils/point.hpp"
 
-class Plane : public Primitive {
+class Plane {
 private:
     double side_length;
 

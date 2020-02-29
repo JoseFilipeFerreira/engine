@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.5)
 # Project Name
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
-add_executable(generator main.cpp plane.cpp ../utils/point.cpp) 
+add_executable(engine main.cpp ../deps/rapidxml.hpp) 
 
 find_package(OpenGL REQUIRED)
 include_directories(${OpenGL_INCLUDE_DIRS})

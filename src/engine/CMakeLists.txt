@@ -1,9 +1,11 @@
 cmake_minimum_required(VERSION 3.5)
 
 # Project Name
+PROJECT(engine)
+
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
-add_executable(engine main.cpp ../deps/rapidxml.hpp) 
+add_executable(${PROJECT_NAME} main.cpp model.cpp ../utils/point.cpp ../deps/rapidxml.hpp)
 
 find_package(OpenGL REQUIRED)
 include_directories(${OpenGL_INCLUDE_DIRS})
@@ -19,10 +21,11 @@ if  (WIN32)
 	set(GLUT_DIR "" CACHE PATH "Path to GLUT folder")
 	if (NOT EXISTS "${GLUT_DIR}/GL/glut.h" OR NOT EXISTS "${GLUT_DIR}/glut32.lib")
 		message(ERROR ": GLUT not found")
-	endif (NOT EXISTS "${GLUT_DIR}/GL/glut.h" OR NOT EXISTS "${GLUT_DIR}/glut32.lib")
+	endif (NOT EXISTS "${GLUT_DIR}/GL/glut.h" OR NOT EXISTS "${GLUT_DIR}/glut32.lib")	
 	include_directories(${GLUT_DIR})
 	link_directories(${GLUT_DIR})
-	target_link_libraries(generator ${OPENGL_LIBRARIES} ${GLUT_DIR}/glut32.lib )
+	target_link_libraries(${PROJECT_NAME} ${OPENGL_LIBRARIES} ${GLUT_DIR}/glut32.lib )
+
 	if (EXISTS "${GLUT_DIR}/glut32.dll")
 		file(COPY ${GLUT_DIR}/glut32.dll DESTINATION ${CMAKE_BINARY_DIR})
 	endif(EXISTS "${GLUT_DIR}/glut32.dll")

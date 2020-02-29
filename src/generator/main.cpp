@@ -1,5 +1,8 @@
 #include<string>
-#include "./plane.hpp"
+#include "plane.hpp"
+#include "box.hpp"
+#include "sphere.hpp"
+#include "cone.hpp"
 #include<ostream>
 #include<iostream>
 #include<fstream>
@@ -13,11 +16,15 @@ void file_writer(T v, string filename) {
         f << p.to_string() << endl;
 }
 
-int main(int argc, char** argv) {
+int main(int argc, char** argv)
+{
     string type(argv[1]);
     if("plane" == type)
         file_writer(Plane(argc - 3, argv + 2), argv[argc-1]);
-    else if("box" == type) {}
-    else if("sphere" == type) {}
-    else if("cone" == type) {}
+    else if("box" == type)
+        file_writer(Box(argc - 3, argv + 2), argv[argc-1]);
+    else if("sphere" == type)
+        file_writer(Sphere(argc - 3, argv + 2), argv[argc-1]);
+    else if("cone" == type)
+        file_writer(Cone(argc - 3, argv + 2), argv[argc-1]);
 }

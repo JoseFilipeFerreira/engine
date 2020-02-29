@@ -34,6 +34,7 @@ vector<string> read_models() {
     for(xml_node<> *n = doc.first_node()->first_node(); n; n = n->next_sibling()) 
         res.push_back(n->first_attribute()->value());
     return res;
+}
 
 void changeSize(int w, int h) {
 

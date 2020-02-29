@@ -24,9 +24,9 @@ std::vector<Point> Plane::draw() const
     coords.push_back(p1);
 
     //2nd triangle
-    coords.push_back(p0);
-    coords.push_back(p3);
+    coords.push_back(p1);
     coords.push_back(p2);
+    coords.push_back(p3);
 
     return coords;
 }

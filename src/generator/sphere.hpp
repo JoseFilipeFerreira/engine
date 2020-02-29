@@ -1,5 +1,5 @@
-#ifndef PLANE_H
-#define PLANE_H
+#ifndef SPHERE_H
+#define SPHERE_H
 #include "primitives.hpp"
 
 class Sphere : public Primitive

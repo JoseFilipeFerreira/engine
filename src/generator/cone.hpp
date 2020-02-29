@@ -1,5 +1,5 @@
-#ifndef PLANE_H
-#define PLANE_H
+#ifndef CONE_H
+#define CONE_H
 #include "primitives.hpp"
 
 class Cone : public Primitive

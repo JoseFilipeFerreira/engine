@@ -2,13 +2,15 @@
 #define PLANE_H
 #include "primitives.hpp"
 
-class Plane : public Primitive
-{
+class Box : public Primitive {
 private:
-    double side_length;
+    double _x;
+    double _y;
+    double _z;
+    double _slices;
 
 public:
-    Plane(int argc, char** args);
+    Box(int argc, char** argv);
     std::vector<Point> draw() const;
 };
 

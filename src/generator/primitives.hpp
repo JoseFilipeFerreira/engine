@@ -3,7 +3,8 @@
 #include "../utils/point.hpp"
 #include <vector>
 
-class Primitive {
+class Primitive
+{
 public:
     virtual std::vector<Point> draw() const = 0;
     virtual ~Primitive() {};

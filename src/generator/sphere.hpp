@@ -2,13 +2,15 @@
 #define PLANE_H
 #include "primitives.hpp"
 
-class Plane : public Primitive
+class Sphere : public Primitive
 {
 private:
-    double side_length;
+    double _radius;
+    double _slices;
+    double _stacks;
 
 public:
-    Plane(int argc, char** args);
+    Sphere(int argc, char** argv);
     std::vector<Point> draw() const;
 };
 

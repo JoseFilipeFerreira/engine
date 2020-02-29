@@ -81,10 +81,10 @@ void draw_axis(){
 
 void renderScene(void) {
 
-	// clear buffers
+    // clear buffers
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	// set the camera
+    // set the camera
     glLoadIdentity();
     gluLookAt(5.0,5.0,5.0, 
 		      0.0,0.0,0.0,
@@ -92,7 +92,7 @@ void renderScene(void) {
 
     draw_axis();
 
-    Model("plane.3d").draw_model();
+    Models(read_models()).draw_models();
 
     // End of frame
     glutSwapBuffers();

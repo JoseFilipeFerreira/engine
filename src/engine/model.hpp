@@ -17,9 +17,10 @@ public:
 
 class Models {
     private:
-    std::vector<Point> models;
+    std::vector<Model> models;
 
 public:
+    Models(vector<string>);
     void draw_models();
 };
 

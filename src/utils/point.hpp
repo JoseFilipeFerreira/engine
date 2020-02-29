@@ -11,6 +11,9 @@ private:
 public:
     Point(float, float, float);
     std::string to_string() const;
+    float x() const { return _x; }
+    float y() const { return _y; }
+    float z() const { return _z; }
 };
 
 #endif // POINT_H

@@ -1,18 +1,17 @@
 #include "cone.hpp"
-#include <stdexcept>
 
-using namespace std;
+#include <stdexcept>
 
 Cone::Cone(int argc, char** argv)
 {
-    _radius = stod(argv[0]);
-    _slices = stod(argv[1]);
-    _stacks = stod(argv[2]);
+    _radius = std::stof(argv[0]);
+    _slices = std::stoi(argv[1]);
+    _stacks = std::stoi(argv[2]);
 }
 
 std::vector<Point> Cone::draw() const
 {
-    vector<Point> coords;
+    std::vector<Point> coords;
 
     return coords;
 }

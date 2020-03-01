@@ -1,20 +1,25 @@
+#include "../utils/point.hpp"
+
+#include "plane.hpp"
+#include "box.hpp"
+#include "sphere.hpp"
+#include "cone.hpp"
+
 #include<string>
 #include<ostream>
 #include<iostream>
 #include<fstream>
-using namespace std;
 
 template<typename T>
-void file_writer(T v, string filename) {
-    ofstream f;
+void file_writer(T v, std::string filename) {
+    std::ofstream f;
     f.open(filename);
     for(Point p: v.draw())
-        f << p.to_string() << endl;
+        f << p.to_string() << "\n";
 }
 
-int main(int argc, char** argv)
-{
-    string type(argv[1]);
+int main(int argc, char** argv) {
+    std::string type(argv[1]);
     if("plane" == type)
         file_writer(Plane(argc - 3, argv + 2), argv[argc-1]);
     else if("box" == type)

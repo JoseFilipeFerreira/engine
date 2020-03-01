@@ -1,8 +1,10 @@
 #ifndef BOX_H
 #define BOX_H
-#include "primitives.hpp"
+#include "../utils/point.hpp"
 
-class Box : public Primitive {
+#include <vector>
+
+class Box {
 private:
     float _x;
     float _y;

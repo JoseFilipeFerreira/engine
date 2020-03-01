@@ -1,8 +1,7 @@
 #include "box.hpp"
 #include <stdexcept>
 
-Box::Box(int argc, char** argv)
-{
+Box::Box(int argc, char** argv) {
     _x = std::stof(argv[0]);
     _y = std::stof(argv[1]);
     _z = std::stof(argv[2]);
@@ -12,8 +11,7 @@ Box::Box(int argc, char** argv)
         _slices = std::stoi(argv[3]);
 }
 
-std::vector<Point> Box::draw() const
-{
+std::vector<Point> Box::draw() const {
     std::vector<Point> coords;
 
     float stepx = _x / _slices;

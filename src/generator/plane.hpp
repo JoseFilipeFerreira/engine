@@ -1,7 +1,8 @@
 #ifndef PLANE_H
 #define PLANE_H
-#include <vector>
 #include "../utils/point.hpp"
+
+#include <vector>
 
 class Plane {
 private:

@@ -2,13 +2,11 @@
 
 #include <stdexcept>
 
-Plane::Plane(int argc, char** args)
-{
+Plane::Plane(int argc, char** args) {
     side_length = std::stof(args[0]);
 }
 
-std::vector<Point> Plane::draw() const
-{
+std::vector<Point> Plane::draw() const {
     std::vector<Point> coords;
     float half = side_length / 2;
 

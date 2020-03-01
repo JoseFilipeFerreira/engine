@@ -5,15 +5,13 @@
 #include <stdexcept>
 #include <cmath>
 
-Sphere::Sphere(int argc, char** argv)
-{
+Sphere::Sphere(int argc, char** argv) {
     _radius = std::stod(argv[0]);
     _slices = std::stod(argv[1]);
     _stacks = std::stod(argv[2]);
 }
 
-std::vector<Point> Sphere::draw() const
-{
+std::vector<Point> Sphere::draw() const {
     std::vector<Point> coords;
 
     float ang_slice = 2 * M_PI / _slices;

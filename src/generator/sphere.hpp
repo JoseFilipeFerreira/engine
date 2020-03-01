@@ -1,9 +1,10 @@
 #ifndef SPHERE_H
 #define SPHERE_H
-#include "primitives.hpp"
+#include "../utils/point.hpp"
 
-class Sphere : public Primitive
-{
+#include <vector>
+
+class Sphere {
 private:
     float _radius;
     float _slices;

@@ -1,9 +1,10 @@
 #ifndef CONE_H
 #define CONE_H
-#include "primitives.hpp"
+#include "../utils/point.hpp"
 
-class Cone : public Primitive
-{
+#include <vector>
+
+class Cone {
 private:
     float _radius;
     int _slices;

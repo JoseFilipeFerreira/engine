@@ -1,7 +1,7 @@
 #ifndef BOX_H
 #define BOX_H
-#include "../utils/point.hpp"
-#include "../utils/types.hpp"
+#include "utils/point.hpp"
+#include "utils/types.hpp"
 
 #include <vector>
 

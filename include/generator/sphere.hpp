@@ -1,7 +1,7 @@
 #ifndef SPHERE_H
 #define SPHERE_H
-#include "../utils/point.hpp"
-#include "../utils/types.hpp"
+#include "utils/point.hpp"
+#include "utils/types.hpp"
 
 #include <vector>
 

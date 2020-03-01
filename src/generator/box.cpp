@@ -1,5 +1,5 @@
-#include "box.hpp"
-#include "../utils/point.hpp"
+#include "generator/box.hpp"
+#include "utils/point.hpp"
 
 
 #include <stdexcept>

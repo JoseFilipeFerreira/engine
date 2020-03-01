@@ -3,6 +3,7 @@
 
 # Compiled Object files
 build
+target
 *.slo
 *.lo
 *.o
@@ -31,10 +32,6 @@ build
 *.exe
 *.out
 *.app
-generator
-!generator/
-engine
-!engine/
 
 #cmake
 CMakeCache.txt

@@ -1,9 +1,9 @@
-#include "../utils/point.hpp"
+#include "utils/point.hpp"
 
-#include "plane.hpp"
-#include "box.hpp"
-#include "sphere.hpp"
-#include "cone.hpp"
+#include "generator/plane.hpp"
+#include "generator/box.hpp"
+#include "generator/sphere.hpp"
+#include "generator/cone.hpp"
 
 #include<string>
 #include<ostream>

@@ -1,4 +1,4 @@
-#include "model.hpp"
+#include "engine/model.hpp"
 #include <stdexcept>
 #include <iostream>
 #include <fstream>

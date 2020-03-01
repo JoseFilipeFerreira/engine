@@ -1,7 +1,7 @@
 #ifndef CONE_H
 #define CONE_H
-#include "../utils/point.hpp"
-#include "../utils/types.hpp"
+#include "utils/point.hpp"
+#include "utils/types.hpp"
 
 #include <vector>
 

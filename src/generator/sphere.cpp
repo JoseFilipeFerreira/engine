@@ -1,4 +1,4 @@
-#include "sphere.hpp"
+#include "generator/sphere.hpp"
 
 #define _USE_MATH_DEFINES
 #include <iostream>

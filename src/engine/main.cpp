@@ -5,9 +5,10 @@
 #include <GL/glut.h>
 #endif
 
-#include "model.hpp"
+#include "engine/model.hpp"
 
-#include "../deps/rapidxml.hpp"
+#include "deps/rapidxml.hpp"
+
 #include <fstream>
 #include <string.h>
 #include <string>

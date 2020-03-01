@@ -1,6 +1,6 @@
 #ifndef PLANE_H
 #define PLANE_H
-#include "../utils/point.hpp"
+#include "utils/point.hpp"
 
 #include <vector>
 

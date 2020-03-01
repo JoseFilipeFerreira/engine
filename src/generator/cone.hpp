@@ -5,9 +5,9 @@
 class Cone : public Primitive
 {
 private:
-    double _radius;
-    double _slices;
-    double _stacks;
+    float _radius;
+    int _slices;
+    int _stacks;
 
 public:
     Cone(int argc, char** argv);

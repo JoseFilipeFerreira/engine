@@ -1,28 +1,34 @@
-#define _USE_MATH_DEFINES
-
 #include "sphere.hpp"
-#include <stdexcept>
-#include <math.h>
 
-using namespace std;
+#define _USE_MATH_DEFINES
+#include <iostream>
+#include <stdexcept>
+#include <cmath>
 
 Sphere::Sphere(int argc, char** argv)
 {
-    _radius = stod(argv[0]);
-    _slices = stod(argv[1]);
-    _stacks = stod(argv[2]);
+    _radius = std::stod(argv[0]);
+    _slices = std::stod(argv[1]);
+    _stacks = std::stod(argv[2]);
 }
 
 std::vector<Point> Sphere::draw() const
 {
-    vector<Point> coords;
+    std::vector<Point> coords;
 
     float ang_slice = 2 * M_PI / _slices;
     float ang_stack = M_PI / _stacks;
 
     for(int slice = 0; slice < _slices; slice++)
         for(int stack = 0; stack < _stacks; stack++)
-            coords.push_back(Point(Point_Spherical(_radius, ang_slice * slice, ang_stack * stack)));
+        {
+            coords.push_back(PointSpherical(_radius, ang_stack * (stack+1), ang_slice * (slice+1)));
+            coords.push_back(PointSpherical(_radius, ang_stack * stack    , ang_slice * (slice+1)));
+            coords.push_back(PointSpherical(_radius, ang_stack * stack    , ang_slice * slice));
+            coords.push_back(PointSpherical(_radius, ang_stack * (stack+1), ang_slice * slice));
+            coords.push_back(PointSpherical(_radius, ang_stack * (stack+1), ang_slice * (slice+1)));
+            coords.push_back(PointSpherical(_radius, ang_stack * stack    , ang_slice * slice));
+        }
 
     return coords;
 }

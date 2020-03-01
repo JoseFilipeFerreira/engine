@@ -5,9 +5,9 @@
 class Sphere : public Primitive
 {
 private:
-    double _radius;
-    double _slices;
-    double _stacks;
+    float _radius;
+    float _slices;
+    float _stacks;
 
 public:
     Sphere(int argc, char** argv);

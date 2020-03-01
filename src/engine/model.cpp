@@ -24,6 +24,10 @@ Model::Model(string fileName)
 }
 
 void draw_triangle(Point p1, Point p2, Point p3){
+    float r = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
+    float g = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
+    float b = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
+    glColor3f(r, g, b);
     glBegin(GL_TRIANGLES);
         glVertex3f(p1.x(), p1.y(), p1.z());
         glVertex3f(p2.x(), p2.y(), p2.z());

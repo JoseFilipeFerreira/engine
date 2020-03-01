@@ -79,6 +79,8 @@ void draw_axis(){
     glEnd();
 }
 
+float angle = 0;
+
 void renderScene(void) {
 
     // clear buffers
@@ -86,16 +88,20 @@ void renderScene(void) {
 
     // set the camera
     glLoadIdentity();
-    gluLookAt(5.0,5.0,5.0, 
+    gluLookAt(10.0,10.0,10.0, 
 		      0.0,0.0,0.0,
 			  0.0f,1.0f,0.0f);
 
-    draw_axis();
+    glRotated(angle, 0, 1, 0);
 
+    angle += 1;
+
+    draw_axis();
     Models(read_models()).draw_models();
 
     // End of frame
     glutSwapBuffers();
+    glutPostRedisplay();
 }
 
 int main(int argc, char** argv) {

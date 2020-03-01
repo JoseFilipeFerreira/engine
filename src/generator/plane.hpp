@@ -5,7 +5,7 @@
 class Plane : public Primitive
 {
 private:
-    double side_length;
+    float side_length;
 
 public:
     Plane(int argc, char** args);

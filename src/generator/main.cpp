@@ -1,8 +1,4 @@
 #include<string>
-#include "plane.hpp"
-#include "box.hpp"
-#include "sphere.hpp"
-#include "cone.hpp"
 #include<ostream>
 #include<iostream>
 #include<fstream>

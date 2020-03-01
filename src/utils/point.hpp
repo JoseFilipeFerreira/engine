@@ -4,16 +4,16 @@
 #include <string>
 #include <tuple>
 
-class Point_Spherical {
+class PointSpherical {
 private:
     float _radius, _inclination, _azimuth;
 
 public:
-    Point_Spherical(float, float, float);
+    PointSpherical(float, float, float);
     std::string to_string() const;
-    float radius() const { return _radius; }
-    float inclination() const { return _inclination; }
-    float azimuth() const { return _azimuth; }
+    auto constexpr radius() const noexcept -> float { return _radius; }
+    auto constexpr inclination() const noexcept -> float { return _inclination; }
+    auto constexpr azimuth() const noexcept -> float { return _azimuth; }
 };
 
 class Point {
@@ -22,11 +22,14 @@ private:
 
 public:
     Point(float, float, float);
-    Point(Point_Spherical);
+    Point(PointSpherical);
     std::string to_string() const;
-    float x() const { return _x; }
-    float y() const { return _y; }
-    float z() const { return _z; }
+    auto constexpr x() const noexcept -> float { return _x; }
+    auto constexpr y() const noexcept -> float { return _y; }
+    auto constexpr z() const noexcept -> float { return _z; }
+    Point operator + (Point const &obj) { 
+         return Point(_x + obj.x(), _y + obj.y(), _z + obj.z()); 
+    }
 };
 
 

@@ -4,10 +4,10 @@
 
 class Box : public Primitive {
 private:
-    double _x;
-    double _y;
-    double _z;
-    double _slices;
+    float _x;
+    float _y;
+    float _z;
+    int _slices;
 
 public:
     Box(int argc, char** argv);

@@ -1,14 +1,15 @@
 #ifndef CONE_H
 #define CONE_H
 #include "../utils/point.hpp"
+#include "../utils/types.hpp"
 
 #include <vector>
 
 class Cone {
 private:
     float _radius;
-    int _slices;
-    int _stacks;
+    u32 _slices;
+    u32 _stacks;
 
 public:
     Cone(int argc, char** argv);

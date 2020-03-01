@@ -12,8 +12,8 @@ std::vector<Point> Plane::draw() const {
 
     Point p0 = Point(-half, 0, -half);
     Point p1 = Point( half, 0, -half);
-    Point p2 = Point(-half, 0, half);
-    Point p3 = Point( half, 0, half);
+    Point p2 = Point(-half, 0,  half);
+    Point p3 = Point( half, 0,  half);
 
     //1st triangle
     coords.push_back(p0);

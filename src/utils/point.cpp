@@ -2,6 +2,26 @@
 #include <sstream>
 #include <cmath>
 
+Vector::Vector(float x, float y, float z)
+    : _x(x)
+    , _y(y)
+    , _z(z)
+{
+}
+
+Vector Vector::unit() {
+    float d = std::sqrt(_x*_x + _y*_y + _z*_z);
+    return Vector(_x/d, _y/d, _z/d);
+}
+
+Vector Vector::hadamard(Vector v) {
+    return Vector(_x * v.x(), _y * v.y(), _z * v.z());
+}
+
+Vector Vector::hadamard(float x, float y, float z) {
+    return Vector(_x * x, _y * y, _z * z);
+}
+
 Point::Point(float x, float y, float z)
     : _x(x)
     , _y(y)

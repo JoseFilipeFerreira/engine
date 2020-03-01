@@ -1,7 +1,6 @@
 #include "point.hpp"
 #include <sstream>
-
-using namespace std;
+#include <cmath>
 
 Point::Point(float x, float y, float z)
     : _x(x)
@@ -10,9 +9,30 @@ Point::Point(float x, float y, float z)
 {
 }
 
-string Point::to_string() const
+PointSpherical::PointSpherical(float radius, float inclination, float azimuth)
+    : _radius(radius)
+    , _inclination(inclination)
+    , _azimuth(azimuth)
 {
-    ostringstream sstream;
+}
+
+Point::Point(PointSpherical p) {
+    _z = p.radius() * sin(p.inclination()) * cos(p.azimuth());
+    _x = p.radius() * sin(p.inclination()) * sin(p.azimuth());
+    _y = p.radius() * cos(p.inclination()); 
+}
+
+std::string PointSpherical::to_string() const {
+    std::ostringstream sstream;
+    sstream
+        << _radius << ' '
+        << _inclination << ' '
+        << _azimuth;
+    return sstream.str();
+}
+
+std::string Point::to_string() const {
+    std::ostringstream sstream;
     sstream
         << _x << ' '
         << _y << ' '

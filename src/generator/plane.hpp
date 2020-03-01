@@ -1,11 +1,12 @@
 #ifndef PLANE_H
 #define PLANE_H
-#include <vector>
 #include "../utils/point.hpp"
+
+#include <vector>
 
 class Plane {
 private:
-    double side_length;
+    float side_length;
 
 public:
     Plane(int argc, char** args);

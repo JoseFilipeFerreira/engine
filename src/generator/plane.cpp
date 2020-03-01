@@ -1,16 +1,13 @@
 #include "plane.hpp"
+
 #include <stdexcept>
 
-using namespace std;
-
-Plane::Plane(int argc, char** args)
-{
-    side_length = stod(*args);
+Plane::Plane(int argc, char** args) {
+    side_length = std::stof(args[0]);
 }
 
-std::vector<Point> Plane::draw() const
-{
-    vector<Point> coords;
+std::vector<Point> Plane::draw() const {
+    std::vector<Point> coords;
     float half = side_length / 2;
 
     Point p0 = Point(-half, 0, -half);

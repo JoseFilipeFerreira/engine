@@ -1,4 +1,5 @@
 #include "engine/model.hpp"
+#include "utils/types.hpp"
 #include <stdexcept>
 #include <iostream>
 #include <fstream>
@@ -9,8 +10,6 @@
 #else
 #include <GL/glut.h>
 #endif
-
-using namespace std;
 
 Model::Model(string fileName)
 {
@@ -36,7 +35,7 @@ void draw_triangle(Point p1, Point p2, Point p3){
 }
 
 void Model::draw_model() {
-    for(int i = 0; i < points.size(); i += 3)
+    for(i32 i = 0; i < points.size(); i += 3)
         draw_triangle(points[i], points[i+1], points[i+2]);
 }
 

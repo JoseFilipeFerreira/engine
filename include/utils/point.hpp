@@ -14,6 +14,7 @@ private:
 
 public:
     Vector(float, float, float);
+    Vector(Point, Point);
     std::string to_string() const;
     auto constexpr x() const noexcept -> float { return _x; }
     auto constexpr y() const noexcept -> float { return _y; }
@@ -23,6 +24,9 @@ public:
     Vector hadamard(float, float, float);
     Vector operator * (int s) { 
          return Vector(_x * s, _y * s, _z *s); 
+    }
+    Vector operator / (int s) { 
+         return Vector(_x / s, _y / s, _z / s); 
     }
 };
 

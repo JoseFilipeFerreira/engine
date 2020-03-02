@@ -8,6 +8,7 @@
 class Cone {
 private:
     float _radius;
+    float _height;
     u32 _slices;
     u32 _stacks;
 

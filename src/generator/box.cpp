@@ -66,12 +66,12 @@ std::vector<Point> Box::draw() const {
             coords.push_back(back + xz.hadamard(-i-1, 0, j+1));
             coords.push_back(back + xz.hadamard(-i  , 0, j+1));
             //bottom
-            coords.push_back(front + xz.hadamard(i  , 0,   -j));
+            coords.push_back(front + xz.hadamard(i+1, 0, -j-1));
             coords.push_back(front + xz.hadamard(i+1, 0,   -j));
+            coords.push_back(front + xz.hadamard(i  , 0,   -j));
+            coords.push_back(front + xz.hadamard(i  , 0, -j-1));
             coords.push_back(front + xz.hadamard(i+1, 0, -j-1));
             coords.push_back(front + xz.hadamard(i  , 0,   -j));
-            coords.push_back(front + xz.hadamard(i+1, 0, -j-1));
-            coords.push_back(front + xz.hadamard(i  , 0, -j-1));
         }
     }
     return coords;

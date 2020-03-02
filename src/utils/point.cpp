@@ -9,6 +9,13 @@ Vector::Vector(float x, float y, float z)
 {
 }
 
+Vector::Vector(Point p1, Point p2) {
+    _x = p2.x() - p1.x();
+    _y = p2.y() - p1.y();
+    _z = p2.z() - p1.z();
+    
+}
+
 Vector Vector::unit() {
     float d = std::sqrt(_x*_x + _y*_y + _z*_z);
     return Vector(_x/d, _y/d, _z/d);

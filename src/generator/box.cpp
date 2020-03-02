@@ -1,4 +1,7 @@
-#include "box.hpp"
+#include "generator/box.hpp"
+#include "utils/point.hpp"
+
+
 #include <stdexcept>
 
 Box::Box(int argc, char** argv) {
@@ -18,55 +21,57 @@ std::vector<Point> Box::draw() const {
     float stepy = _y / _slices;
     float stepz = _z / _slices;
 
-    //front left bottom corner
-    Point front  = Point(-_x/2, -_y/2,  _z/2);
-    //back right top corner
-    Point back   = Point(_x/2, _y/2, -_z/2);
+    Vector xy = Vector(stepx, stepy,     0);
+    Vector yz = Vector(0    , stepy, stepz);
+    Vector xz = Vector(stepx,     0, stepz);
 
-    for(int i = 0; i < _slices; i++) {
-        for(int j = 0; j < _slices; j++) {
+    Point front  = Point(-_x/2, -_y/2,  _z/2);
+    Point back   = Point( _x/2,  _y/2, -_z/2);
+
+    for(i32 i = 0; i < _slices; i++) {
+        for(i32 j = 0; j < _slices; j++) {
             //front
-            coords.push_back(front + Point(i*stepx    , j*stepy    , 0));
-            coords.push_back(front + Point((i+1)*stepx, j*stepy    , 0));
-            coords.push_back(front + Point((i+1)*stepx, (j+1)*stepy, 0));
-            coords.push_back(front + Point(i*stepx    , j*stepy    , 0));
-            coords.push_back(front + Point((i+1)*stepx, (j+1)*stepy, 0));
-            coords.push_back(front + Point(i*stepx    , (j+1)*stepy, 0));
+            coords.push_back(front + xy.hadamard(i  , j  , 0));
+            coords.push_back(front + xy.hadamard(i+1, j  , 0));
+            coords.push_back(front + xy.hadamard(i+1, j+1, 0));
+            coords.push_back(front + xy.hadamard(i  , j  , 0));
+            coords.push_back(front + xy.hadamard(i+1, j+1, 0));
+            coords.push_back(front + xy.hadamard(i  , j+1, 0));
             //back
-            coords.push_back(back + Point(-(i+1)*stepx, -(j+1)*stepy, 0));
-            coords.push_back(back + Point(-(i+1)*stepx, -j*stepy    , 0));
-            coords.push_back(back + Point(-i*stepx    , -j*stepy    , 0));
-            coords.push_back(back + Point(-i*stepx    , -(j+1)*stepy, 0));
-            coords.push_back(back + Point(-(i+1)*stepx, -(j+1)*stepy, 0));
-            coords.push_back(back + Point(-i*stepx    , -j*stepy    , 0));
+            coords.push_back(back + xy.hadamard(-i-1, -j-1, 0));
+            coords.push_back(back + xy.hadamard(-i-1, -j  , 0));
+            coords.push_back(back + xy.hadamard(-i  , -j  , 0));
+            coords.push_back(back + xy.hadamard(-i  , -j-1, 0));
+            coords.push_back(back + xy.hadamard(-i-1, -j-1, 0));
+            coords.push_back(back + xy.hadamard(-i  , -j  , 0));
             //left
-            coords.push_back(front + Point(0, i*stepy    , -j*stepz));
-            coords.push_back(front + Point(0, (i+1)*stepy, -j*stepz));
-            coords.push_back(front + Point(0, (i+1)*stepy, -(j+1)*stepz));
-            coords.push_back(front + Point(0, i*stepy    , -j*stepz));
-            coords.push_back(front + Point(0, (i+1)*stepy, -(j+1)*stepz));
-            coords.push_back(front + Point(0, i*stepy    , -(j+1)*stepz));
+            coords.push_back(front + yz.hadamard(0, i  , -j  ));
+            coords.push_back(front + yz.hadamard(0, i+1, -j  ));
+            coords.push_back(front + yz.hadamard(0, i+1, -j-1));
+            coords.push_back(front + yz.hadamard(0, i  , -j  ));
+            coords.push_back(front + yz.hadamard(0, i+1, -j-1));
+            coords.push_back(front + yz.hadamard(0, i  , -j-1));
             //right
-            coords.push_back(back + Point(0, -(i+1)*stepy, (j+1)*stepz));
-            coords.push_back(back + Point(0, -(i+1)*stepy, j*stepz));
-            coords.push_back(back + Point(0, -i*stepy    , j*stepz));
-            coords.push_back(back + Point(0, -i*stepy    , (j+1)*stepz));
-            coords.push_back(back + Point(0, -(i+1)*stepy, (j+1)*stepz));
-            coords.push_back(back + Point(0, -i*stepy    , j*stepz));
+            coords.push_back(back + yz.hadamard(0, -i-1, j+1));
+            coords.push_back(back + yz.hadamard(0, -i-1, j  ));
+            coords.push_back(back + yz.hadamard(0, -i  , j  ));
+            coords.push_back(back + yz.hadamard(0, -i  , j+1));
+            coords.push_back(back + yz.hadamard(0, -i-1, j+1));
+            coords.push_back(back + yz.hadamard(0, -i  , j  ));
             //top
-            coords.push_back(back + Point(-i*stepx    , 0, j*stepz));
-            coords.push_back(back + Point(-(i+1)*stepx, 0, j*stepz));
-            coords.push_back(back + Point(-(i+1)*stepx, 0, (j+1)*stepz));
-            coords.push_back(back + Point(-i*stepx    , 0, j*stepz));
-            coords.push_back(back + Point(-(i+1)*stepx, 0, (j+1)*stepz));
-            coords.push_back(back + Point(-i*stepx    , 0, (j+1)*stepz));
+            coords.push_back(back + xz.hadamard(-i  , 0,   j));
+            coords.push_back(back + xz.hadamard(-i-1, 0,   j));
+            coords.push_back(back + xz.hadamard(-i-1, 0, j+1));
+            coords.push_back(back + xz.hadamard(-i  , 0,   j));
+            coords.push_back(back + xz.hadamard(-i-1, 0, j+1));
+            coords.push_back(back + xz.hadamard(-i  , 0, j+1));
             //bottom
-            coords.push_back(front + Point(i*stepx    , 0, -j*stepz));
-            coords.push_back(front + Point((i+1)*stepx, 0, -j*stepz));
-            coords.push_back(front + Point((i+1)*stepx, 0, -(j+1)*stepz));
-            coords.push_back(front + Point(i*stepx    , 0, -j*stepz));
-            coords.push_back(front + Point((i+1)*stepx, 0, -(j+1)*stepz));
-            coords.push_back(front + Point(i*stepx    , 0, -(j+1)*stepz));
+            coords.push_back(front + xz.hadamard(i+1, 0, -j-1));
+            coords.push_back(front + xz.hadamard(i+1, 0,   -j));
+            coords.push_back(front + xz.hadamard(i  , 0,   -j));
+            coords.push_back(front + xz.hadamard(i  , 0, -j-1));
+            coords.push_back(front + xz.hadamard(i+1, 0, -j-1));
+            coords.push_back(front + xz.hadamard(i  , 0,   -j));
         }
     }
     return coords;

@@ -1,8 +1,15 @@
 cmake_minimum_required(VERSION 3.5)
 
-# Project Name
-project(generator)
+add_executable(generator
+    main.cpp
+    cone.cpp
+    box.cpp
+    plane.cpp
+    sphere.cpp
+)
 
-set_property(GLOBAL PROPERTY USE_FOLDERS ON)
+target_link_libraries(
+    generator
+    utils
+)
 
-add_executable(generator main.cpp plane.cpp box.cpp sphere.cpp cone.cpp ../utils/point.cpp) 

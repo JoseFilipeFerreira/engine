@@ -1,8 +1,0 @@
-cmake_minimum_required(VERSION 3.9)
-project(globalProject)
-set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
-set(CMAKE_CXX_STANDARD 17)
-add_subdirectory(engine)
-add_subdirectory(generator)
-add_subdirectory(utils)
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)

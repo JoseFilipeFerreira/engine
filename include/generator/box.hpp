@@ -1,6 +1,7 @@
 #ifndef BOX_H
 #define BOX_H
-#include "../utils/point.hpp"
+#include "utils/point.hpp"
+#include "utils/types.hpp"
 
 #include <vector>
 
@@ -9,7 +10,7 @@ private:
     float _x;
     float _y;
     float _z;
-    int _slices;
+    u32 _slices;
 
 public:
     Box(int argc, char** argv);

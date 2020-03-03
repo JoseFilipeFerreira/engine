@@ -4,6 +4,7 @@
 #include "generator/box.hpp"
 #include "generator/sphere.hpp"
 #include "generator/cone.hpp"
+#include "generator/cylinder.hpp"
 
 #include<string>
 #include<ostream>
@@ -28,4 +29,6 @@ int main(int argc, char** argv) {
         file_writer(Sphere(argc - 3, argv + 2), argv[argc-1]);
     else if("cone" == type)
         file_writer(Cone(argc - 3, argv + 2), argv[argc-1]);
+    else if("cylinder" == type)
+        file_writer(Cylinder(argc - 3, argv + 2), argv[argc-1]);
 }

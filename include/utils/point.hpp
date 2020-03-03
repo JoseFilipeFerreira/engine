@@ -52,11 +52,14 @@ private:
 
 public:
     PointSpherical(float, float, float);
+    PointSpherical(Point);
     std::string to_string() const;
     auto constexpr radius() const noexcept -> float { return _radius; }
     auto constexpr inclination() const noexcept -> float { return _inclination; }
     auto constexpr azimuth() const noexcept -> float { return _azimuth; }
+    PointSpherical operator + (Vector const &v) {
+        return PointSpherical(Point(*this) + v); 
+    }
 };
-
 
 #endif // POINT_H

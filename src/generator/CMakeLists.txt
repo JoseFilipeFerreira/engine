@@ -6,6 +6,7 @@ add_executable(generator
     box.cpp
     plane.cpp
     sphere.cpp
+    cylinder.cpp
 )
 
 target_link_libraries(

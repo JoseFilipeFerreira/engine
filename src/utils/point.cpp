@@ -1,6 +1,8 @@
 #include "utils/point.hpp"
+#include <math.h>
 #include <sstream>
 #include <cmath>
+#include <iostream>
 
 Vector::Vector(float x, float y, float z)
     : _x(x)
@@ -43,10 +45,21 @@ PointSpherical::PointSpherical(float radius, float inclination, float azimuth)
 {
 }
 
+PointSpherical::PointSpherical(Point p) {
+    _radius = sqrt(p.x()*p.x() + p.y()*p.y() + p.z()*p.z());
+
+    if (_radius == 0)
+        _inclination = 0;
+    else
+        _inclination = acos(p.y()/ _radius);
+
+    _azimuth = atan2(p.x(), p.z());
+}
+
 Point::Point(PointSpherical p) {
+_x = p.radius() * sin(p.inclination()) * sin(p.azimuth());
+_y = p.radius() * cos(p.inclination()); 
     _z = p.radius() * sin(p.inclination()) * cos(p.azimuth());
-    _x = p.radius() * sin(p.inclination()) * sin(p.azimuth());
-    _y = p.radius() * cos(p.inclination()); 
 }
 
 std::string PointSpherical::to_string() const {

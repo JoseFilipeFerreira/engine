@@ -160,8 +160,10 @@ Para definir o triângulo inferior:
     \label{fig:plane}
 \end{figure}
 
-
 \section{Caixa}
+Para desenhar uma caixa é necessário saber as dimensões da caixa (\textit{\_X},
+\textit{\_Y}, \textit{\_Z}) e, opcionalmente, o número de divisões da caixa
+(\textit{\_slices - 1}).\\
 Para definir cada uma das faces de uma caixa é necessário ter um ponto que
 esteja nessa face. De forma a minimizar os pontos que são definidos escolhemos
 dois pontos em cantos opostos. Neste caso no canto inferior esquerdo da frente e
@@ -201,9 +203,12 @@ originais. isto permite escalar os vetores apenas num eixo.\\
 \end{figure}
 
 \section{Esfera}
-Para desenhar a esfera fizemos uso do sistema de coordenadas esféricas definidas
-anteriormente. Como o próprio nome indica, o espaço definido por estas
-coordenadas é esférico o que facilita o desenho de uma esfera.\\
+Para desenhar a esfera é necessário saber o seu raio (\textit{\_radius}), o
+número de slices (\textit{\_slices}) e o número de stacks (\textit{\_stacks}).\\
+Fizemos uso do sistema de coordenadas esféricas definidas
+anteriormente para desenhar a esfera. Como o próprio nome indica, o espaço
+definido por estas coordenadas é esférico o que facilita o desenho de uma
+esfera.\\
 Tal como foi referido, um ponto precisa de três valores para ser defenido num
 sistema de coordenadas esféricas. O primeiro é a dsitância ao ponto do centro do
 referencial que por definição também é o raio da esfera. Assim basta obter a
@@ -226,7 +231,92 @@ Assim a versão final fica:
 
 \input{code/spherev3.tex}
 
+\begin{figure}[H]
+    \centering 
+    \includegraphics[width=0.5\textwidth]{images/sphere.png}  
+    \caption{Esfera: raio:5 slices:8 stacks:8}
+    \label{fig:cilindro_render}
+\end{figure}
+
+
 \section{Cone}
+Para desenhar um cone é necessário saber o seu raio (\textit{\_radius}), a sua
+altura (\textit{\_height}), o número de slices (\textit{\_slices}) e o número de
+stacks (\textit{\_stacks}).\\
+Primeiramente é calculado o angulo entre cada slice (\textit(ang\_slice))
+e é definido um ponto que se encontra no topo do cone (\textit{top\_point}).
+
+\begin{lstlisting}
+float ang_slice = 2 * M_PI / _slices;
+Point top_point = Point(0, _height, 0);
+\end{lstlisting}
+\begin{figure}[H]
+    \centering 
+    \includegraphics[width=0.5\textwidth]{images/cone_vetores.png}  
+    \caption{pontos e vetores no cone}
+    \label{fig:cone_vetores}
+\end{figure}
+
+Assim, os pontos na base do cone são da forma \textit{(radius, $\pi$, a)}.
+Logo para desenhar a base do cone fazemos:
+
+\begin{lstlisting}
+for(i32 slice = 0; slice < _slices; slice++) {
+    Point base   = PointSpherical(_radius, M_PI/2, ang_slice *  slice);
+    Point n_base = PointSpherical(_radius, M_PI/2, ang_slice * (slice+1));
+
+    coords.push_back(n_base);
+    coords.push_back(base);
+    coords.push_back(PointSpherical(0, 0, 0));
+
+}
+\end{lstlisting}
+Em seguida é calculado em cada ciclo um vetor que vai do \textit{base} e do
+\textit{n\_base} até ao topo do cone mas que só tem o comprimento de uma stack:
+
+\begin{lstlisting}
+Vector step   = Vector(  base, top_point) / _stacks;
+Vector n_step = Vector(n_base, top_point) / _stacks;
+\end{lstlisting}
+Assim, para obter um ponto na lateral do cone podemos fazer \textit{base + step
+* stack}. Visto que no topo do cone os triangulos também se iriam sobrepor uma
+solução semelhante à usada na esfera foi aplicada.\\
+Assim, o código final fica:
+
+\begin{lstlisting}
+for(i32 slice = 0; slice < _slices; slice++) {
+    Point base   = PointSpherical(_radius, M_PI/2, ang_slice *  slice);
+    Point n_base = PointSpherical(_radius, M_PI/2, ang_slice * (slice+1));
+
+    coords.push_back(n_base);
+    coords.push_back(base);
+    coords.push_back(Point(0, 0, 0));
+
+    Vector step   = Vector(  base, top_point) / _stacks;
+    Vector n_step = Vector(n_base, top_point) / _stacks;
+
+    for(i32 stack = 0; stack < _stacks; stack++) {
+        Point pivot   =    base +   step * stack;
+        Point n_pivot =  n_base + n_step * stack;
+
+        if(!(stack == _stacks -1)) {
+            coords.push_back(pivot);
+            coords.push_back(n_pivot + n_step);
+            coords.push_back(pivot + step);
+        }
+        coords.push_back(pivot);
+        coords.push_back(n_pivot);
+        coords.push_back(n_pivot + n_step);
+    }
+}
+\end{lstlisting}
+
+\begin{figure}[H]
+    \centering 
+    \includegraphics[width=0.5\textwidth]{images/cone.png}  
+    \caption{Cilindro: altura:5 raio:3 slices:10 stacks:2}
+    \label{fig:cilindro_render}
+\end{figure}
 
 \section{Cilindro}
 Para desenhar o cilindro primeiro é definido um vetor que vai da base do cone ao
@@ -246,8 +336,8 @@ float ang_slice = 2 * M_PI / _slices;
     \label{fig:cilindro_vec}
 \end{figure}
 Assim para desenhar a base do cilindro e o topo do cilindro fazemos:
-\input{code/cilindrov2.tex}
 
+\input{code/cilindrov2.tex}
 Para desenhar as laterais do cilindro coloca-se um ciclo for dentro do
 ciclo definido anteriormente de forma a pecorrer as stacks do sólido.
 Assim, a versão final do código fica:

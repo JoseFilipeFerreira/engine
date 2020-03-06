@@ -11,7 +11,7 @@ Box::Box(int argc, char** argv) {
     if (argc < 4)
         _slices = 1;
     else
-        _slices = std::stoi(argv[3]);
+        _slices = std::stoi(argv[3]) + 1;
 }
 
 std::vector<Point> Box::draw() const {

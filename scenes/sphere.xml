@@ -1,4 +1,3 @@
 <scene> 
     <model file="models/sphere.3d" /> 
-    <model file="models/plane.3d" /> 
 </scene>

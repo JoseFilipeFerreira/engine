@@ -1,5 +1,7 @@
 #include "engine/model.hpp"
 #include "utils/types.hpp"
+#include "deps/uniformrealdist.hpp"
+
 #include <stdexcept>
 #include <iostream>
 #include <fstream>
@@ -11,22 +13,16 @@
 #include <GL/glut.h>
 #endif
 
-Model::Model(string fileName)
-{
+Model::Model(std::string fileName){
     float x, y, z;
-    ifstream file(fileName.c_str());
-
+    std::ifstream file(fileName.c_str());
     while (file >> x >> y >> z)
          points.push_back(Point(x, y, z));
-
-    file.close();
 }
 
 void draw_triangle(Point p1, Point p2, Point p3){
-    float r = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
-    float g = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
-    float b = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
-    glColor3f(r, g, b);
+    auto static const rng = UniformRealDist(0.0, 1.0);
+    glColor3f(rng(), rng(), rng());
     glBegin(GL_TRIANGLES);
         glVertex3f(p1.x(), p1.y(), p1.z());
         glVertex3f(p2.x(), p2.y(), p2.z());
@@ -38,12 +34,13 @@ void Model::draw_model() {
     for(i32 i = 0; i < points.size(); i += 3)
         draw_triangle(points[i], points[i+1], points[i+2]);
 }
+
 Models::Models(){
-    models = vector<Model>();
+    models = std::vector<Model>();
 }
 
-Models::Models(vector<string> fileNames){
-    for(string fileName: fileNames)
+Models::Models(std::vector<std::string> fileNames){
+    for(std::string fileName: fileNames)
         models.push_back(Model(fileName));
 }
 

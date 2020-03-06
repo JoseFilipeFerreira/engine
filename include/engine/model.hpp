@@ -4,14 +4,12 @@
 #include "utils/point.hpp"
 #include <vector>
 
-using namespace std;
-
 class Model {
 private:
     std::vector<Point> points;
 
 public:
-    Model(string);
+    Model(std::string);
     void draw_model();
 };
 
@@ -21,7 +19,7 @@ class Models {
 
 public:
     Models();
-    Models(vector<string>);
+    Models(std::vector<std::string>);
     void draw_models();
 };
 

@@ -93,11 +93,11 @@ void renderScene() {
 
     // End of frame
     glutSwapBuffers();
-    glutPostRedisplay();
 }
 
 void react_key(unsigned char key, int x, int y){
     camera.react_key(key, x, y);
+    renderScene();
 }
 
 int main(int argc, char** argv) {

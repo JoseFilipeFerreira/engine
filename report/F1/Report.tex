@@ -92,8 +92,20 @@ linkcolor=black}
 \tableofcontents
 
 \chapter{Introdução}
+Este trabalho foi desenvolvido no âmbito da unidade curricular de computação
+gráfica e está dividido em várias fases de entrega distintas sendo que esta é a
+primeira.\\
+Esta fase está dividido em duas partes distintas, o \textit{generator} e o
+\textit{engine}.\\
+O \textit{generator} destina-se a gerar os pontos que desenham um conjunto de
+primitivas.\\
+O \textit{engine} destina-se a representar as primitivas produzidas
+anteriormente.\\
+De forma a facilitar a compilação do código foi criado um \textit{script}
+chamado \textit{build.sh} que compila o código e gera os dois executáveis dentro
+da pasta \textit{target/release/bin} quando executado.\\
 Ao longo deste relatório irá ser explicado a metodologia e raciocínio usados
-para a realização da primeira fase de computação gráfica.
+para a realização desta fase.\\
 
 \chapter{Utils}
 \section{Sistemas de Coordenadas}
@@ -114,15 +126,26 @@ referencial, a inclinação é o ângulo que o ponto faz com o eixo vertical e o
 azimute é o ângulo que o ponto faz com o eixo dos z.
 \begin{figure}[H]
     \centering 
-    \includegraphics[width=0.3\textwidth]{images/Spherical_Coordinates.png}  
+    \includegraphics[width=0.25\textwidth]{images/Spherical_Coordinates.png}  
     \caption{Coordenadas esféricas}
     \label{fig:spherical_coordinates}
 \end{figure}
 Para ambos os sistemas de coordenadas foram definidos uma classe de pontos e uma
-classe de vetores.
+classe de vetores.\\
+Também foram implementadas operações simples fazendo uso de \textit{operator
+overloading} de forma a ser possível, por exemplo, escrever \textit{Point} +
+\textit{Vector} e o resultado desta operação dar um \textit{Point}.
 
 \chapter{Generator}
-O formato escolhido para representar os pontos carregados é o de colocar um
+Neste módulo foram definidas 5 primitivas:
+\begin{itemize}
+        \item Plano
+        \item Caixa
+        \item Esfera
+        \item Cone
+        \item Cilindro
+\end{itemize}
+O formato escolhido para representar os pontos gerados é o de colocar um
 ponto por linha com as coordenadas pela ordem X, Y e Z e separados por espaço.\\
 Assim, por exemplo, o conjunto de pontos (0, 0, 0), (1, 0, 0) e (1, 1, 1)
 ficaria representado como.
@@ -166,9 +189,14 @@ Para desenhar uma caixa é necessário saber as dimensões da caixa (\textit{\_X
 (\textit{\_slices - 1}).\\
 Para definir cada uma das faces de uma caixa é necessário ter um ponto que
 esteja nessa face. De forma a minimizar os pontos que são definidos escolhemos
-dois pontos em cantos opostos. Neste caso no canto inferior esquerdo da frente e
-no canto superior direito de trás. Assim, todas as faces da caixa podem ser
-definidas com base em apenas dois pontos.\\
+dois pontos em cantos opostos. Neste caso no canto inferior esquerdo da frente
+(\textit{front}) e no canto superior direito de trás (\textit{back}):\\
+\begin{lstlisting}
+Point front  = Point(-_x/2, -_y/2,  _z/2);
+Point back   = Point( _x/2,  _y/2, -_z/2);
+\end{lstlisting}
+Assim, todas as faces da caixa podem ser definidas com base em apenas dois
+pontos.\\
 \begin{figure}[H]
     \centering 
     \includegraphics[width=0.5\textwidth]{images/cubo_vectors.png}  
@@ -194,6 +222,21 @@ Para obter os pontos ao longo de cada face utilizamos o produto de
 definida para duas matrizes com as mesmas dimensões e produz uma matriz onde
 cada elemento (i, j) é o produto de elementos (i , j) das duas matrizes
 originais. isto permite escalar os vetores apenas num eixo.\\
+Assim, o código para desenhar a face da frente da caixa fica da seguinte forma,
+sendo que o código para as restantes faces segue a mesma lógica:
+\begin{lstlisting}
+for(i32 i = 0; i < _slices; i++) {
+    for(i32 j = 0; j < _slices; j++) {
+        //front
+        coords.push_back(front + xy.hadamard(i  , j  , 0));
+        coords.push_back(front + xy.hadamard(i+1, j  , 0));
+        coords.push_back(front + xy.hadamard(i+1, j+1, 0));
+        coords.push_back(front + xy.hadamard(i  , j  , 0));
+        coords.push_back(front + xy.hadamard(i+1, j+1, 0));
+        coords.push_back(front + xy.hadamard(i  , j+1, 0));
+    }
+}
+\end{lstlisting}
 
 \begin{figure}[H]
     \centering 
@@ -216,6 +259,12 @@ inclinação e o azimute.\\
 Para facilitar estas contas são calculados dois valores:\\
 O angulo entre cada slice (ang\_slice = 2 * $\pi$ / n de slices) e o angulo
 entre cada stack (ang\_stack = $\pi$ / n de stacks).\\
+\begin{figure}[H]
+    \centering 
+    \includegraphics[width=0.5\textwidth]{images/sphere_vetores.png}  
+    \caption{Angulos e pontos na esfera}
+    \label{fig:sphere}
+\end{figure}
 Assim, para obter todos os pontos numa esfera podemos usar o excerto de código:
 
 \input{code/spherev1.tex}
@@ -256,7 +305,6 @@ Point top_point = Point(0, _height, 0);
     \caption{pontos e vetores no cone}
     \label{fig:cone_vetores}
 \end{figure}
-
 Assim, os pontos na base do cone são da forma \textit{(radius, $\pi$, a)}.
 Logo para desenhar a base do cone fazemos:
 
@@ -353,6 +401,10 @@ Assim, a versão final do código fica:
 \end{figure}
 
 \chapter{Engine}
+Neste módulo foi desenvolvido um motor 3D simples.\\
+Quando se executa o progrma gerado por defeito é aberta a scene guardada em
+\textit{scenes/config.xml}. Se alguém ficehiro for passado como argumento esse
+será o selecionado.\\
 Como ainda não existem sombras e luz as formas não são facilmente
 distinguíveis. De forma a resolver este problema decidimos atribuir a cada
 triângulo uma cor aleatória.
@@ -437,6 +489,11 @@ Para mover a camera basta utilizar as funções definidas na classe \textit{Poin
 e \textit{PointSpherical} para alterar a posição da camera.
 
 \chapter{Conclusão}
-
+Com este trabalho prático podemos aplicar os conhecimentos lecionados até agora
+nas aulas da unidade curricular de computação gráfica permitindo assim que
+aprofundar os nossos conhecimentos de openGl.\\
+Como trabalho futuro gostaríamos de melhorar a camera de orbita que foi
+implementada no \textit{engine}, introduzir mais cameras distintas e criar mais
+primitivas no \textit{generator} como a torus, por exemplo.
 
 \end{document}

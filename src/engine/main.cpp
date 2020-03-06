@@ -1,4 +1,5 @@
 #include "engine/model.hpp"
+#include "engine/camera.hpp"
 #include "deps/rapidxml.hpp"
 
 #include <GL/gl.h>
@@ -17,9 +18,13 @@
 #include<ostream>
 #include<iostream>
 
-vector<string> read_models() {
+// singletons
+Camera camera;
+Models models;
+
+vector<string> read_models(string fileName) {
     ifstream file;
-    file.open("scenes/config.xml");
+    file.open(fileName);
     string txt, buf;
     while(getline(file, buf))
         txt.append(buf);
@@ -76,32 +81,30 @@ void draw_axis(){
     glEnd();
 }
 
-float angle = 0;
-
-void renderScene(void) {
-
+void renderScene() {
     // clear buffers
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     // set the camera
-    glLoadIdentity();
-    gluLookAt(10.0,10.0,10.0, 
-		      0.0,0.0,0.0,
-			  0.0f,1.0f,0.0f);
-
-    glRotated(angle, 0, 1, 0);
-
-    angle += 1;
+    camera.place_camera();
 
     draw_axis();
-    Models(read_models()).draw_models();
+    models.draw_models();
 
     // End of frame
     glutSwapBuffers();
     glutPostRedisplay();
 }
 
+void react_key(unsigned char key, int x, int y){
+    camera.react_key(key, x, y);
+}
+
 int main(int argc, char** argv) {
+    string sceneName = "scenes/config.xml";
+    if(argc > 1)
+        sceneName = string(argv[1]);
+    models = Models(read_models(sceneName));
 
     // init GLUT and the window
     glutInit(&argc, argv);
@@ -115,7 +118,7 @@ int main(int argc, char** argv) {
     glutReshapeFunc(changeSize);
 
     // put here the registration of the keyboard callbacks
-//    glutKeyboardFunc(reactKey);
+    glutKeyboardFunc(react_key);
 
     //  OpenGL settings
     glEnable(GL_DEPTH_TEST);

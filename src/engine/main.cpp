@@ -22,17 +22,17 @@
 Camera camera;
 Models models;
 
-vector<string> read_models(string fileName) {
-    ifstream file;
+std::vector<std::string> read_models(std::string fileName) {
+    std::ifstream file;
     file.open(fileName);
-    string txt, buf;
+    std::string txt, buf;
     while(getline(file, buf))
         txt.append(buf);
     rapidxml::xml_document<> doc;
     char* txtm = (char*) malloc(txt.length() + 1);
     strcpy(txtm, txt.c_str());
     doc.parse<0>(txtm);
-    vector<string> res;
+    std::vector<std::string> res;
     for(rapidxml::xml_node<> *n = doc.first_node()->first_node(); n; n = n->next_sibling()) 
         res.push_back(n->first_attribute()->value());
     return res;
@@ -101,9 +101,9 @@ void react_key(unsigned char key, int x, int y){
 }
 
 int main(int argc, char** argv) {
-    string sceneName = "scenes/config.xml";
+    std::string sceneName = "scenes/config.xml";
     if(argc > 1)
-        sceneName = string(argv[1]);
+        sceneName = std::string(argv[1]);
     models = Models(read_models(sceneName));
 
     // init GLUT and the window

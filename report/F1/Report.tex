@@ -3,7 +3,7 @@
 \usepackage[portuguese]{babel}
 \usepackage{hyperref}
 \usepackage{a4wide}
-\hypersetup{pdftitle={CC - TP01},
+\hypersetup{pdftitle={CG - Fase 1 - Grupo 7},
 pdfauthor={João Teixeira, José Ferreira, Miguel Solino},
 colorlinks=true,
 urlcolor=blue,
@@ -70,7 +70,7 @@ linkcolor=black}
 \begin{document}
 
 \title{Computação Gráfica\\
-\large Fase 1 - Grupo ??}
+\large Fase 1 - Grupo 7}
 \author{José Ferreira (A83683) \and João Teixeira (A85504) \and Miguel Solino (A86435)}
 \date{\today}
 
@@ -110,8 +110,8 @@ ponto no espaço fica definido com 3 valores: x, y e z.\\
 O segundo sistema de coordenadas é o sistema esférico. Neste, para definir a
 posição de um ponto no espaço, são também necessários 3 valores: raio,
 inclinação e azimute. O raio é a distancia que o ponto tem à origem do
-referancial, a inclinação é o angulo que o ponto faz com o eixo vertical e o
-azimute é o angulo que o ponto faz com o eixo dos z.
+referencial, a inclinação é o ângulo que o ponto faz com o eixo vertical e o
+azimute é o ângulo que o ponto faz com o eixo dos z.
 \begin{figure}[H]
     \centering 
     \includegraphics[width=0.3\textwidth]{images/Spherical_Coordinates.png}  
@@ -133,7 +133,7 @@ ficaria representado como.
 \end{lstlisting}
 
 \section{Plano}
-Para desenhar um plano com dois triangulos sabendo o lado do plano basta
+Para desenhar um plano com dois triângulos sabendo o lado do plano basta
 conseguir obter as coordenadas dos cantos do plano.\\
 \begin{figure}[H]
     \centering 
@@ -175,7 +175,7 @@ definidas com base em apenas dois pontos.\\
     \caption{Vetores e pontos na caixa}
     \label{fig:box_vectors}
 \end{figure}
-Para facilitar as contas, o gerador converte as divisões que recebe no númeor de
+Para facilitar as contas, o gerador converte as divisões que recebe no número de
 slices que o cubo tem (\textit{slices = divisions + 1}).\\
 Em seguida são definidos 3 vetores cada um associado a um dos planos que
 atravessam os eixos e têm como coordenadas o comprimento de cada uma das slices
@@ -210,23 +210,23 @@ anteriormente para desenhar a esfera. Como o próprio nome indica, o espaço
 definido por estas coordenadas é esférico o que facilita o desenho de uma
 esfera.\\
 Tal como foi referido, um ponto precisa de três valores para ser defenido num
-sistema de coordenadas esféricas. O primeiro é a dsitância ao ponto do centro do
+sistema de coordenadas esféricas. O primeiro é a distância ao ponto do centro do
 referencial que por definição também é o raio da esfera. Assim basta obter a
 inclinação e o azimute.\\
-Para facilitar estas contas são calcolados dois valores:\\
+Para facilitar estas contas são calculados dois valores:\\
 O angulo entre cada slice (ang\_slice = 2 * $\pi$ / n de slices) e o angulo
 entre cada stack (ang\_stack = $\pi$ / n de stacks).\\
 Assim, para obter todos os pontos numa esfera podemos usar o excerto de código:
 
 \input{code/spherev1.tex}
-Para obter os próximos pontos da esfera de forma a criar os triangulos basta
+Para obter os próximos pontos da esfera de forma a criar os triângulos basta
 fazer \textit{ang\_stack * (stack + 1)} e \textit{ang\_slice * (slice + 1)}\\
 Assim, juntando estes quatro pontos com o explicado na criação do plano:
 
 \input{code/spherev2.tex}
 O resultado deste código já gera uma esfera. No entanto, quando es está a
-desenhar a primeira e a última stack os triangulos são duplicados.
-Para resolver este problema basta não desenhar um dos triangulos nestes casos.
+desenhar a primeira e a última stack os triângulos são duplicados.
+Para resolver este problema basta não desenhar um dos triângulos nestes casos.
 Assim a versão final fica:
 
 \input{code/spherev3.tex}
@@ -243,7 +243,7 @@ Assim a versão final fica:
 Para desenhar um cone é necessário saber o seu raio (\textit{\_radius}), a sua
 altura (\textit{\_height}), o número de slices (\textit{\_slices}) e o número de
 stacks (\textit{\_stacks}).\\
-Primeiramente é calculado o angulo entre cada slice (\textit(ang\_slice))
+Primeiramente é calculado o ângulo entre cada slice (\textit(ang\_slice))
 e é definido um ponto que se encontra no topo do cone (\textit{top\_point}).
 
 \begin{lstlisting}
@@ -279,7 +279,7 @@ Vector step   = Vector(  base, top_point) / _stacks;
 Vector n_step = Vector(n_base, top_point) / _stacks;
 \end{lstlisting}
 Assim, para obter um ponto na lateral do cone podemos fazer \textit{base + step
-* stack}. Visto que no topo do cone os triangulos também se iriam sobrepor uma
+* stack}. Visto que no topo do cone os triângulos também se iriam sobrepor uma
 solução semelhante à usada na esfera foi aplicada.\\
 Assim, o código final fica:
 
@@ -321,7 +321,7 @@ for(i32 slice = 0; slice < _slices; slice++) {
 \section{Cilindro}
 Para desenhar o cilindro primeiro é definido um vetor que vai da base do cone ao
 topo do cone(top) e um vetor que tem a altura de uma stack do cilindro(step) e
-é calculado o angulo que uma slice tem(ang\_slice).\\
+é calculado o ângulo que uma slice tem(ang\_slice).\\
 Assim, para um ponto da aresta da base é dado por \textit{(radius, $\pi$/2,
 ang\_slice * slice)}.
 \begin{lstlisting}
@@ -332,14 +332,14 @@ float ang_slice = 2 * M_PI / _slices;
 \begin{figure}[H]
     \centering 
     \includegraphics[width=0.5\textwidth]{images/cilindro_vetores.png}  
-    \caption{Vetores e angulos dos cilindros}
+    \caption{Vetores e ângulos dos cilindros}
     \label{fig:cilindro_vec}
 \end{figure}
 Assim para desenhar a base do cilindro e o topo do cilindro fazemos:
 
 \input{code/cilindrov2.tex}
 Para desenhar as laterais do cilindro coloca-se um ciclo for dentro do
-ciclo definido anteriormente de forma a pecorrer as stacks do sólido.
+ciclo definido anteriormente de forma a percorrer as stacks do sólido.
 Assim, a versão final do código fica:
 
 \input{code/cilindrov3.tex}
@@ -405,7 +405,7 @@ void Model::draw_model() {
 
 \section{XML parsing}
 Para dar parsing ao XML utilizamos a biblioteca \textit{rapidxml}. Nesta
-primeira versão do parser apenas obtemos quais são os ficehiros dos modelos a
+primeira versão do parser apenas obtemos quais são os ficheiros dos modelos a
 carregar contidos no xml. De forma a garantir que o ficheiro é lido apenas uma
 vez o carregamento é feito imediatamente quando o programa inicia e os ficheiros
 são carregas para a classe \textit{Models} que contem um vetor de \textit{Model}
@@ -436,6 +436,7 @@ gluLookAt(c.x(),c.y(),c.z(),
 Para mover a camera basta utilizar as funções definidas na classe \textit{Point}
 e \textit{PointSpherical} para alterar a posição da camera.
 
+\chapter{Conclusão}
 
 
 \end{document}

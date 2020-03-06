@@ -38,6 +38,9 @@ void Model::draw_model() {
     for(i32 i = 0; i < points.size(); i += 3)
         draw_triangle(points[i], points[i+1], points[i+2]);
 }
+Models::Models(){
+    models = vector<Model>();
+}
 
 Models::Models(vector<string> fileNames){
     for(string fileName: fileNames)

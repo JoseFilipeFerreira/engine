@@ -20,6 +20,7 @@ class Models {
     std::vector<Model> models;
 
 public:
+    Models();
     Models(vector<string>);
     void draw_models();
 };

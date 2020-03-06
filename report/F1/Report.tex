@@ -1,0 +1,351 @@
+\documentclass[a4paper]{report}
+\usepackage[utf8]{inputenc}
+\usepackage[portuguese]{babel}
+\usepackage{hyperref}
+\usepackage{a4wide}
+\hypersetup{pdftitle={CC - TP01},
+pdfauthor={João Teixeira, José Ferreira, Miguel Solino},
+colorlinks=true,
+urlcolor=blue,
+linkcolor=black}
+\usepackage{subcaption}
+\usepackage[cache=false]{minted}
+\usepackage{listings}
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{appendix}
+\usepackage{tikz}
+\usepackage{authblk}
+\usepackage{bashful}
+\usepackage{verbatim}
+\usepackage{amsmath}
+\usepackage{tikz}
+\usepackage{tikz,fullpage}
+\usepackage{pgfgantt}
+\usepackage{amssymb}
+\usetikzlibrary{arrows,%
+                petri,%
+                topaths}%
+\usepackage{tkz-berge}
+\usetikzlibrary{positioning,automata,decorations.markings}
+\AfterEndEnvironment{figure}{\noindent\ignorespaces}
+\AfterEndEnvironment{table}{\noindent\ignorespaces}
+
+\definecolor{solarized@base03}{HTML}{002B36}
+\definecolor{solarized@base02}{HTML}{073642}
+\definecolor{solarized@base01}{HTML}{586e75}
+\definecolor{solarized@base00}{HTML}{657b83}
+\definecolor{solarized@base0}{HTML}{839496}
+\definecolor{solarized@base1}{HTML}{93a1a1}
+\definecolor{solarized@base2}{HTML}{EEE8D5}
+\definecolor{solarized@base3}{HTML}{FDF6E3}
+\definecolor{solarized@yellow}{HTML}{B58900}
+\definecolor{solarized@orange}{HTML}{CB4B16}
+\definecolor{solarized@red}{HTML}{DC322F}
+\definecolor{solarized@magenta}{HTML}{D33682}
+\definecolor{solarized@violet}{HTML}{6C71C4}
+\definecolor{solarized@blue}{HTML}{268BD2}
+\definecolor{solarized@cyan}{HTML}{2AA198}
+\definecolor{solarized@green}{HTML}{859900}
+
+\lstset{
+  language=Java,
+  upquote=true,
+  columns=fixed,
+  tabsize=4,
+  extendedchars=true,
+  breaklines=true,
+  numbers=left,
+  numbersep=5pt,
+  rulesepcolor=\color{solarized@base03},
+  numberstyle=\tiny\color{solarized@base01},
+  basicstyle=\footnotesize\ttfamily,
+  keywordstyle=\color{solarized@green},
+  stringstyle=\color{solarized@yellow}\ttfamily,
+  identifierstyle=\color{solarized@blue},
+  commentstyle=\color{solarized@base01},
+  emphstyle=\color{solarized@red}
+}
+
+\begin{document}
+
+\title{Computação Gráfica\\
+\large Fase 1 - Grupo ??}
+\author{José Ferreira (A83683) \and João Teixeira (A85504) \and Miguel Solino (A86435)}
+\date{\today}
+
+\begin{center}
+    \begin{minipage}{0.75\linewidth}
+        \centering
+        \includegraphics[width=0.4\textwidth]{images/eng.jpeg}\par\vspace{1cm}
+        \vspace{1.5cm}
+        \href{https://www.uminho.pt/PT}
+        {\color{black}{\scshape\LARGE Universidade do Minho}} \par
+        \vspace{1cm}
+        \href{https://www.di.uminho.pt/}
+        {\color{black}{\scshape\Large Departamento de Informática}} \par
+        \vspace{1.5cm}
+        \maketitle
+    \end{minipage}
+\end{center}
+
+\tableofcontents
+
+\chapter{Introdução}
+Ao longo deste relatório irá ser explicado a metodologia e raciocínio usados
+para a realização da primeira fase de computação gráfica.
+
+\chapter{Utils}
+\section{Sistemas de Coordenadas}
+De forma a facilitar o desenho das formas foram desenvolvidas um conjunto de
+classes para representar dois sistemas distintos de coordenadas.\\
+O primeiro sistema de coordenadas é o sistema cartesiano. Neste a posição de um
+ponto no espaço fica definido com 3 valores: x, y e z.\\
+\begin{figure}[H]
+    \centering 
+    \includegraphics[width=0.25\textwidth]{images/Coord_XYZ.png}  
+    \caption{Coordenadas cartesianas}
+    \label{fig:coord_xyz}
+\end{figure}
+O segundo sistema de coordenadas é o sistema esférico. Neste, para definir a
+posição de um ponto no espaço, são também necessários 3 valores: raio,
+inclinação e azimute. O raio é a distancia que o ponto tem à origem do
+referancial, a inclinação é o angulo que o ponto faz com o eixo vertical e o
+azimute é o angulo que o ponto faz com o eixo dos z.
+\begin{figure}[H]
+    \centering 
+    \includegraphics[width=0.3\textwidth]{images/Spherical_Coordinates.png}  
+    \caption{Coordenadas esféricas}
+    \label{fig:spherical_coordinates}
+\end{figure}
+Para ambos os sistemas de coordenadas foram definidos uma classe de pontos e uma
+classe de vetores.
+
+\chapter{Generator}
+O formato escolhido para representar os pontos carregados é o de colocar um
+ponto por linha com as coordenadas pela ordem X, Y e Z e separados por espaço.\\
+Assim, por exemplo, o conjunto de pontos (0, 0, 0), (1, 0, 0) e (1, 1, 1)
+ficaria representado como.
+\begin{lstlisting}
+0 0 0
+1 0 0
+1 1 1
+\end{lstlisting}
+
+\section{Plano}
+Para desenhar um plano com dois triangulos sabendo o lado do plano basta
+conseguir obter as coordenadas dos cantos do plano.\\
+\begin{figure}[H]
+    \centering 
+    \includegraphics[width=0.5\textwidth]{images/esquema_plano.png}  
+    \caption{Esquema dos pontos no plano}
+    \label{fig:scheme_plane}
+\end{figure}
+Para desenhar um triângulo com o lado visível virado para cima é necessário
+seguir a regra da mão direita quando se decide porque ordem desenhar os pontos.
+Assim, os dois triângulos necessários são definidos da seguinte forma:\\
+Para definir o triângulo superior:
+\[(-h/2,\quad 0, \quad -h/2)\]
+\[(-h/2,\quad  0, \quad h/2)\]
+\[(h/2,\quad  0, \quad -h/2)\]
+Para definir o triângulo inferior:
+\[(h/2, \quad 0, \quad -h/2)\]
+\[(-h/2, \quad  0, \quad  h/2)\]
+\[(h/2, \quad  0, \quad h/2)\]
+
+\begin{figure}[H]
+    \centering 
+    \includegraphics[width=0.5\textwidth]{images/plane.png}  
+    \caption{Plano Side:10}
+    \label{fig:plane}
+\end{figure}
+
+
+\section{Caixa}
+Para definir cada uma das faces de uma caixa é necessário ter um ponto que
+esteja nessa face. De forma a minimizar os pontos que são definidos escolhemos
+dois pontos em cantos opostos. Neste caso no canto inferior esquerdo da frente e
+no canto superior direito de trás. Assim, todas as faces da caixa podem ser
+definidas com base em apenas dois pontos.\\
+\begin{figure}[H]
+    \centering 
+    \includegraphics[width=0.5\textwidth]{images/cubo_vectors.png}  
+    \caption{Vetores e pontos na caixa}
+    \label{fig:box_vectors}
+\end{figure}
+Para facilitar as contas, o gerador converte as divisões que recebe no númeor de
+slices que o cubo tem (\textit{slices = divisions + 1}).\\
+Em seguida são definidos 3 vetores cada um associado a um dos planos que
+atravessam os eixos e têm como coordenadas o comprimento de cada uma das slices
+do cubo.\\
+\begin{lstlisting}
+float stepx = _x / _slices;
+float stepy = _y / _slices;
+float stepz = _z / _slices;
+
+Vector xy = Vector(stepx, stepy,     0);
+Vector yz = Vector(0    , stepy, stepz);
+Vector xz = Vector(stepx,     0, stepz);
+\end{lstlisting}
+Para obter os pontos ao longo de cada face utilizamos o produto de
+\textit{haramard} sobre os vetores definidos anteriormente. Esta operação é
+definida para duas matrizes com as mesmas dimensões e produz uma matriz onde
+cada elemento (i, j) é o produto de elementos (i , j) das duas matrizes
+originais. isto permite escalar os vetores apenas num eixo.\\
+
+\begin{figure}[H]
+    \centering 
+    \includegraphics[width=0.5\textwidth]{images/box.png}  
+    \caption{Caixa: X:5 Y:5 Z:5 Divisions:2}
+    \label{fig:box_render}
+\end{figure}
+
+\section{Esfera}
+Para desenhar a esfera fizemos uso do sistema de coordenadas esféricas definidas
+anteriormente. Como o próprio nome indica, o espaço definido por estas
+coordenadas é esférico o que facilita o desenho de uma esfera.\\
+Tal como foi referido, um ponto precisa de três valores para ser defenido num
+sistema de coordenadas esféricas. O primeiro é a dsitância ao ponto do centro do
+referencial que por definição também é o raio da esfera. Assim basta obter a
+inclinação e o azimute.\\
+Para facilitar estas contas são calcolados dois valores:\\
+O angulo entre cada slice (ang\_slice = 2 * $\pi$ / n de slices) e o angulo
+entre cada stack (ang\_stack = $\pi$ / n de stacks).\\
+Assim, para obter todos os pontos numa esfera podemos usar o excerto de código:
+
+\input{code/spherev1.tex}
+Para obter os próximos pontos da esfera de forma a criar os triangulos basta
+fazer \textit{ang\_stack * (stack + 1)} e \textit{ang\_slice * (slice + 1)}\\
+Assim, juntando estes quatro pontos com o explicado na criação do plano:
+
+\input{code/spherev2.tex}
+O resultado deste código já gera uma esfera. No entanto, quando es está a
+desenhar a primeira e a última stack os triangulos são duplicados.
+Para resolver este problema basta não desenhar um dos triangulos nestes casos.
+Assim a versão final fica:
+
+\input{code/spherev3.tex}
+
+\section{Cone}
+
+\section{Cilindro}
+Para desenhar o cilindro primeiro é definido um vetor que vai da base do cone ao
+topo do cone(top) e um vetor que tem a altura de uma stack do cilindro(step) e
+é calculado o angulo que uma slice tem(ang\_slice).\\
+Assim, para um ponto da aresta da base é dado por \textit{(radius, $\pi$/2,
+ang\_slice * slice)}.
+\begin{lstlisting}
+Vector top = Vector(0, _height, 0);
+Vector step = top / _stacks;
+float ang_slice = 2 * M_PI / _slices;
+\end{lstlisting}
+\begin{figure}[H]
+    \centering 
+    \includegraphics[width=0.5\textwidth]{images/cilindro_vetores.png}  
+    \caption{Vetores e angulos dos cilindros}
+    \label{fig:cilindro_vec}
+\end{figure}
+Assim para desenhar a base do cilindro e o topo do cilindro fazemos:
+\input{code/cilindrov2.tex}
+
+Para desenhar as laterais do cilindro coloca-se um ciclo for dentro do
+ciclo definido anteriormente de forma a pecorrer as stacks do sólido.
+Assim, a versão final do código fica:
+
+\input{code/cilindrov3.tex}
+
+
+\begin{figure}[H]
+    \centering 
+    \includegraphics[width=0.5\textwidth]{images/cylinder.png}  
+    \caption{Cilindro: altura:5 raio:5 slices:10 stacks:2}
+    \label{fig:cilindro_render}
+\end{figure}
+
+\chapter{Engine}
+Como ainda não existem sombras e luz as formas não são facilmente
+distinguíveis. De forma a resolver este problema decidimos atribuir a cada
+triângulo uma cor aleatória.
+\begin{figure}[H]
+    \centering 
+    \includegraphics[width=0.5\textwidth]{images/sphere_onecolor.png}  
+    \caption{Esfera com cor sólida}
+    \label{fig:sphere_color}
+\end{figure}
+\begin{figure}[H]
+    \centering 
+    \includegraphics[width=0.5\textwidth]{images/sphere_color.png}  
+    \caption{Esfera com várias cores por triângulo}
+    \label{fig:sphere_onecolor}
+\end{figure}
+
+\section{3D Model loading}
+Para facilitar a leitura do ficheiro final gerado pelo gerador foi desenvolvida
+uma classe denominada de \textit{Model}. Esta contem um vetor de pontos que são
+carregados do ficheiro anteriormente gerado e para o povoar apenas é necessário
+indicar o nome do ficheiro.\\
+\begin{lstlisting}
+Model::Model(string fileName){
+    float x, y, z;
+    ifstream file(fileName.c_str());
+    while (file >> x >> y >> z)
+         points.push_back(Point(x, y, z));
+}
+\end{lstlisting}
+Esta classe também contém um método para desenhar o modelo \textit{draw\_model} que chama um método
+para desenhar triângulos com cores aleatórias \textit{draw\_triangle}.
+\begin{lstlisting}
+void draw_triangle(Point p1, Point p2, Point p3){
+    float r = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
+    float g = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
+    float b = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
+    glColor3f(r, g, b);
+    glBegin(GL_TRIANGLES);
+        glVertex3f(p1.x(), p1.y(), p1.z());
+        glVertex3f(p2.x(), p2.y(), p2.z());
+        glVertex3f(p3.x(), p3.y(), p3.z());
+    glEnd();
+}
+
+void Model::draw_model() {
+    for(i32 i = 0; i < points.size(); i += 3)
+        draw_triangle(points[i], points[i+1], points[i+2]);
+}
+\end{lstlisting}
+
+\section{XML parsing}
+Para dar parsing ao XML utilizamos a biblioteca \textit{rapidxml}. Nesta
+primeira versão do parser apenas obtemos quais são os ficehiros dos modelos a
+carregar contidos no xml. De forma a garantir que o ficheiro é lido apenas uma
+vez o carregamento é feito imediatamente quando o programa inicia e os ficheiros
+são carregas para a classe \textit{Models} que contem um vetor de \textit{Model}
+e o resultado é guardado num singleton.\\
+Assim, para carregar todos os sólidos dentro do xml basta fazer:
+\begin{lstlisting}
+models = Models(read_models(sceneName));
+\end{lstlisting}
+Para desenhar os modelos utilizamos o método \textit{draw\_models()}.
+
+\section{Camera}
+A camera consiste em dois pontos. Um ponto de coordenadas esféricas que
+representa a localização da camera no espaço e um ponto de coordenadas
+cartesianas que representa para onde a camera está a olhar.\\
+\begin{lstlisting}
+PointSpherical _pl;
+Point _center;
+\end{lstlisting}
+Para desenhar a camera converte se o ponto esférico num ponto cartesiano e
+utiliza-se a função \textit{gluLookAt}.
+\begin{lstlisting}
+Point c = Point(_pl);
+glLoadIdentity();
+gluLookAt(c.x(),c.y(),c.z(), 
+	_center.x(),_center.y(),_center.z(),
+		0.0f,1.0f,0.0f);
+\end{lstlisting}
+Para mover a camera basta utilizar as funções definidas na classe \textit{Point}
+e \textit{PointSpherical} para alterar a posição da camera.
+
+
+
+\end{document}

@@ -40,3 +40,9 @@ Makefile
 cmake_install.cmake
 .clangd
 compile_commands.json
+
+#latex
+*.aux
+*.log
+*.toc
+*.pdf

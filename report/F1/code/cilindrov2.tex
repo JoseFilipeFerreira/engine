@@ -1,0 +1,14 @@
+\begin{lstlisting}
+for(i32 slice = 0; slice < _slices; slice++) {
+    PointSpherical central = PointSpherical(0, 0, 0);
+    PointSpherical base    = PointSpherical(_radius, M_PI/2, ang_slice * slice);
+    PointSpherical n_base  = PointSpherical(_radius, M_PI/2, ang_slice *(slice+1));
+    //top & bottom
+    coords.push_back(n_base);
+    coords.push_back(base);
+    coords.push_back(central);
+    coords.push_back(central + top);
+    coords.push_back(base + top);
+    coords.push_back(n_base + top);
+}
+\end{lstlisting}

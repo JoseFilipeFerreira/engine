@@ -1,26 +1,92 @@
-#ifndef PLANE_H
-#define PLANE_H
+#ifndef MODEL_H
+#define MODEL_H
 
 #include "utils/point.hpp"
+
+#include <GL/gl.h>
+#include <variant>
 #include <vector>
+#ifdef __APPLE__
+#    include <GLUT/glut.h>
+#else
+#    include <GL/glut.h>
+#endif
+
+template<class... Ts>
+struct overloaded: Ts... {
+    using Ts::operator()...;
+};
+template<class... Ts>
+overloaded(Ts...)->overloaded<Ts...>; // not needed as of C++20
 
 class Model {
-private:
+  private:
     std::vector<Point> points;
 
-public:
+  public:
     Model(std::string);
-    void draw_model();
+    void draw_model() const;
 };
 
-class Models {
-    private:
+class Scale {
+  private:
+    float _x, _y, _z;
+
+  public:
+    Scale(float x, float y, float z): _x(x), _y(y), _z(z) {}
+    void apply() const { glScalef(_x, _y, _z); }
+};
+
+class Translate {
+  private:
+    float _x, _y, _z;
+
+  public:
+    Translate(float x, float y, float z): _x(x), _y(y), _z(z) {}
+    void apply() const { glTranslatef(_x, _y, _z); }
+};
+
+class Rotate {
+  private:
+    float _ang, _x, _y, _z;
+
+  public:
+    Rotate(float ang, float x, float y, float z)
+        : _ang(ang), _x(x), _y(y), _z(z) {}
+    void apply() const { glRotatef(_ang, _x, _y, _z); }
+};
+
+class Transform {
+  private:
+    std::variant<Scale, Translate, Rotate> _t;
+
+  public:
+    Transform(Rotate t): _t(t){};
+    Transform(Scale t): _t(t){};
+    Transform(Translate t): _t(t){};
+    void apply() const {
+        std::visit(
+            overloaded{
+                [](Scale t) { t.apply(); },
+                [](Translate t) { t.apply(); },
+                [](Rotate t) { t.apply(); },
+            },
+            _t);
+    }
+};
+
+class Group {
+  private:
+    std::vector<Transform> transformations;
     std::vector<Model> models;
+    std::vector<Group> subgroups;
 
-public:
-    Models();
-    Models(std::vector<std::string>);
-    void draw_models();
+  public:
+    Group();
+    Group(std::vector<Transform> t, std::vector<Model> m, std::vector<Group> g)
+        : transformations(t), models(m), subgroups(g) {}
+    Group(std::string);
+    void draw_group() const;
 };
 
-#endif // PLANE_H
+#endif // MODEL_H

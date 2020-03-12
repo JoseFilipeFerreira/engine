@@ -1,6 +1,6 @@
 #include "generator/box.hpp"
-#include "utils/point.hpp"
 
+#include "utils/point.hpp"
 
 #include <stdexcept>
 

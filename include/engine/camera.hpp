@@ -2,18 +2,18 @@
 #define CAMERA_H
 
 #include "utils/point.hpp"
+
 #include <vector>
 
 class Camera {
-private:
+  private:
     PointSpherical _pl;
     Point _center;
 
-public:
+  public:
     Camera();
     void react_key(unsigned char, int, int);
-    void place_camera();
-
+    void place_camera() const;
 };
 
 #endif // CAMERA_H

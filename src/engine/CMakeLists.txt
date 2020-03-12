@@ -27,6 +27,7 @@ link_libraries(${IL_LIBRARIES})
 target_link_libraries(
     engine
     utils
+    deps
     ${OPENGL_LIBRARIES}
     ${GLUT_LIBRARY}
     ${GLEW_LIBRARY}

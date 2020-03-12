@@ -6,13 +6,11 @@
 #include <vector>
 
 class Box {
-private:
-    float _x;
-    float _y;
-    float _z;
+  private:
+    float _x, _y, _z;
     u32 _slices;
 
-public:
+  public:
     Box(int argc, char** argv);
     std::vector<Point> draw() const;
 };

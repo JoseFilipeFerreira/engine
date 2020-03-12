@@ -12,5 +12,6 @@ add_executable(generator
 target_link_libraries(
     generator
     utils
+    deps
 )
 

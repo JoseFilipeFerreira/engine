@@ -6,13 +6,13 @@
 #include <vector>
 
 class Cylinder {
-private:
+  private:
     float _radius;
     float _height;
     u32 _slices;
     u32 _stacks;
 
-public:
+  public:
     Cylinder(int argc, char** argv);
     std::vector<Point> draw() const;
 };

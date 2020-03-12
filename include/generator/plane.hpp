@@ -5,10 +5,10 @@
 #include <vector>
 
 class Plane {
-private:
+  private:
     float side_length;
 
-public:
+  public:
     Plane(int argc, char** args);
     std::vector<Point> draw() const;
 };

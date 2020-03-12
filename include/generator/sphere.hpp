@@ -6,12 +6,12 @@
 #include <vector>
 
 class Sphere {
-private:
+  private:
     float _radius;
     u32 _slices;
     u32 _stacks;
 
-public:
+  public:
     Sphere(int argc, char** argv);
     std::vector<Point> draw() const;
 };

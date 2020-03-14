@@ -13,6 +13,8 @@ jobs:
     
     steps:
     - uses: actions/checkout@v2
+    - name: dependencies
+      run: apt install opengl
     - name: configure
       run: bash build.sh
     - name: make

@@ -17,5 +17,3 @@ jobs:
       run: sudo apt-get install freeglut3-dev libglew-dev libdevil-dev -yyq
     - name: configure
       run: bash build.sh
-    - name: make
-      run: make

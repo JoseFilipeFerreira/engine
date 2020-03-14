@@ -68,12 +68,13 @@ class Rotate {
 class Transform {
   private:
     std::variant<Scale, Translate, Rotate, Colour> _t;
-
+  
   public:
     Transform(Rotate t): _t(t){};
     Transform(Scale t): _t(t){};
     Transform(Translate t): _t(t){};
     Transform(Colour t): _t(t){};
+
     void apply() const {
         std::visit(
             overloaded{

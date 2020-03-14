@@ -37,6 +37,15 @@ class Scale {
     void apply() const { glScalef(_x, _y, _z); }
 };
 
+class Colour {
+  private:
+    float _r, _g, _b, _a;
+
+  public:
+    Colour(float r, float g, float b, float a): _r(r), _g(g), _b(b), _a(a) {}
+    void apply() const { glColor4f(_r, _g, _b, _a); }
+};
+
 class Translate {
   private:
     float _x, _y, _z;
@@ -58,18 +67,20 @@ class Rotate {
 
 class Transform {
   private:
-    std::variant<Scale, Translate, Rotate> _t;
+    std::variant<Scale, Translate, Rotate, Colour> _t;
 
   public:
     Transform(Rotate t): _t(t){};
     Transform(Scale t): _t(t){};
     Transform(Translate t): _t(t){};
+    Transform(Colour t): _t(t){};
     void apply() const {
         std::visit(
             overloaded{
                 [](Scale t) { t.apply(); },
                 [](Translate t) { t.apply(); },
                 [](Rotate t) { t.apply(); },
+                [](Colour t) { t.apply(); },
             },
             _t);
     }

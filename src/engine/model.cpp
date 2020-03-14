@@ -22,7 +22,7 @@ Model::Model(std::string fileName) {
 
 void draw_triangle(Point p1, Point p2, Point p3) {
     auto static const rng = UniformRealDist(0.0, 1.0);
-    glColor3f(rng(), rng(), rng());
+    //glColor3f(rng(), rng(), rng());
     glBegin(GL_TRIANGLES);
     glVertex3f(p1.x(), p1.y(), p1.z());
     glVertex3f(p2.x(), p2.y(), p2.z());
@@ -66,6 +66,12 @@ Group Parser(TiXmlElement* root) {
             float y = std::stof(elem->Attribute("Y") ?: "1");
             float z = std::stof(elem->Attribute("Z") ?: "1");
             vTran.push_back(Scale(x, y, z));
+        } else if (type == "colour") {
+            float r = std::stof(elem->Attribute("R") ?: "0");
+            float g = std::stof(elem->Attribute("G") ?: "0");
+            float b = std::stof(elem->Attribute("B") ?: "0");
+            float a = std::stof(elem->Attribute("A") ?: "1");
+            vTran.push_back(Colour(r, g, b, a));
         } else if (type == "model") {
             vMod.push_back(Model(elem->Attribute("file")));
         } else {

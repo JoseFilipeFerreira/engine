@@ -60,7 +60,7 @@ Group Parser(TiXmlElement* root) {
             float x = std::stof(elem->Attribute("axisX") ?: "0");
             float y = std::stof(elem->Attribute("axisY") ?: "0");
             float z = std::stof(elem->Attribute("axisZ") ?: "0");
-            vTran.push_back(Translate(x, y, z));
+            vTran.push_back(Rotate(ang, x, y, z));
         } else if (type == "scale") {
             float x = std::stof(elem->Attribute("X") ?: "1");
             float y = std::stof(elem->Attribute("Y") ?: "1");

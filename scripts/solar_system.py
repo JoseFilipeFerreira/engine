@@ -21,7 +21,7 @@ class Astro:
 
     def print_astro(self, indent=7):
         print(' ' * indent, '<!-- {} -->'.format(self.name))
-        print(' ' * indent, '<group R="{0} G="{1}" B="{2}" A="{3}">'.format(self.red, self.green, self.blue, 1))
+        print(' ' * indent, '<group R="{0}" G="{1}" B="{2}" A="{3}">'.format(self.red, self.green, self.blue, 1))
         print(' ' * indent, '    <rotate axisX="0" axisY="1" axisZ="0" angle="{0}"/>'.format(random.uniform(0,360)))
         print(' ' * indent, '    <translate X="0" Y="0" Z="{0}" />'.format(self.distance))
         print(' ' * indent, '    <scale X="{0}" Y="{0}" Z="{0}" />'.format(self.radius))
@@ -34,9 +34,9 @@ class Astro:
 
 def draw_asteroid_belt(number, min_dist, max_dist, size):
     print('        <!-- Astteroid belt -->')
-    print('        <group R="1" G="0.5" B="0.5">')
+    print('        <group>')
     for i in range(number - 1):
-        Astro(f'asteroid {i}', size, random.uniform(min_dist, max_dist), 0, 1, 0, []).print_astro(11)
+        Astro(f'asteroid {i}', size, random.uniform(min_dist, max_dist), 1, 0.5, 0.5, []).print_astro(11)
     print('        </group>')
 
 def generate_moons(planet_name, min_dist, max_dist):

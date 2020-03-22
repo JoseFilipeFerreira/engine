@@ -23,9 +23,6 @@ private:
 public:
   Colour(): _r(0), _g(0), _b(0), _a(1) {}
   Colour(float r, float g, float b, float a) : _r(r), _g(g), _b(b), _a(a) {}
-  auto constexpr r() const noexcept -> float { return _r; }
-  auto constexpr g() const noexcept -> float { return _g; }
-  auto constexpr b() const noexcept -> float { return _b; }
   void apply() const { glColor4f(_r, _g, _b, _a); }
 };
 

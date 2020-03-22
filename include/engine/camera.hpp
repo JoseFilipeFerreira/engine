@@ -3,8 +3,6 @@
 
 #include "utils/point.hpp"
 
-#include <vector>
-
 class Camera {
   private:
     PointSpherical _pl;

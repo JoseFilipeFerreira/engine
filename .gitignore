@@ -46,3 +46,5 @@ compile_commands.json
 *.log
 *.toc
 *.pdf
+
+.vim

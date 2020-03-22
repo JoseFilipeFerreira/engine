@@ -1,5 +1,5 @@
 #include "engine/camera.hpp"
-#include "engine/model.hpp"
+#include "engine/parser.hpp"
 
 #include <GL/gl.h>
 #ifdef __APPLE__
@@ -7,14 +7,6 @@
 #else
 #    include <GL/glut.h>
 #endif
-
-#include <fstream>
-#include <iostream>
-#include <math.h>
-#include <ostream>
-#include <string.h>
-#include <string>
-#include <vector>
 
 // singletons
 Camera camera;

@@ -1,8 +1,6 @@
 #ifndef POINT_H
 #define POINT_H
-#include <array>
 #include <string>
-#include <tuple>
 
 class Point;
 class PointSpherical;

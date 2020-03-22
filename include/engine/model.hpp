@@ -3,102 +3,87 @@
 
 #include "utils/point.hpp"
 
-#include <GL/gl.h>
 #include <variant>
+#include <GL/gl.h>
 #include <vector>
 #ifdef __APPLE__
-#    include <GLUT/glut.h>
+#include <GLUT/glut.h>
 #else
-#    include <GL/glut.h>
+#include <GL/glut.h>
 #endif
 
-template<class... Ts>
-struct overloaded: Ts... {
-    using Ts::operator()...;
-};
-template<class... Ts>
+template <class... Ts> struct overloaded : Ts... { using Ts::operator()...; };
+template <class... Ts>
 overloaded(Ts...)->overloaded<Ts...>; // not needed as of C++20
 
-class Model {
-  private:
-    std::vector<Point> points;
+class Colour {
+private:
+  float _r, _g, _b, _a;
 
-  public:
-    Model(std::string);
-    void draw_model() const;
+public:
+  Colour(): _r(0), _g(0), _b(0), _a(1) {}
+  Colour(float r, float g, float b, float a) : _r(r), _g(g), _b(b), _a(a) {}
+  auto constexpr r() const noexcept -> float { return _r; }
+  auto constexpr g() const noexcept -> float { return _g; }
+  auto constexpr b() const noexcept -> float { return _b; }
+  void apply() const { glColor4f(_r, _g, _b, _a); }
 };
 
 class Scale {
-  private:
-    float _x, _y, _z;
+private:
+  float _x, _y, _z;
 
-  public:
-    Scale(float x, float y, float z): _x(x), _y(y), _z(z) {}
-    void apply() const { glScalef(_x, _y, _z); }
-};
-
-class Colour {
-  private:
-    float _r, _g, _b, _a;
-
-  public:
-    Colour(float r, float g, float b, float a): _r(r), _g(g), _b(b), _a(a) {}
-    void apply() const { glColor4f(_r, _g, _b, _a); }
+public:
+  Scale(float x, float y, float z) : _x(x), _y(y), _z(z) {}
+  void apply() const { glScalef(_x, _y, _z); }
 };
 
 class Translate {
-  private:
-    float _x, _y, _z;
+private:
+  float _x, _y, _z;
 
-  public:
-    Translate(float x, float y, float z): _x(x), _y(y), _z(z) {}
-    void apply() const { glTranslatef(_x, _y, _z); }
+public:
+  Translate(float x, float y, float z) : _x(x), _y(y), _z(z) {}
+  void apply() const { glTranslatef(_x, _y, _z); }
 };
 
 class Rotate {
-  private:
-    float _ang, _x, _y, _z;
+private:
+  float _ang, _x, _y, _z;
 
-  public:
-    Rotate(float ang, float x, float y, float z)
-        : _ang(ang), _x(x), _y(y), _z(z) {}
-    void apply() const { glRotatef(_ang, _x, _y, _z); }
+public:
+  Rotate(float ang, float x, float y, float z)
+      : _ang(ang), _x(x), _y(y), _z(z) {}
+  void apply() const { glRotatef(_ang, _x, _y, _z); }
 };
 
 class Transform {
-  private:
-    std::variant<Scale, Translate, Rotate, Colour> _t;
-  
-  public:
-    Transform(Rotate t): _t(t){};
-    Transform(Scale t): _t(t){};
-    Transform(Translate t): _t(t){};
-    Transform(Colour t): _t(t){};
+private:
+  std::variant<Scale, Translate, Rotate> _t;
 
-    void apply() const {
-        std::visit(
-            overloaded{
-                [](Scale t) { t.apply(); },
-                [](Translate t) { t.apply(); },
-                [](Rotate t) { t.apply(); },
-                [](Colour t) { t.apply(); },
-            },
-            _t);
-    }
+public:
+  Transform(Rotate t) : _t(t){};
+  Transform(Scale t) : _t(t){};
+  Transform(Translate t) : _t(t){};
+
+  void apply() const {
+    std::visit(overloaded{
+                   [](Scale t) { t.apply(); },
+                   [](Translate t) { t.apply(); },
+                   [](Rotate t) { t.apply(); },
+               },
+               _t);
+  }
 };
 
-class Group {
-  private:
-    std::vector<Transform> transformations;
-    std::vector<Model> models;
-    std::vector<Group> subgroups;
+class Model {
+private:
+  std::vector<Point> points;
+  Colour colour;
 
-  public:
-    Group();
-    Group(std::vector<Transform> t, std::vector<Model> m, std::vector<Group> g)
-        : transformations(t), models(m), subgroups(g) {}
-    Group(std::string);
-    void draw_group() const;
+public:
+  Model(std::string, Colour);
+  void draw_model() const;
 };
 
 #endif // MODEL_H

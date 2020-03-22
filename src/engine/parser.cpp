@@ -1,6 +1,7 @@
 #include "engine/parser.hpp"
 
 #include "deps/tinyxml.hpp"
+#include "utils/types.hpp"
 
 Group::Group() {
   transformations = std::vector<Transform>();
@@ -10,13 +11,16 @@ Group::Group() {
 }
 
 Colour parse_colour(TiXmlElement *elem, Colour colour) {
-  if (elem->Attribute("R") || elem->Attribute("G") || elem->Attribute("B") ||
-      elem->Attribute("A")) {
-    float r = std::stof(elem->Attribute("R") ?: "0");
-    float g = std::stof(elem->Attribute("G") ?: "0");
-    float b = std::stof(elem->Attribute("B") ?: "0");
-    float a = std::stof(elem->Attribute("A") ?: "1");
-    colour = Colour(r, g, b, a);
+  if (elem->Attribute("colour")) {
+    u32 r, g, b, a;
+    std::string s = elem->Attribute("colour");
+    if (s.length() == 7) {
+      std::sscanf(s.c_str(), "#%02x%02x%02x", &r, &g, &b);
+      a = 255;
+    } else
+      std::sscanf(s.c_str(), "#%02x%02x%02x%02x", &r, &g, &b, &a);
+
+    colour = Colour(static_cast<float>(r)/255, static_cast<float>(g)/255, static_cast<float>(b)/255, static_cast<float>(a)/255);
   }
   return colour;
 }

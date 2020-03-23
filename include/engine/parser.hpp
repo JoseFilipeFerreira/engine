@@ -1,6 +1,6 @@
 #ifndef PARSER_H
 #define PARSER_H
-#include"engine/model.hpp"
+#include "engine/model.hpp"
 
 #include <vector>
 
@@ -16,9 +16,8 @@ public:
   Group(std::vector<Transform> t, std::vector<Model> m, Colour c,
         std::vector<Group> g)
       : transformations(t), models(m), colour(c), subgroups(g) {}
-  Group(std::string);
+  Group(const char *);
   void draw_group() const;
 };
-
 
 #endif // PARSER_H

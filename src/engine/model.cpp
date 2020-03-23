@@ -5,7 +5,7 @@
 
 #include <fstream>
 
-Model::Model(char* fileName, Colour c) {
+Model::Model(const char* fileName, Colour c) {
     colour = c;
     float x, y, z;
     auto file = std::ifstream(fileName);

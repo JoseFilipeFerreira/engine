@@ -13,14 +13,14 @@ Group::Group() {
 Colour parse_colour(TiXmlElement *elem, Colour colour) {
   if (elem->Attribute("colour")) {
     u32 r, g, b, a;
-    std::string s = elem->Attribute("colour");
+    std::string_view s = elem->Attribute("colour");
     if (s.length() == 7) {
-      std::sscanf(s.c_str(), "#%02x%02x%02x", &r, &g, &b);
+      std::sscanf(s.data(), "#%02x%02x%02x", &r, &g, &b);
       a = 255;
-    } else
-      std::sscanf(s.c_str(), "#%02x%02x%02x%02x", &r, &g, &b, &a);
-
-    colour = Colour(static_cast<float>(r)/255, static_cast<float>(g)/255, static_cast<float>(b)/255, static_cast<float>(a)/255);
+    } else {
+      std::sscanf(s.data(), "#%02x%02x%02x%02x", &r, &g, &b, &a);
+    }
+    colour = Colour(r / 255.0f, g / 255.0f, b / 255.0f, a / 255.0f);
   }
   return colour;
 }
@@ -32,7 +32,7 @@ Group Parser(TiXmlElement *root, Colour colour) {
 
   for (TiXmlElement *elem = root->FirstChildElement(); elem != NULL;
        elem = elem->NextSiblingElement()) {
-    std::string type = elem->Value();
+    std::string_view type = elem->Value();
 
     if (type == "translate") {
       float x = std::stof(elem->Attribute("X") ?: "0");
@@ -57,32 +57,29 @@ Group Parser(TiXmlElement *root, Colour colour) {
       vGroup.push_back(Parser(elem, parse_colour(elem, colour)));
     }
   }
-  return Group(vTran, vMod, colour, vGroup);
+  return Group(std::move(vTran), std::move(vMod), colour, std::move(vGroup));
 }
 
-Group::Group(std::string fileName) {
+Group::Group(const char *fileName) {
   TiXmlDocument doc(fileName);
   if (!doc.LoadFile()) {
-    std::cerr << doc.ErrorDesc() << std::endl;
-    return;
+    throw doc.ErrorDesc();
   }
 
   TiXmlElement *root = doc.FirstChildElement();
-  if (root == NULL) {
-    std::cerr << "Failed to load file: No root element." << std::endl;
-    doc.Clear();
-    return;
+  if (!root) {
+    throw "Failed to load file: No root element.";
   }
 
   *this = Parser(doc.FirstChildElement(), Colour());
 }
 
 void Group::draw_group() const {
-  for (auto &t : transformations)
+  for (auto const &t : transformations)
     t.apply();
-  for (auto &m : models)
+  for (auto const &m : models)
     m.draw_model();
-  for (auto &g : subgroups) {
+  for (auto const &g : subgroups) {
     glPushMatrix();
     g.draw_group();
     glPopMatrix();

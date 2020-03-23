@@ -79,7 +79,7 @@ private:
   Colour colour;
 
 public:
-  Model(std::string, Colour);
+  Model(char*, Colour);
   void draw_model() const;
 };
 

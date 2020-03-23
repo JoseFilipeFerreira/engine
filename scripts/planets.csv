@@ -1,10 +1,10 @@
-planet,radius
-Mercury,2439.7
-Venus,6051.8
-Earth,6371
-Mars,3389.5
-Jupiter,69911
-Saturn,58232
-Uranus,25362
-Neptune,24662
-Pluto,1188.3
+planet,radius,relative distance,color
+Mercury,2439.7,1,#FF6347
+Venus,6051.8,2,#FFA500
+Earth,6371,2.5,#4169E1
+Mars,3389.5,4,#B22222
+Jupiter,69911,13,#8B4513
+Saturn,58232,24,#A0522D
+Uranus,25362,49,#5F9EA0
+Neptune,24662,76,#0000CD
+Pluto,1188.3,90,#FFE4E1

@@ -13,12 +13,14 @@ SCALE = 3
 def astro_radius(name):
     with open('planets.csv','rt')as f:
         data = csv.reader(f)
+        next(data)
         for row in data:
             if(row[0] == name):
                 return float(row[1])/60000
 
     with open('satellites.csv','rt')as f:
         data = csv.reader(f)
+        next(data)
         for row in data:
             if(row[1] == name):
                 size = float(row[3])
@@ -48,7 +50,7 @@ class Astro:
         self.colour = colour
         self.moons = generate_moons(name, self.radius*1.5, self.radius*2.5)
 
-    def print_astro(self, curr_radius=1, indent=7):
+    def print_astro(self, curr_radius=SCALE, indent=7):
         print(' ' * indent, '<!-- {} -->'.format(self.name))
         print(' ' * indent, '<group colour="{0}">'.format(self.colour))
         print(' ' * indent, '    <rotate axisX="0" axisY="1" axisZ="0" angle="{0}"/>'.format(random.uniform(0,360)))
@@ -66,20 +68,16 @@ def draw_asteroid_belt(name, number, min_dist, max_dist, size, colour):
     print('        <group>')
     for i in range(number - 1):
         dist = random.uniform(min_dist, max_dist)
-        Astro(f'asteroid {i}', dist, colour, radius=size).print_astro(SCALE, 11)
+        Astro(f'asteroid {i}', dist, colour, radius=size).print_astro(indent=11)
     print('        </group>')
 
-Mercury = Astro('Mercury',SCALE + 1  , "#FF6347")
-Venus   = Astro('Venus'  ,SCALE + 2  , "#FFA500")
-Earth   = Astro('Earth'  ,SCALE + 2.5, "#4169E1")
-Mars    = Astro('Mars'   ,SCALE + 4  , "#B22222")
-Jupiter = Astro('Jupiter',SCALE + 13 , "#8B4513")
-Saturn  = Astro('Saturn' ,SCALE + 24 , "#A0522D")
-Uranus  = Astro('Uranus' ,SCALE + 49 , "#5F9EA0")
-Neptune = Astro('Neptune',SCALE + 76 , "#0000CD")
-Pluto   = Astro('Pluto'  ,SCALE + 90 , "#FFE4E1")
 
-planets = [Mercury, Venus, Earth, Mars, Jupiter, Saturn, Uranus, Neptune, Pluto]
+def get_planets():
+    with open('planets.csv','rt')as f:
+        data = csv.reader(f)
+        next(data)
+        for row in data:
+            yield Astro(row[0], SCALE + float(row[2]), row[3])
 
 print('<scene>')
 print('    <!--Sun-->')
@@ -88,8 +86,8 @@ print(f'        <scale X="{SCALE}" Y="{SCALE}" Z="{SCALE}" />')
 print('        <models>')
 print('            <model file="models/sphere.3d"/>')
 print('        </models>')
-for p in planets:
-    p.print_astro(SCALE)
+for p in get_planets():
+    p.print_astro()
 
 draw_asteroid_belt("Asteroid belt", 200 , SCALE + 8  , SCALE + 9  , 0.02, "#FF00AA")
 draw_asteroid_belt("Kuiper Belt"  , 1000, SCALE + 100, SCALE + 103, 0.05, "#FF00AA")

@@ -1,7 +1,6 @@
 #!/bin/python3
 #Data for moons from: https://github.com/devstronomy/nasa-data-scraper/blob/master/data/csv/satellites.csv
 #Data for planets distance from: https://www.nationalgeographic.org/activity/planetary-size-and-distance-comparison/ 
-import json
 import os
 import sys
 import random

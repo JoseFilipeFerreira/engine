@@ -20,7 +20,7 @@ static auto const help_string =
 "sphere     [radius] [slices] [stacks]\n"
 "cone       [radius] [height] [slices] [stacks]\n"
 "cylinder   [radius] [height] [slices] [stacks]\n"
-"torus      [radius] [ring radius] [stacks] [slices]");
+"torus      [inner radius] [outer radius] [stacks] [slices]";
 
 template<typename T>
 void file_writer(T v, std::string const& filename) {

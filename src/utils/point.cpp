@@ -1,8 +1,6 @@
 #include "utils/point.hpp"
 
 #include <cmath>
-#include <iostream>
-#include <math.h>
 #include <sstream>
 
 Vector::Vector(float x, float y, float z): _x(x), _y(y), _z(z) {}

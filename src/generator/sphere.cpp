@@ -19,16 +19,18 @@ std::vector<Point> Sphere::draw() const {
 
     for(i32 slice = 0; slice < _slices; slice++)
         for(i32 stack = 0; stack < _stacks; stack++) {
-            if(! (stack == 0 || stack == _stacks-1)) {
+            if(stack != 0) {
                 //1st triangle
                 coords.push_back(PointSpherical(_radius, ang_stack * (stack+1), ang_slice * (slice+1)));
                 coords.push_back(PointSpherical(_radius, ang_stack * stack    , ang_slice * (slice+1)));
                 coords.push_back(PointSpherical(_radius, ang_stack * stack    , ang_slice * slice));
             }
-            //2nd triangle
-            coords.push_back(PointSpherical(_radius, ang_stack * (stack+1), ang_slice * slice));
-            coords.push_back(PointSpherical(_radius, ang_stack * (stack+1), ang_slice * (slice+1)));
-            coords.push_back(PointSpherical(_radius, ang_stack * stack    , ang_slice * slice));
+            if(stack != _stacks -1) {
+                //2nd triangle
+                coords.push_back(PointSpherical(_radius, ang_stack * (stack+1), ang_slice * slice));
+                coords.push_back(PointSpherical(_radius, ang_stack * (stack+1), ang_slice * (slice+1)));
+                coords.push_back(PointSpherical(_radius, ang_stack * stack    , ang_slice * slice));
+            }
         }
 
     return coords;

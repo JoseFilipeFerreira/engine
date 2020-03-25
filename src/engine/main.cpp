@@ -73,8 +73,8 @@ void react_key(unsigned char key, int x, int y) {
 }
 
 int main(int argc, char** argv) {
-    std::string sceneName = "scenes/config.xml";
-    if (argc > 1) sceneName = std::string(argv[1]);
+    auto sceneName = "scenes/config.xml";
+    if (argc > 1) sceneName = argv[1];
     group = Group(sceneName);
 
     // init GLUT and the window

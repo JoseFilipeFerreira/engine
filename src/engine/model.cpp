@@ -5,14 +5,14 @@
 
 #include <fstream>
 
-Model::Model(std::string fileName, Colour c) {
+Model::Model(const char* fileName, Colour c) {
     colour = c;
     float x, y, z;
-    auto file = std::ifstream(fileName.c_str());
+    auto file = std::ifstream(fileName);
     while (file >> x >> y >> z) points.push_back(Point(x, y, z));
 }
 
-void draw_triangle(Point p1, Point p2, Point p3) {
+void draw_triangle(Point const& p1, Point const& p2, Point const& p3) {
     //auto static const rng = UniformRealDist(0.0, 1.0);
     //glColor3f(rng(), rng(), rng());
     glBegin(GL_TRIANGLES);

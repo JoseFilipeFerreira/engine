@@ -3,8 +3,8 @@
 
 #include "utils/point.hpp"
 
-#include <variant>
 #include <GL/gl.h>
+#include <variant>
 #include <vector>
 #ifdef __APPLE__
 #include <GLUT/glut.h>
@@ -21,7 +21,7 @@ private:
   float _r, _g, _b, _a;
 
 public:
-  Colour(): _r(0), _g(0), _b(0), _a(1) {}
+  Colour() : _r(0), _g(0), _b(0), _a(1) {}
   Colour(float r, float g, float b, float a) : _r(r), _g(g), _b(b), _a(a) {}
   void apply() const { glColor4f(_r, _g, _b, _a); }
 };
@@ -79,7 +79,7 @@ private:
   Colour colour;
 
 public:
-  Model(std::string, Colour);
+  Model(const char *, Colour);
   void draw_model() const;
 };
 

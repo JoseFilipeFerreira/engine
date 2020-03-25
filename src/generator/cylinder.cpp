@@ -18,13 +18,13 @@ std::vector<Point> Cylinder::draw() const {
 
     float ang_slice = 2 * M_PI / _slices;
 
-    Vector top = Vector(0, _height, 0);
-    Vector step = top / _stacks;
+    auto top = Vector(0, _height, 0);
+    auto step = top / _stacks;
 
     for(i32 slice = 0; slice < _slices; slice++) {
-        PointSpherical central = PointSpherical(0, 0, 0);
-        PointSpherical base    = PointSpherical(_radius, M_PI/2, ang_slice * slice);
-        PointSpherical n_base  = PointSpherical(_radius, M_PI/2, ang_slice *(slice+1));
+        auto central = PointSpherical(0, 0, 0);
+        auto base    = PointSpherical(_radius, M_PI/2, ang_slice * slice);
+        auto n_base  = PointSpherical(_radius, M_PI/2, ang_slice *(slice+1));
         //top & bottom
         coords.push_back(n_base);
         coords.push_back(base);
@@ -35,8 +35,8 @@ std::vector<Point> Cylinder::draw() const {
 
         //side
         for(i32 stack = 0; stack < _stacks; stack++) {
-            Point pivot   =   base + step * stack;
-            Point n_pivot = n_base + step * stack;
+            auto pivot   =   base + step * stack;
+            auto n_pivot = n_base + step * stack;
 
             coords.push_back(pivot);
             coords.push_back(n_pivot + step);

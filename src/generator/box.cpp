@@ -21,12 +21,12 @@ std::vector<Point> Box::draw() const {
     float stepy = _y / _slices;
     float stepz = _z / _slices;
 
-    Vector xy = Vector(stepx, stepy,     0);
-    Vector yz = Vector(0    , stepy, stepz);
-    Vector xz = Vector(stepx,     0, stepz);
+    auto xy = Vector(stepx, stepy,     0);
+    auto yz = Vector(0    , stepy, stepz);
+    auto xz = Vector(stepx,     0, stepz);
 
-    Point front  = Point(-_x/2, -_y/2,  _z/2);
-    Point back   = Point( _x/2,  _y/2, -_z/2);
+    auto front  = Point(-_x/2, -_y/2,  _z/2);
+    auto back   = Point( _x/2,  _y/2, -_z/2);
 
     for(i32 i = 0; i < _slices; i++) {
         for(i32 j = 0; j < _slices; j++) {

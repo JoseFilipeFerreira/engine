@@ -48,7 +48,7 @@ void Camera::react_key(unsigned char key, int x, int y) {
 }
 
 void Camera::place_camera() const {
-    Point c = Point(_pl);
+    auto c = Point(_pl);
     glLoadIdentity();
     gluLookAt(
         c.x(),

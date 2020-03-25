@@ -5,6 +5,7 @@
 #include "generator/sphere.hpp"
 #include "generator/cone.hpp"
 #include "generator/cylinder.hpp"
+#include "generator/torus.hpp"
 
 #include<string>
 #include<ostream>
@@ -18,7 +19,8 @@ static auto const help_string =
 "box        [x] [y] [z] [divisions]\n"
 "sphere     [radius] [slices] [stacks]\n"
 "cone       [radius] [height] [slices] [stacks]\n"
-"cylinder   [radius] [height] [slices] [stacks]";
+"cylinder   [radius] [height] [slices] [stacks]\n"
+"torus      [radius] [ring radius] [stacks] [slices]");
 
 template<typename T>
 void file_writer(T v, std::string const& filename) {
@@ -39,6 +41,8 @@ int main(int argc, char** argv) {
         file_writer(Cone(argc - 3, argv + 2), argv[argc-1]);
     else if("cylinder" == type)
         file_writer(Cylinder(argc - 3, argv + 2), argv[argc-1]);
+    else if("torus" == type)
+        file_writer(Torus(argc - 3, argv + 2), argv[argc-1]);
     else
         std::cout << help_string << std::endl;
 }

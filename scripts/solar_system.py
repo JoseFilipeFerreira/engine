@@ -9,6 +9,15 @@ import csv
 os.chdir(sys.path[0])
 SCALE = 3
 
+def str_to_bool(s):
+    return s.lower() in ("yes", "true", "t", "1")
+
+def colour_variant(hex_colour, brightness_offset=1):
+    rgb_hex = [hex_colour[x:x+2] for x in [1, 3, 5]]
+    new_rgb_int = [int(hex_value, 16) + brightness_offset for hex_value in rgb_hex]
+    new_rgb_int = [min([255, max([0, i])]) for i in new_rgb_int] # make sure new values are between 0 and 255
+    return "#" + "".join([hex(i)[2:] for i in new_rgb_int])
+
 def astro_radius(name):
     with open('planets.csv','rt')as f:
         data = csv.DictReader(f)
@@ -37,7 +46,7 @@ def generate_moons(planet_name, planet_radius, colour):
     return moons
 
 class Astro:
-    def __init__(self, name, distance, colour, radius=None):
+    def __init__(self, name, distance, colour, radius=None, has_ring=False):
         self.name = name
         if not radius:
             self.radius = astro_radius(name)
@@ -45,7 +54,19 @@ class Astro:
             self.radius = radius
         self.distance = distance
         self.colour = colour
+        self.has_ring = has_ring
         self.moons = generate_moons(name, self.radius, "#808080")
+
+    def print_ring(self, curr_radius=SCALE, indent=7):
+        new_colour = colour_variant(self.colour, 15)
+        print(' ' * indent, f'<!-- {self.name}\'s ring -->')
+        print(' ' * indent, f'<group colour="{new_colour}">')
+        print(' ' * indent, f'    <scale Y="0.01" />')
+        print(' ' * indent, '     <models>')
+        print(' ' * indent, '         <model file="models/torus.3d"/>')
+        print(' ' * indent, '     </models>')
+        print(' ' * indent, '</group>')
+
 
     def print_astro(self, curr_radius=SCALE, indent=7):
         rng_r = random.uniform(0,360)
@@ -56,9 +77,11 @@ class Astro:
         print(' ' * indent, f'    <rotate axisX="0" axisY="1" axisZ="0" angle="{rng_r}"/>')
         print(' ' * indent, f'    <translate X="0" Y="0" Z="{curr_translate}" />')
         print(' ' * indent, f'    <scale X="{curr_scale}" Y="{curr_scale}" Z="{curr_scale}" />')
-        print(' ' * indent, '    <models>')
-        print(' ' * indent, '        <model file="models/sphere.3d"/>')
-        print(' ' * indent, '    </models>')
+        print(' ' * indent, '     <models>')
+        print(' ' * indent, '         <model file="models/sphere.3d"/>')
+        print(' ' * indent, '     </models>')
+        if self.has_ring:
+            self.print_ring(self.radius, indent+4)
         for m in self.moons:
             m.print_astro(self.radius, indent+4)
         print(' ' * indent, '</group>')
@@ -76,7 +99,7 @@ def get_planets():
     with open('planets.csv','rt')as f:
         data = csv.DictReader(f)
         for row in data:
-            yield Astro(row["planet"], SCALE + float(row["relative distance"]), row["color"])
+            yield Astro(row["planet"], SCALE + float(row["relative distance"]), row["color"], has_ring=str_to_bool(row["has ring"]))
 
 print('<scene>')
 print('    <!--Sun-->')

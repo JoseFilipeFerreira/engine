@@ -1,5 +1,6 @@
 #ifndef POINT_H
 #define POINT_H
+#include <cmath>
 #include <string>
 
 class Point;
@@ -19,14 +20,18 @@ public:
   auto constexpr x() const noexcept -> float { return _x; }
   auto constexpr y() const noexcept -> float { return _y; }
   auto constexpr z() const noexcept -> float { return _z; }
-  Vector unit() const;
-  Vector hadamard(Vector) const;
-  Vector hadamard(float, float, float) const;
-  Vector operator+(Vector v) const {
+  auto unit() const -> Vector;
+  auto hadamard(Vector) const -> Vector;
+  auto hadamard(float, float, float) const -> Vector;
+  auto operator+(Vector v) const -> Vector {
     return Vector(_x + v.x(), _y + v.y(), _z + v.z());
   }
-  Vector operator*(int s) const { return Vector(_x * s, _y * s, _z * s); }
-  Vector operator/(int s) const { return Vector(_x / s, _y / s, _z / s); }
+  auto operator*(int s) const -> Vector {
+    return Vector(_x * s, _y * s, _z * s);
+  }
+  auto operator/(int s) const -> Vector {
+    return Vector(_x / s, _y / s, _z / s);
+  }
 };
 
 class VectorSpherical {
@@ -40,7 +45,10 @@ public:
   auto constexpr radius() const noexcept -> float { return _radius; }
   auto constexpr inclination() const noexcept -> float { return _inclination; }
   auto constexpr azimuth() const noexcept -> float { return _azimuth; }
-  VectorSpherical operator+(VectorSpherical const &v) {
+  auto radius(float) const -> VectorSpherical;
+  auto inclination(float) const -> VectorSpherical;
+  auto azimuth(float) const -> VectorSpherical;
+  auto operator+(VectorSpherical const &v) const -> VectorSpherical {
     return VectorSpherical(Vector(*this) + Vector(v));
   }
 };
@@ -56,13 +64,13 @@ public:
   auto constexpr x() const noexcept -> float { return _x; }
   auto constexpr y() const noexcept -> float { return _y; }
   auto constexpr z() const noexcept -> float { return _z; }
-  void x(float x) { _x += x; }
-  void y(float x) { _y += x; }
-  void z(float x) { _z += x; }
-  Point operator+(Vector const &p) {
+  auto x(float) const -> Point;
+  auto y(float) const -> Point;
+  auto z(float) const -> Point;
+  auto operator+(Vector const &p) const -> Point {
     return Point(_x + p.x(), _y + p.y(), _z + p.z());
   }
-  Point operator+(VectorSpherical const &vs) {
+  auto operator+(VectorSpherical const &vs) const -> Point {
     Vector v = Vector(vs);
     return Point(_x + v.x(), _y + v.y(), _z + v.z());
   }
@@ -79,13 +87,13 @@ public:
   auto constexpr radius() const noexcept -> float { return _radius; }
   auto constexpr inclination() const noexcept -> float { return _inclination; }
   auto constexpr azimuth() const noexcept -> float { return _azimuth; }
-  void radius(float x) { _radius += x; }
-  void inclination(float x) { _inclination += x; }
-  void azimuth(float x) { _azimuth += x; }
-  PointSpherical operator+(Vector const &v) {
+  auto radius(float) const -> PointSpherical;
+  auto inclination(float) const -> PointSpherical;
+  auto azimuth(float) const -> PointSpherical;
+  auto operator+(Vector const &v) const -> PointSpherical {
     return PointSpherical(Point(*this) + v);
   }
-  PointSpherical operator+(VectorSpherical const &v) {
+  auto operator+(VectorSpherical const &v) const -> PointSpherical {
     return PointSpherical(Point(*this) + Vector(v));
   }
 };

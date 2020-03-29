@@ -96,10 +96,10 @@ linkcolor=black}
 Este trabalho foi desenvolvido no âmbito da unidade curricular de computação
 gráfica e está dividido em várias fases de entrega distintas sendo que esta é a
 segundo.\\
-Ao longo desta fase dividimos o trabalho em 4 partes:
-Primeiro melhoramos o parser de xml desenvolvido na fase anterior de forma a
-suportar operações de openGl. Depois melhoramos algumas funcionalidades do
-engine em si. Por fim, tal como foi pedido, desenvolvemos uma scene que
+Ao longo desta fase dividimos o trabalho em 4 partes:\\
+Primeiro melhoramos o parser de \textit{XML} desenvolvido na fase anterior de
+forma a suportar operações de openGl. Depois melhoramos algumas funcionalidades
+do engine em si. Por fim, tal como foi pedido, desenvolvemos uma scene que
 representa o nosso sistema solar com recurso a um script em Python.\\
 Enquanto fizemos o sistema solar reparamos que precisávamos de uma forma de
 desenhar aneís em planetas que o tivéssemos. A forma mais fácil
@@ -119,12 +119,12 @@ será o selecionado.\\
 Para dar parsing ao XML utilizamos a biblioteca \textit{TinyXML}.\\
 Visto que é necessário que o ficheiro seja lido apenas uma vez é necessário
 criar uma estrutura para armazenar os dados contidos no XML. Visto que estes se
-assemelham a uma árvore decidimos criar uma classe recursiva chamda Group que
+assemelham a uma árvore decidimos criar uma classe recursiva chamada Group que
 representa cada nó dessa árvore.\\
 Esta classe contém um vetor de transformações, um vetor de modelos, a cor que
 foi definida nesse nodo (ou, se nenhuma foi definida, a cor do nodo pai) e um
 vetor de Group filhos.\\
-Esta classe te, dois construtores definidos. Um que recebe todos os parametros
+Esta classe te, dois construtores definidos. Um que recebe todos os parâmetros
 referidos acima e um que recebe o caminho para o ficheiro XML a ler.\\
 Assim, para ler um ficheiro para memória e guardar num singleton basta fazer.
 
@@ -153,7 +153,7 @@ Group::Group(const char *fileName) {
 }
 \end{lstlisting}
 De forma a extrair todos os dados necessários de cada nodo a função Parser
-percorre todos os nodos filho do nodo que se está a analizar.\\
+percorre todos os nodos filho do nodo que se está a analisar.\\
 Assim, se o nodo filho tiver um valor de translate, rotate ou scale é convertido
 numa transformação e colocado no vetor de transformações \textit{vTran}. De
 forma a permitir que apenas os valores pretendidos sejam preenchidos nas
@@ -203,7 +203,7 @@ Group Parser(TiXmlElement *root, Colour colour) {
   return Group(std::move(vTran), std::move(vMod), colour, std::move(vGroup));
 }
 \end{lstlisting}
-Para desenhar o Group criado basta aplicar todas as tranformações definidas no
+Para desenhar o Group criado basta aplicar todas as transformações definidas no
 vetor, desenhar todos os modelos definidos e por fim chamar recursivamente a
 função para desenhar sobre os subgrupos.
 
@@ -229,8 +229,8 @@ De forma a facilitar a escrita das cores decidimos utilizar a sintaxe de
 e \#RRGGBBAA. E esta pode facilmente ser definida em qualquer label que não
 represente uma transformação. Assim, é possível definir a cor no group (fazendo
 que com todos os modelos e subgrupos tenham a mesma cor) ou dentro do models
-(fazendo com que todos os subgroups e modelos tenham a mesma cor)
-Por exemplo,
+(fazendo com que todos os subgroups e modelos tenham a mesma cor).\\
+Por exemplo:
 \begin{lstlisting}
 <scene>
     <!-- group 1 -->
@@ -431,6 +431,7 @@ Com base nestes dois ficheiros, é possível desenhar um sistema solar com mais 
 100 luas.\\
 Por fim decidimos acrescentar a cintura de asteróides e a cintura de
 \textit{Kuiper} com 200 e 1000 asteróides respectivamente.\\
+O ficheiro gerado em XML encontra-se em \textit{scenes/solar.xml}.
 
 \begin{figure}[H]
     \centering 
@@ -452,7 +453,7 @@ Por fim decidimos acrescentar a cintura de asteróides e a cintura de
 \end{figure}
 
 \chapter{Conclusão}
-Com este trabalho prático podemos aplicar os conhecimentos lecionados até agora
+Com este trabalho prático podemos aplicar os conhecimentos leccionados até agora
 nas aulas da unidade curricular de computação gráfica permitindo assim que
 aprofundar os nossos conhecimentos de openGl.\\
 Como trabalho futuro gostaríamos de criar mais scenes para testar as capacidades

@@ -101,14 +101,13 @@ Primeiro melhoramos o parser de xml desenvolvido na fase anterior de forma a
 suportar operações de openGl. Depois melhoramos algumas funcionalidades do
 engine em si. Por fim, tal como foi pedido, desenvolvemos uma scene que
 representa o nosso sistema solar com recurso a um script em Python.\\
-Enquanto fizemos o sistema solar apercebemonos que precisavamos de uma forma de
-dessenhar aneís em planetas que o tivessemos. Pareceu-nos que a forma mais fácil
+Enquanto fizemos o sistema solar reparamos que precisávamos de uma forma de
+desenhar aneís em planetas que o tivéssemos. A forma mais fácil
 de implementar isso seria recorrendo a uma Torus espalmada, ou seja, com um
 scale no eixo do Y com um valor muito próximo de 0. Assim, também implementamos
 mais uma primitiva, a Torus.
 Ao longo deste relatório irá ser explicado a metodologia e raciocínio usados
 para a realização desta fase.\\
-
 
 \chapter{Engine}
 Neste módulo foi desenvolvido um motor 3D simples.\\
@@ -132,7 +131,7 @@ Assim, para ler um ficheiro para memória e guardar num singleton basta fazer.
 \begin{lstlisting}
 group = Group(sceneName);
 \end{lstlisting}
-Quando esta função é chamada primeiro o ficheiro é aberto, e obten-se o nodo
+Quando esta função é chamada primeiro o ficheiro é aberto, e obtém-se o nodo
 base do ficheiro com recurso ao \textit{TinyXML} e com o devido error
 checking.\\
 Depois chama-se a função auxiliar, Parser, que está preparada para dar parse a
@@ -156,9 +155,9 @@ Group::Group(const char *fileName) {
 De forma a extrair todos os dados necessários de cada nodo a função Parser
 percorre todos os nodos filho do nodo que se está a analizar.\\
 Assim, se o nodo filho tiver um valor de translate, rotate ou scale é convertido
-numa transformação e colocado no vetor \textit{vTran}. De forma a permitir que
-apenas os valores pretendidos sejam preenchidos nas transformações implementamos
-valores \textit{default}.\\
+numa transformação e colocado no vetor de transformações \textit{vTran}. De
+forma a permitir que apenas os valores pretendidos sejam preenchidos nas
+transformações implementamos valores \textit{default}.\\
 Se o nodo tiver o valor de model é lido o nome do ficheiro dos atributos e é
 criado um Model que recebe o nome do ficheiro e a cor currente e é adicionado ao
 vetor \textit{vMod}.\\
@@ -204,8 +203,6 @@ Group Parser(TiXmlElement *root, Colour colour) {
   return Group(std::move(vTran), std::move(vMod), colour, std::move(vGroup));
 }
 \end{lstlisting}
-Uma tranformação é um 
-
 Para desenhar o Group criado basta aplicar todas as tranformações definidas no
 vetor, desenhar todos os modelos definidos e por fim chamar recursivamente a
 função para desenhar sobre os subgrupos.
@@ -225,16 +222,53 @@ void Group::draw_group() const {
 \end{lstlisting}
 
 \subsection{Extensões de XML implementadas}
-Para além das funcinalidades pedidas no ennunciado também implementamos a
-possibilidade de indicar a cor que se pretende desenhar.
-
-
-
+Para além das funcionalidades pedidas no enunciado também implementamos a
+possibilidade de indicar a cor que se pretende desenhar.\\
+De forma a facilitar a escrita das cores decidimos utilizar a sintaxe de
+\#RRGGBB
+e \#RRGGBBAA. E esta pode facilmente ser definida em qualquer label que não
+represente uma transformação. Assim, é possível definir a cor no group (fazendo
+que com todos os modelos e subgrupos tenham a mesma cor) ou dentro do models
+(fazendo com que todos os subgroups e modelos tenham a mesma cor)
+Por exemplo,
+\begin{lstlisting}
+<scene>
+    <!-- group 1 -->
+    <group colour="#FF0000">
+        <models>
+            <model file="models/sphere.3d" />
+        </models>
+        <!-- subgroup 1 -->
+        <group>
+            <translate Y=2 />
+            <models>
+                <model file="models/cone.3d" />
+            </models>
+        </group>
+        <!-- subgroup 2 -->
+        <group colour="#00FF00">
+            <translate Y=-1 />
+            <models>
+                <model file="models/torus.3d" />
+            </models>
+        </group>
+    </group>
+</scene>
+\end{lstlisting}
+\begin{figure}[H]
+    \centering 
+    \includegraphics[width=0.5\textwidth]{images/example.png}
+    \caption{Exemplo no engine}
+    \label{fig:scheme_torus}
+\end{figure}
+Neste exemplo, tanto o subgroup 1 como o subgroup 2 herdam a cor definida no
+group 1. No entanto como o subgroup 2 tem uma cor definida dentro os models
+definidos dentro desse têm essa cor.
 
 \section{Camera}
 \subsection{Moving the Camera}
 Para mover a camera são usados dois keysets. O WASD é usado para mover o ponto
-para onde a câmera está a olhar (\textit{\_center}). o HJKL é usado para orbitar
+para onde a camera está a olhar (\textit{\_center}). o HJKL é usado para orbitar
 esse ponto (\textit{\_pl}).\\
 Para desenhar a camera basta usar a função \textit{gluLookAt}.
 \begin{lstlisting}
@@ -248,7 +282,7 @@ na classe \textit{Point} aliadas ao vetor calculado anteriormente.\\
 Por exemplo, para mover a camera e o ponto para onde se está a olhar para a
 frente relativamente à direção para que a camera está a olhar.\\
 Primeiro é calculado um vetor paralelo ao plano XZ alinhado com o vetor
-calculado mas no sentido contrário e de comprimeto 0.1. Agora basta somar esse
+calculado mas no sentido contrário e de comprimento 0.1. Agora basta somar esse
 vetor aos pontos da classe.\\
 \begin{lstlisting}
 t = VectorSpherical(0.1, M_PI / 2, v.azimuth() + M_PI);
@@ -312,7 +346,7 @@ o raio do anel propriamente dito (\textit{\_ring\_radius}).
 
 \begin{figure}[H]
     \centering 
-    \includegraphics[width=0.5\textwidth]{images/torus.png}
+    \includegraphics[width=0.5\textwidth]{images/torus_points.png}
     \caption{Esquema dos pontos no plano}
     \label{fig:scheme_torus}
 \end{figure}
@@ -373,12 +407,56 @@ for(i32 slice = 0; slice < _slices; slice++) {
     \label{fig:torus_render}
 \end{figure}
 
+\chapter{Solar System}
+Para facilitar desenhar o sistema solar decidimos criar um script em Python.\\
+De forma a criar um modelo relativamente realista do sistema solar decidimos
+seguir um conjunto de regras simples.
+
+\begin{itemize}
+        \item tamanho de planetas e luas está à escala entre planetas e luas
+        \item distancia dos planetas e cinturas de asteróides ao sol está à
+            escala dentro de si próprio
+\end{itemize}
+Criando várias escalas permite que seja criado um modelo relativamente realista
+do sistema solar mas ao mesmo tempo visualmente apelativo.\\
+A informação sobre a distancia relativa dos planetas ao sol veio do
+\textit{National Geographic} (
+\url{https://www.nationalgeographic.org/activity/planetary-size-and-distance-comparison/})
+e foram colocados dentro de um csv com mais alguma informação, tal como, se o
+planeta tem um sistema de anéis ou não.\\
+A informação sobre as luas presentes no sistema solar foi obtida de um CSV
+publicamente disponivel em
+\url{https://github.com/devstronomy/nasa-data-scraper/blob/master/data/csv/satellites.csv}.
+Com base nestes dois ficheiros, é possível desenhar um sistema solar com mais de
+100 luas.\\
+Por fim decidimos acrescentar a cintura de asteróides e a cintura de
+\textit{Kuiper} com 200 e 1000 asteróides respectivamente.\\
+
+\begin{figure}[H]
+    \centering 
+    \includegraphics[width=0.8\textwidth]{images/sun.png}  
+    \caption{Imagem do sol}
+    \label{fig:sun}
+\end{figure}
+\begin{figure}[H]
+    \centering 
+    \includegraphics[width=0.8\textwidth]{images/jupiter.png}  
+    \caption{Imagem de Júpiter e as suas luas}
+    \label{fig:jupiter}
+\end{figure}
+\begin{figure}[H]
+    \centering 
+    \includegraphics[width=0.8\textwidth]{images/saturno.png}  
+    \caption{Imagem de Saturno}
+    \label{fig:saturn}
+\end{figure}
+
 \chapter{Conclusão}
 Com este trabalho prático podemos aplicar os conhecimentos lecionados até agora
 nas aulas da unidade curricular de computação gráfica permitindo assim que
 aprofundar os nossos conhecimentos de openGl.\\
-Como trabalho futuro gostaríamos de melhorar a camera de orbita que foi
-implementada no \textit{engine}, introduzir mais cameras distintas e criar mais
-primitivas no \textit{generator} como a torus, por exemplo.
+Como trabalho futuro gostaríamos de criar mais scenes para testar as capacidades
+do nosso \textit{Engine}, implementar animações e melhorar a performance do
+nosso engine com recurso a VBOs.
 
 \end{document}

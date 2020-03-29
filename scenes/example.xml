@@ -1,0 +1,22 @@
+<scene>
+    <!-- group 1 -->
+    <group colour="#FF0000">
+        <models>
+            <model file="models/sphere.3d" />
+        </models>
+        <!-- subgroup 1 -->
+        <group>
+            <translate Y=2 />
+            <models>
+                <model file="models/cone.3d" />
+            </models>
+        </group>
+        <!-- subgroup 2 -->
+        <group colour="#00FF00">
+            <translate Y=-1 />
+            <models>
+                <model file="models/torus.3d" />
+            </models>
+        </group>
+    </group>
+</scene>

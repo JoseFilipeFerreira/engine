@@ -60,15 +60,6 @@ void Camera::react_key(unsigned char key, int x, int y) {
         case 'x': // toggle axis
             _has_axis = !_has_axis;
             break;
-        case 'g': // toggle debug mode
-            if (_has_axis && _display_center) {
-                _has_axis = false;
-                _display_center = false;
-            } else {
-                _has_axis = true;
-                _display_center = true;
-            }
-            break;
     }
 }
 
@@ -98,13 +89,12 @@ void draw_point(Point p) {
     glPopMatrix();
 }
 
-void Camera::place_camera() const {
-    auto c = Point(_pl);
+void Camera::place_camera(bool debug_mode) const {
     glLoadIdentity();
     gluLookAt(
-        c.x(),
-        c.y(),
-        c.z(),
+        _pl.x(),
+        _pl.y(),
+        _pl.z(),
         _center.x(),
         _center.y(),
         _center.z(),
@@ -112,6 +102,6 @@ void Camera::place_camera() const {
         1.0f,
         0.0f);
 
-    if (_has_axis) draw_axis();
-    if (_display_center) draw_point(_center);
+    if (_has_axis || debug_mode) draw_axis();
+    if (debug_mode) draw_point(_center);
 }

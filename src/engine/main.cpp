@@ -1,7 +1,10 @@
 #include "engine/camera.hpp"
 #include "engine/parser.hpp"
+#include "utils/types.hpp"
 
 #include <GL/gl.h>
+#include <iostream>
+#include <sstream>
 #ifdef __APPLE__
 #    include <GLUT/glut.h>
 #else
@@ -11,6 +14,7 @@
 // singletons
 Camera camera;
 Group group;
+bool DEBUG = false;
 
 void changeSize(int w, int h) {
     // Prevent a divide by zero, when window is too short
@@ -40,9 +44,32 @@ void renderScene() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     // set the camera
-    camera.place_camera();
+    camera.place_camera(DEBUG);
 
     group.draw_group();
+
+    if (DEBUG) {
+        static u64 frame = 0;
+        static double timebase = 0;
+        static double fps = 60;
+        frame++;
+        u64 time = glutGet(GLUT_ELAPSED_TIME);
+        if (time - timebase > 1000) {
+            fps = frame * 1000.0 / (time - timebase);
+            timebase = time;
+            frame = 0;
+        }
+
+        std::stringstream title;
+        title.precision(2);
+        title << "CG-Engine"
+              << " | FPS: " << fps;
+
+        glutSetWindowTitle(title.str().data());
+    }
+    else{
+        glutSetWindowTitle("CG-Engine");
+    }
 
     // End of frame
     glutSwapBuffers();
@@ -50,6 +77,13 @@ void renderScene() {
 
 void react_key(unsigned char key, int x, int y) {
     camera.react_key(key, x, y);
+
+    switch (key) {
+        case 'g': // toggle debug mode
+            DEBUG = ! DEBUG;
+            break;
+    }
+
     renderScene();
 }
 
@@ -63,10 +97,11 @@ int main(int argc, char** argv) {
     glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
     glutInitWindowPosition(100, 100);
     glutInitWindowSize(800, 800);
-    glutCreateWindow("CG@DI-UM");
+    glutCreateWindow("CG-Engine");
 
     // Required callback registry
     glutDisplayFunc(renderScene);
+    glutIdleFunc(renderScene);
     glutReshapeFunc(changeSize);
 
     // put here the registration of the keyboard callbacks

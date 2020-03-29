@@ -31,10 +31,12 @@ std::vector<Point> Torus::draw() const {
             auto n_base = VectorSpherical(_ring_radius, ang_stack *  stack     , n_center.azimuth() );
             auto n_top  = VectorSpherical(_ring_radius, ang_stack * (stack + 1), n_center.azimuth() );
 
+            // 1st triangle
             coords.push_back(  center + top);
             coords.push_back(n_center + n_base);
             coords.push_back(  center + base);
 
+            //2nd triangle
             coords.push_back(  center + top);
             coords.push_back(n_center + n_top);
             coords.push_back(n_center + n_base);

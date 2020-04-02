@@ -1,12 +1,13 @@
 #include "engine/camera.hpp"
 
-#include <GL/gl.h>
 #include <cmath>
 #ifdef __APPLE__
 #    include <GLUT/glut.h>
 #else
+#    include <GL/glew.h>
 #    include <GL/glut.h>
 #endif
+
 
 void Camera::react_key(unsigned char key, int x, int y) {
     auto v = VectorSpherical(Vector(_center, _pl));
@@ -103,5 +104,4 @@ void Camera::place_camera(bool debug_mode) const {
         0.0f);
 
     if (_has_axis || debug_mode) draw_axis();
-    if (debug_mode) draw_point(_center);
 }

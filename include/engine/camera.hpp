@@ -11,9 +11,10 @@ class Camera {
 
   public:
     Camera()
-        : _pl(Point(10, 10, 10)),
-          _center(Point(0, 0, 0)),
-          _has_axis(false){}
+        : _pl(Point(10, 10, 10)), _center(Point(0, 0, 0)), _has_axis(false) {}
+    template<typename T> auto with (T func) -> void {
+        func(_pl, _center, _has_axis);
+    };
     void react_key(unsigned char, int, int);
     void place_camera(bool) const;
 };

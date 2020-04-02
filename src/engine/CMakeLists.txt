@@ -17,10 +17,6 @@ include_directories(${GLUT_INCLUDE_DIR})
 link_directories(${GLUT_LIBRARY_DIRS})
 add_definitions(${GLUT_DEFINITIONS})
 
-find_package(GLEW REQUIRED)
-include_directories(${GLEW_INCLUDE_DIRS})
-link_libraries(${GLEW_LIBRARIES})
-
 find_package(DevIL REQUIRED)
 include_directories(${IL_INCLUDE_DIR})
 link_libraries(${IL_LIBRARIES})
@@ -31,7 +27,7 @@ target_link_libraries(
     deps
     ${OPENGL_LIBRARIES}
     ${GLUT_LIBRARY}
-    ${GLEW_LIBRARY}
+    GLEW::GLEW
     ${IL_LIBRARIES}
 )
 

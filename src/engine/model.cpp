@@ -1,32 +1,37 @@
 #include "engine/model.hpp"
 
-#include "deps/uniformrealdist.hpp"
 #include "utils/types.hpp"
 
 #include <fstream>
+#include <iostream>
 
-Model::Model(const char *fileName, Colour c) {
-  colour = c;
-  float x, y, z;
-  auto file = std::ifstream(fileName);
-  while (file >> x >> y >> z)
-    points.push_back(Point(x, y, z));
+Model::Model(const char* fileName, Colour c) {
+    _colour = c;
+    _file_name = fileName;
 }
 
-void draw_triangle(Point const &p1, Point const &p2, Point const &p3, bool rng_color) {
-  if (rng_color) {
-    auto static const rng = UniformRealDist(0.0, 1.0);
-    glColor3f(rng(), rng(), rng());
-  }
-  glBegin(GL_TRIANGLES);
-  glVertex3f(p1.x(), p1.y(), p1.z());
-  glVertex3f(p2.x(), p2.y(), p2.z());
-  glVertex3f(p3.x(), p3.y(), p3.z());
-  glEnd();
+ModelBuffer::ModelBuffer(std::string const& fileName) {
+    float x, y, z;
+    std::vector<float> vec;
+    auto file = std::ifstream(fileName);
+    while (file >> x >> y >> z) {
+        vec.push_back(x);
+        vec.push_back(y);
+        vec.push_back(z);
+    }
+    _n_vertices = vec.size();
+
+    glGenBuffers(1, _buffers);
+    glBindBuffer(GL_ARRAY_BUFFER, _buffers[0]);
+    glBufferData(
+        GL_ARRAY_BUFFER,
+        sizeof(float) * _n_vertices,
+        vec.data(),
+        GL_STATIC_DRAW);
 }
 
-void Model::draw_model() const {
-  colour.apply();
-  for (i32 i = 0; i < points.size(); i += 3)
-    draw_triangle(points[i], points[i + 1], points[i + 2], false);
+void ModelBuffer::draw_model() const {
+    glBindBuffer(GL_ARRAY_BUFFER, _buffers[0]);
+    glVertexPointer(3, GL_FLOAT, 0, 0);
+    glDrawArrays(GL_TRIANGLES, 0, _n_vertices);
 }

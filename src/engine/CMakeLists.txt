@@ -5,6 +5,7 @@ add_executable(engine
     model.cpp
     camera.cpp
     parser.cpp
+    transformations.cpp
 )
 
 find_package(OpenGL REQUIRED)

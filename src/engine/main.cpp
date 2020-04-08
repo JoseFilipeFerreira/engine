@@ -3,6 +3,7 @@
 #include "utils/types.hpp"
 
 #include <GL/gl.h>
+#include <IL/il.h>
 #include <iostream>
 #include <sstream>
 #ifdef __APPLE__
@@ -83,7 +84,6 @@ void renderScene() {
     group.draw_group(group_buffer);
     glDisableClientState(GL_VERTEX_ARRAY);
 
-
     // End of frame
     glutSwapBuffers();
 }
@@ -112,20 +112,20 @@ int main(int argc, char** argv) {
     glutDisplayFunc(renderScene);
     glutIdleFunc(renderScene);
     glutReshapeFunc(changeSize);
-
-    // put here the registration of the keyboard callbacks
     glutKeyboardFunc(react_key);
 
     //  OpenGL settings
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_CULL_FACE);
+    //glPolygonMode(GL_FRONT, GL_LINE);
 
+    ilInit();
     glewInit();
 
     auto sceneName = "scenes/config.xml";
     if (argc > 1) sceneName = argv[1];
 
-    group_buffer.insert("models/sphere.3d");
+    group_buffer.insert_model("models/sphere.3d");
     group = Group(sceneName, group_buffer);
 
     // enter GLUT's main cycle

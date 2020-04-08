@@ -14,14 +14,23 @@ Vector::Vector(float x, float y, float z): _x(x), _y(y), _z(z) {}
 Vector::Vector(Point const& p1, Point const& p2)
     : _x(p2.x() - p1.x()), _y(p2.y() - p1.y()), _z(p2.z() - p1.z()) {}
 
+Vector::Vector(Point const& p): _x(p.x()), _y(p.y()), _z(p.z()) {}
+
 Vector::Vector(VectorSpherical const& p)
     : _x(p.radius() * sin(p.inclination()) * sin(p.azimuth())),
       _y(p.radius() * cos(p.inclination())),
       _z(p.radius() * sin(p.inclination()) * cos(p.azimuth())) {}
 
-auto Vector::unit() const -> Vector {
+auto Vector::normalize() const -> Vector {
     float d = std::sqrt(_x * _x + _y * _y + _z * _z);
     return Vector(_x / d, _y / d, _z / d);
+}
+
+auto Vector::cross(Vector v) const -> Vector {
+    return Vector(
+        _y * v.z() - _z * v.y(),
+        _z * v.x() - _x * v.z(),
+        _x * v.y() - _y * v.z());
 }
 
 auto Vector::hadamard(Vector const& v) const -> Vector {

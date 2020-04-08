@@ -1,0 +1,4 @@
+<scene> 
+    <terrain file="terrains/terreno.jpg" colour="#FF0000" max="60"/> 
+    <model file="models/sphere.3d" />
+</scene>

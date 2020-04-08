@@ -1,4 +1,4 @@
 <scene> 
-    <model file="models/box.3d" /> 
+    <model colour="#FF0000" file="models/box.3d" /> 
 </scene>
 

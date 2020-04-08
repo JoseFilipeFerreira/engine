@@ -15,12 +15,14 @@ class Vector {
   public:
     Vector(float, float, float);
     Vector(Point const&, Point const&);
+    Vector(Point const&);
     Vector(VectorSpherical const&);
     std::string to_string() const;
     auto constexpr x() const noexcept -> float { return _x; }
     auto constexpr y() const noexcept -> float { return _y; }
     auto constexpr z() const noexcept -> float { return _z; }
-    auto unit() const -> Vector;
+    auto normalize() const -> Vector;
+    auto cross(Vector) const -> Vector;
     auto hadamard(Vector const&) const -> Vector;
     auto hadamard(float, float, float) const -> Vector;
     auto operator+(Vector const& v) const -> Vector {

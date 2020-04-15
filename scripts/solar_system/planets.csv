@@ -1,0 +1,11 @@
+planet,radius,relative distance,color,has ring,orbit time (days),rotation time (minutes)
+Mercury,2439.7,1,#FF6347,False,88,84450
+Venus,6051.8,2,#FFA500,False,225,168120
+Earth,6371,2.5,#4169E1,False,365,1440
+Mars,3389.5,4,#B22222,False,687,1477
+Jupiter,69911,13,#8B4513,False,6380,596
+Saturn,58232,24,#A0522D,True,10585,642
+Uranus,25362,49,#5F9EA0,False,30660,1034
+Neptune,24662,76,#0000CD,False,60225,966
+Pluto,1188.3,90,#FFE4E1,False,90520,9216
+Ceres,1100,7.9,#FFE4E1,False,1682,540

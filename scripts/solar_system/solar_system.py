@@ -1,6 +1,8 @@
 #!/bin/python3
 #Data for moons from: https://github.com/devstronomy/nasa-data-scraper/blob/master/data/csv/satellites.csv
 #Data for planets distance from: https://www.nationalgeographic.org/activity/planetary-size-and-distance-comparison/ 
+#Data for planets orbit: 
+#Data for planets rotation:
 import os
 import sys
 import random
@@ -8,6 +10,7 @@ import csv
 
 os.chdir(sys.path[0])
 SCALE = 3
+AU = 2.5
 
 def str_to_bool(s):
     return s.lower() in ("yes", "true", "t", "1")
@@ -46,12 +49,14 @@ def generate_moons(planet_name, planet_radius, colour):
     return moons
 
 class Astro:
-    def __init__(self, name, distance, colour, radius=None, has_ring=False):
+    def __init__(self, name, distance, colour, radius=None, has_ring=False, orbit_time=0, rotation_time=0):
         self.name = name
         if not radius:
             self.radius = astro_radius(name)
         else:
             self.radius = radius
+        self.orbit_time=orbit_time
+        self.rotation_time=rotation_time
         self.distance = distance
         self.colour = colour
         self.has_ring = has_ring
@@ -61,7 +66,7 @@ class Astro:
         new_colour = colour_variant(self.colour, 15)
         print(' ' * indent, f'<!-- {self.name}\'s ring -->')
         print(' ' * indent, f'<group colour="{new_colour}">')
-        print(' ' * indent, f'    <scale Y="0.01" />')
+        print(' ' * indent, f'    <scale X="1.5" Z="1.5" Y="0.01" />')
         print(' ' * indent, '     <models>')
         print(' ' * indent, '         <model file="models/torus.3d"/>')
         print(' ' * indent, '     </models>')
@@ -74,8 +79,9 @@ class Astro:
         curr_scale = self.radius / curr_radius
         print(' ' * indent, f'<!-- {self.name} -->')
         print(' ' * indent, f'<group colour="{self.colour}">')
-        print(' ' * indent, f'    <rotate axisX="0" axisY="1" axisZ="0" angle="{rng_r}"/>')
+        print(' ' * indent, f'    <rotate axisX="0" axisY="1" axisZ="0" angle="{rng_r}" time={self.orbit_time} />')
         print(' ' * indent, f'    <translate X="0" Y="0" Z="{curr_translate}" />')
+        print(' ' * indent, f'    <rotate axisX="0" axisY="1" axisZ="0" time={self.rotation_time} />')
         print(' ' * indent, f'    <scale X="{curr_scale}" Y="{curr_scale}" Z="{curr_scale}" />')
         print(' ' * indent, '     <models>')
         print(' ' * indent, '         <model file="models/sphere.3d"/>')
@@ -91,7 +97,8 @@ def draw_asteroid_belt(name, number, min_dist, max_dist, size, colour):
     print('        <group>')
     for i in range(number - 1):
         dist = random.uniform(min_dist, max_dist)
-        Astro(f'asteroid {i}', dist, colour, radius=size).print_astro(indent=11)
+        otime = random.uniform(dist * 1.75,dist * 2.5)
+        Astro(f'asteroid {i}', dist, colour, radius=size, orbit_time=otime).print_astro(indent=11)
     print('        </group>')
 
 
@@ -99,7 +106,13 @@ def get_planets():
     with open('planets.csv','rt')as f:
         data = csv.DictReader(f)
         for row in data:
-            yield Astro(row["planet"], SCALE + float(row["relative distance"]), row["color"], has_ring=str_to_bool(row["has ring"]))
+            yield Astro(
+                    row["planet"],
+                    SCALE + float(row["relative distance"]),
+                    row["color"],
+                    has_ring=str_to_bool(row["has ring"]),
+                    orbit_time=float(row["orbit time (days)"])/40,
+                    rotation_time=float(row["rotation time (minutes)"])/70)
 
 print('<scene>')
 print('    <!--Sun-->')
@@ -111,7 +124,7 @@ print('        </models>')
 for p in get_planets():
     p.print_astro()
 
-draw_asteroid_belt("Asteroid belt", 200 , SCALE + 8  , SCALE + 9  , 0.02, "#808080")
+draw_asteroid_belt("Asteroid belt", 200 , SCALE + 7.5 , SCALE + 8.5  , 0.01, "#808080")
 draw_asteroid_belt("Kuiper Belt"  , 1000, SCALE + 100, SCALE + 103, 0.05, "#808080")
 
 print('    </group>')

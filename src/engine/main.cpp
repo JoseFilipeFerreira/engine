@@ -13,13 +13,12 @@
 #    include <GL/glut.h>
 #endif
 
+// singletons
 Camera camera;
 Group group;
 GroupBuffer group_buffer;
-
 bool DEBUG = false;
 
-// singletons
 void changeSize(int w, int h) {
     // Prevent a divide by zero, when window is too short
     // (you cant make a window with zero width).

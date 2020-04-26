@@ -13,13 +13,13 @@
 #    include <GL/glut.h>
 #endif
 
-// singletons
 Camera camera;
 Group group;
 GroupBuffer group_buffer;
 
 bool DEBUG = false;
 
+// singletons
 void changeSize(int w, int h) {
     // Prevent a divide by zero, when window is too short
     // (you cant make a window with zero width).
@@ -107,20 +107,26 @@ int main(int argc, char** argv) {
     glutInitWindowPosition(100, 100);
     glutInitWindowSize(800, 800);
     glutCreateWindow("CG-Engine");
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    //  OpenGL settings
+    glEnable(GL_BLEND);
+    glEnable(GL_DEPTH_TEST);
+    glEnable(GL_CULL_FACE);
+    glEnable(GL_TEXTURE_2D);
+    glEnable(GL_NORMALIZE);
+    //glPolygonMode(GL_FRONT, GL_LINE);
+
+    glewInit();
+
+    ilInit();
+    ilEnable(IL_ORIGIN_SET);
+    ilOriginFunc(IL_ORIGIN_UPPER_LEFT);
 
     // Required callback registry
     glutDisplayFunc(renderScene);
     glutIdleFunc(renderScene);
     glutReshapeFunc(changeSize);
     glutKeyboardFunc(react_key);
-
-    //  OpenGL settings
-    glEnable(GL_DEPTH_TEST);
-    glEnable(GL_CULL_FACE);
-    //glPolygonMode(GL_FRONT, GL_LINE);
-
-    ilInit();
-    glewInit();
 
     auto sceneName = "scenes/config.xml";
     if (argc > 1) sceneName = argv[1];

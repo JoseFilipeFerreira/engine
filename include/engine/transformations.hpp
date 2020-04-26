@@ -53,7 +53,8 @@ class CatmullRon {
     CatmullRon(float time, std::vector<Point> points)
         : _time(time), _points(points) {}
     void apply(float);
-    auto get_location(float) -> std::pair<Point,Vector>;
+    auto get_location(float) const -> std::pair<Point,Vector>;
+    void draw_curve() const;
 };
 
 class Rotate {

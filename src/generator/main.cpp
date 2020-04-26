@@ -6,6 +6,7 @@
 #include "generator/cone.hpp"
 #include "generator/cylinder.hpp"
 #include "generator/torus.hpp"
+#include "generator/patches.hpp"
 
 #include<string>
 #include<ostream>
@@ -20,7 +21,8 @@ static auto const help_string =
 "sphere     [radius] [slices] [stacks]\n"
 "cone       [radius] [height] [slices] [stacks]\n"
 "cylinder   [radius] [height] [slices] [stacks]\n"
-"torus      [inner radius] [outer radius] [stacks] [slices]";
+"torus      [inner radius] [outer radius] [stacks] [slices]\n"
+"patches    [file name] [tesselation level]\n";
 
 template<typename T>
 void file_writer(T v, std::string const& filename) {
@@ -43,6 +45,8 @@ int main(int argc, char** argv) {
         file_writer(Cylinder(argc - 3, argv + 2), argv[argc-1]);
     else if("torus" == type)
         file_writer(Torus(argc - 3, argv + 2), argv[argc-1]);
+    else if("patches" == type)
+        file_writer(Patches(argc - 3, argv + 2), argv[argc-1]);
     else
         std::cout << help_string << std::endl;
 }

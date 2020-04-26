@@ -8,6 +8,7 @@ add_executable(generator
     sphere.cpp
     cylinder.cpp
     torus.cpp
+    patches.cpp
 )
 
 target_link_libraries(

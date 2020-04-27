@@ -106,7 +106,17 @@ int main(int argc, char** argv) {
     glutInitWindowPosition(100, 100);
     glutInitWindowSize(800, 800);
     glutCreateWindow("CG-Engine");
+
+    // Required callback registry
+    glutDisplayFunc(renderScene);
+    glutIdleFunc(renderScene);
+    glutReshapeFunc(changeSize);
+    glutKeyboardFunc(react_key);
+
+    // Enable blending
+    glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
     //  OpenGL settings
     glEnable(GL_BLEND);
     glEnable(GL_DEPTH_TEST);

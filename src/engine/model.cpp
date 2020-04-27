@@ -42,12 +42,12 @@ TerrainBuffer::TerrainBuffer(
             float point = imageData[_image_height * h + w];
             float n_point = imageData[_image_height * (h + 1) + w];
 
-            vec.push_back(w - (_image_width / 2.0));        // x1
-            vec.push_back(point * new_interval / 255.0f + min_height);          // y1
-            vec.push_back(h - (_image_height / 2.0));       // z1
-            vec.push_back(w - (_image_width / 2.0));        // x2
-            vec.push_back(n_point * new_interval / 255.0f + min_height);        // y2
-            vec.push_back(h + 1.0 - (_image_height / 2.0)); // z2
+            vec.push_back(w - (_image_width / 2.0));                     // x1
+            vec.push_back(point * new_interval / 255.0f + min_height);   // y1
+            vec.push_back(h - (_image_height / 2.0));                    // z1
+            vec.push_back(w - (_image_width / 2.0));                     // x2
+            vec.push_back(n_point * new_interval / 255.0f + min_height); // y2
+            vec.push_back(h + 1.0 - (_image_height / 2.0));              // z2
         }
     }
 

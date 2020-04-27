@@ -1,7 +1,7 @@
 #include "engine/transformations.hpp"
 
-std::pair<Point, Vector> get_catmull_rom_point(
-    float t, Point const p0, Point const p1, Point const p2, Point const p3) {
+auto get_catmull_rom_point(
+    float t, Point const p0, Point const p1, Point const p2, Point const p3) -> std::pair<Point, Vector> {
     // catmull-rom matrix
     const float m[4][4] = {{-0.5f, +1.5f, -1.5f, +0.5f},
                            {+1.0f, -2.5f, +2.0f, -0.5f},
@@ -28,12 +28,12 @@ std::pair<Point, Vector> get_catmull_rom_point(
 
     float dv[3] = {0};
     for (i32 j = 0; j < 3; j++)
-        for (i32 k = 0; k < 4; k++) dv[j] += tv[k] * a[k][j];
+        for (i32 k = 0; k < 4; k++) dv[j] += tvd[k] * a[k][j];
 
     return {Point(pv[0], pv[1], pv[2]), Vector(dv[0], dv[1], dv[2])};
 }
 
-auto CatmullRon::get_location(float elapsed) -> std::pair<Point, Vector> {
+auto CatmullRon::get_location(float elapsed) const -> std::pair<Point, Vector> {
     const u64 point_count = _points.size(); // number of points
     float gt = elapsed / _time; // how many times has the translation occurred
     float t = gt * point_count; // this is the real global t
@@ -76,6 +76,7 @@ auto buildRotMatrix(Vector x, Vector y, Vector z) -> std::vector<float> {
 }
 
 void CatmullRon::apply(float elapsed) {
+    draw_curve();
     auto point_dir = get_location(elapsed);
     auto p = std::get<0>(point_dir);
     glTranslatef(p.x(), p.y(), p.z());
@@ -85,4 +86,18 @@ void CatmullRon::apply(float elapsed) {
     auto Y = Z.cross(X).normalize();
 
     glMultMatrixf(buildRotMatrix(X, Y, Z).data());
+}
+
+void CatmullRon::draw_curve() const {
+    float gt = 0.0;
+    const float NUM_STEPS = 100;
+    const float gt_step = _time / NUM_STEPS;
+    glBegin(GL_LINE_LOOP);
+    for (int i = 0; i < NUM_STEPS; i++) {
+        auto pos_deriv = get_location(gt);
+        Point pos = get<0>(pos_deriv);
+        glVertex3f(pos.x(), pos.y(), pos.z());
+        gt += gt_step;
+    }
+    glEnd();
 }

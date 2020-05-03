@@ -25,13 +25,8 @@ TerrainBuffer::TerrainBuffer(
     ilBindImage(t);
     ilLoadImage((ILstring) fileName.c_str());
     ilConvertImage(IL_LUMINANCE, IL_UNSIGNED_BYTE);
-    // important: check tw and th values
-    // both should be equal to 256
-    // if not there was an error loading the image
-    // most likely the image could not be found
     _image_width = ilGetInteger(IL_IMAGE_WIDTH);
     _image_height = ilGetInteger(IL_IMAGE_HEIGHT);
-    // imageData is a LINEAR array with the pixel values
     imageData = ilGetData();
 
     // 	Build the vertex arrays

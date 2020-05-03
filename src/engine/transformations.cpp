@@ -1,31 +1,36 @@
 #include "engine/transformations.hpp"
 
 auto get_catmull_rom_point(
-    float t, Point const p0, Point const p1, Point const p2, Point const p3) -> std::pair<Point, Vector> {
+    float t, Point const p0, Point const p1, Point const p2, Point const p3)
+    -> std::pair<Point, Vector> {
     // catmull-rom matrix
-    const float m[4][4] = {{-0.5f, +1.5f, -1.5f, +0.5f},
-                           {+1.0f, -2.5f, +2.0f, -0.5f},
-                           {-0.5f, +0.0f, +0.5f, +0.0f},
-                           {+0.0f, +1.0f, +0.0f, +0.0f}};
+    const float m[4][4] = {
+        {-0.5f, +1.5f, -1.5f, +0.5f},
+        {+1.0f, -2.5f, +2.0f, -0.5f},
+        {-0.5f, +0.0f, +0.5f, +0.0f},
+        {+0.0f, +1.0f, +0.0f, +0.0f}};
 
-    const float pm[4][3] = {{p0.x(), p0.y(), p0.z()},
-                            {p1.x(), p1.y(), p1.z()},
-                            {p2.x(), p2.y(), p2.z()},
-                            {p3.x(), p3.y(), p3.z()}};
+    // point matrix
+    const float pm[4][3] = {
+        {p0.x(), p0.y(), p0.z()},
+        {p1.x(), p1.y(), p1.z()},
+        {p2.x(), p2.y(), p2.z()},
+        {p3.x(), p3.y(), p3.z()}};
 
+    // a = m X pm
     float a[4][3] = {0};
     for (i32 i = 0; i < 4; i++)
         for (i32 j = 0; j < 3; j++)
             for (i32 k = 0; k < 4; k++) a[i][j] += m[i][k] * pm[k][j];
 
+    // pv = tv X a
     const float tv[4] = {t * t * t, t * t, t, 1};
-
     float pv[3] = {0};
     for (i32 j = 0; j < 3; j++)
         for (i32 k = 0; k < 4; k++) pv[j] += tv[k] * a[k][j];
 
+    // dv = tvd X a
     const float tvd[4] = {3 * t * t, 2 * t, 1, 0};
-
     float dv[3] = {0};
     for (i32 j = 0; j < 3; j++)
         for (i32 k = 0; k < 4; k++) dv[j] += tvd[k] * a[k][j];
@@ -54,7 +59,7 @@ auto CatmullRon::get_location(float elapsed) const -> std::pair<Point, Vector> {
         _points[indices[3]]);
 }
 
-auto buildRotMatrix(Vector x, Vector y, Vector z) -> std::vector<float> {
+auto build_rotation_matrix(Vector x, Vector y, Vector z) -> std::vector<float> {
     std::vector<float> v;
     v.push_back(x.x());
     v.push_back(x.y());
@@ -75,8 +80,8 @@ auto buildRotMatrix(Vector x, Vector y, Vector z) -> std::vector<float> {
     return v;
 }
 
-void CatmullRon::apply(float elapsed) {
-    draw_curve();
+void CatmullRon::apply(bool draw, float elapsed) {
+    if (draw) draw_curve();
     auto point_dir = get_location(elapsed);
     auto p = std::get<0>(point_dir);
     glTranslatef(p.x(), p.y(), p.z());
@@ -85,12 +90,12 @@ void CatmullRon::apply(float elapsed) {
     auto Z = X.cross(Vector(0, 1, 0)).normalize();
     auto Y = Z.cross(X).normalize();
 
-    glMultMatrixf(buildRotMatrix(X, Y, Z).data());
+    glMultMatrixf(build_rotation_matrix(X, Y, Z).data());
 }
 
 void CatmullRon::draw_curve() const {
     float gt = 0.0;
-    const float NUM_STEPS = 100;
+    const float NUM_STEPS = _points.size() * 20;
     const float gt_step = _time / NUM_STEPS;
     glBegin(GL_LINE_LOOP);
     for (int i = 0; i < NUM_STEPS; i++) {

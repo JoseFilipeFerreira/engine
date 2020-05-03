@@ -79,6 +79,7 @@ void renderScene() {
 
     if (DEBUG) {
         draw_axis();
+        /*
         camera.with([&](auto const& pl, auto const& center) {
             glPushMatrix();
             glColor3f(0.0, 1.0, 0.0);
@@ -86,6 +87,7 @@ void renderScene() {
             group_buffer.draw_model("models/sphere.3d");
             glPopMatrix();
         });
+        */
     }
 
     group.draw_group(elapsed / 1000.0f, DEBUG, group_buffer);

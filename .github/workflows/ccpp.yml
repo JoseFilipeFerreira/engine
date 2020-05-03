@@ -14,6 +14,6 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: dependencies
-      run: sudo apt-get install freeglut3-dev libglew-dev libdevil-dev -yyq --no-install-recommends
+      run: sudo apt-get install freeglut3-dev libglew-dev libdevil-dev libpulse0- -yyq --no-install-recommends
     - name: configure
       run: bash build.sh

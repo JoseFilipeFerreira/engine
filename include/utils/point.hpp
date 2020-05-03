@@ -28,7 +28,7 @@ class Vector {
     auto operator+(Vector const& v) const -> Vector {
         return Vector(_x + v.x(), _y + v.y(), _z + v.z());
     }
-    auto operator*(int s) const -> Vector {
+    auto operator*(float s) const -> Vector {
         return Vector(_x * s, _y * s, _z * s);
     }
     auto operator/(int s) const -> Vector {
@@ -43,6 +43,7 @@ class VectorSpherical {
   public:
     VectorSpherical(float, float, float);
     VectorSpherical(Vector const&);
+    VectorSpherical(Point const&, Point const&);
     std::string to_string() const;
     auto constexpr radius() const noexcept -> float { return _radius; }
     auto constexpr inclination() const noexcept -> float {
@@ -50,10 +51,14 @@ class VectorSpherical {
     }
     auto constexpr azimuth() const noexcept -> float { return _azimuth; }
     auto add_radius(float) const -> VectorSpherical;
+    auto normalize() const -> VectorSpherical;
     auto add_inclination(float) const -> VectorSpherical;
     auto add_azimuth(float) const -> VectorSpherical;
     auto operator+(VectorSpherical const& v) const -> VectorSpherical {
         return VectorSpherical(Vector(*this) + Vector(v));
+    }
+    auto operator*(float s) const -> VectorSpherical {
+        return VectorSpherical(_radius * s, _inclination, _azimuth);
     }
 };
 

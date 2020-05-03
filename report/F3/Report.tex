@@ -363,14 +363,9 @@ mesma função mas desta vez com o v.\\
 \input{code/patch_generator.tex}
 Dividindo 1 pelo \textit{\_tesselation\_level} obtemos o delta de cada ponto
 dentro de um patch.\\
-Assim, para obter todos os pontos para um determindao tesselation level fazemos:
-
-\input{code/draw_patchesv1.tex}
-Assim não estão a ser desenhados triângulos válidos. Para isso é necessário
-saber os 3 pontos que vêm imediatamente a seguir ao ponto que está a ser
-calculado. Para isso basta calcular as combinações de pontos para \textit{ui +
-1} e para \textit{vi + 1}.
-
+Para obter triangulos válidos é necessário saber os 3 pontos que vêm
+imediatamente a seguir ao ponto que está a ser calculado. Para isso basta
+calcular as combinações de pontos para \textit{ui + 1} e para \textit{vi + 1}.
 \input{code/draw_patchesv2.tex}
 
 \chapter{Scenes}
@@ -463,6 +458,32 @@ mais se afasta mais devagar se desloca.\\
 Visto que podemos representar a órbita de qualquer asteróide decidimos utilizar
 os dados do Halley.\\
 O ficheiro gerado em XML encontra-se em \textit{scenes/solar.xml}.
+
+\begin{figure}[H]
+    \centering 
+    \includegraphics[width=0.7\textwidth]{images/close_view.png}  
+    \caption{teapot em frente ao sol}
+\end{figure}
+\begin{figure}[H]
+    \centering 
+    \includegraphics[width=0.7\textwidth]{images/side_view.png}  
+    \caption{planetas interiores}
+\end{figure}
+\begin{figure}[H]
+    \centering 
+    \includegraphics[width=0.7\textwidth]{images/top_view.png}  
+    \caption{vista superior do sistema solar}
+\end{figure}
+\begin{figure}[H]
+    \centering 
+    \includegraphics[width=0.7\textwidth]{images/top_view_debug.png}  
+    \caption{vista superior do sistema solar em debug mode}
+\end{figure}
+\begin{figure}[H]
+    \centering 
+    \includegraphics[width=0.7\textwidth]{images/all_view_debug.png}  
+    \caption{Vista de toda a órbita do Cometa em cebug mode}
+\end{figure}
 
 \chapter{Conclusão}
 Com este trabalho prático podemos aplicar os conhecimentos leccionados até agora

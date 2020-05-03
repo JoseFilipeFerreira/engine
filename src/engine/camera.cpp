@@ -20,19 +20,19 @@ void Camera::react_key(unsigned char key, int x, int y) {
         case '-':
             _pl = _center + v.add_radius(0.1);
             break;
-        case 'j':
+        case 'k':
             if (v.inclination() + 0.1 < M_PI)
                 _pl = _center + v.add_inclination(0.1);
             break;
-        case 'k':
+        case 'j':
             if (v.inclination() - 0.1 > 0)
                 _pl = _center + v.add_inclination(-0.1);
             break;
         case 'l':
-            _pl = _center + v.add_azimuth(0.1);
+            _pl = _center + v.add_azimuth(-0.1);
             break;
         case 'h':
-            _pl = _center + v.add_azimuth(-0.1);
+            _pl = _center + v.add_azimuth(0.1);
             break;
         case 'w':
             t = VectorSpherical(0.1, M_PI / 2, v.azimuth() + M_PI);
@@ -58,28 +58,7 @@ void Camera::react_key(unsigned char key, int x, int y) {
             _center = Point(0, 0, 0);
             _pl = _center + v;
             break;
-        case 'x': // toggle axis
-            _has_axis = !_has_axis;
-            break;
     }
-}
-
-void draw_axis() {
-    // axis
-    glBegin(GL_LINES);
-    // X axis in red
-    glColor3f(1.0f, 0.0f, 0.0f);
-    glVertex3f(-100.0f, 0.0f, 0.0f);
-    glVertex3f(100.0f, 0.0f, 0.0f);
-    // Y Axis in Green
-    glColor3f(0.0f, 1.0f, 0.0f);
-    glVertex3f(0.0f, -100.0f, 0.0f);
-    glVertex3f(0.0f, 100.0f, 0.0f);
-    // Z Axis in Blue
-    glColor3f(0.0f, 0.0f, 1.0f);
-    glVertex3f(0.0f, 0.0f, -100.0f);
-    glVertex3f(0.0f, 0.0f, 100.0f);
-    glEnd();
 }
 
 void draw_point(Point p) {
@@ -90,7 +69,7 @@ void draw_point(Point p) {
     glPopMatrix();
 }
 
-void Camera::place_camera(bool debug_mode) const {
+void Camera::place_camera() const {
     glLoadIdentity();
     gluLookAt(
         _pl.x(),
@@ -102,6 +81,4 @@ void Camera::place_camera(bool debug_mode) const {
         0.0f,
         1.0f,
         0.0f);
-
-    if (_has_axis || debug_mode) draw_axis();
 }

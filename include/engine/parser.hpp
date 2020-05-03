@@ -40,7 +40,7 @@ class Group {
         std::vector<Group> g)
         : transformations(t), models(m), terrains(ter), colour(c), subgroups(g) {}
     Group(const char*, GroupBuffer&);
-    void draw_group(GroupBuffer const&) const;
+    void draw_group(float, bool, GroupBuffer const&) const;
 };
 
 #endif // PARSER_H

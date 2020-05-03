@@ -95,7 +95,7 @@ Group Parser(TiXmlElement* root, Colour colour, GroupBuffer& gb) {
 
         if (type == "translate") {
             if (elem->Attribute("time")) {
-                float time = time = std::stof(elem->Attribute("time") ?: "0");
+                float const time = std::stof(elem->Attribute("time") ?: "0");
                 auto point_vec = parse_points(elem);
                 if (point_vec.size() < 4)
                     throw std::invalid_argument(
@@ -156,9 +156,8 @@ Group::Group(const char* fileName, GroupBuffer& gb) {
     *this = Parser(doc.FirstChildElement(), Colour(), gb);
 }
 
-void Group::draw_group(GroupBuffer const& group_buffer) const {
-    auto elapsed = glutGet(GLUT_ELAPSED_TIME) / 1000.0f;
-    for (auto const& t : transformations) t.apply(elapsed);
+void Group::draw_group(float elapsed, bool DEBUG, GroupBuffer const& group_buffer) const {
+    for (auto const& t : transformations) t.apply(DEBUG, elapsed);
     for (auto const& m : models) {
         m.apply_colour();
         group_buffer.draw_model(m.model_name());
@@ -169,7 +168,7 @@ void Group::draw_group(GroupBuffer const& group_buffer) const {
     }
     for (auto const& g : subgroups) {
         glPushMatrix();
-        g.draw_group(group_buffer);
+        g.draw_group(elapsed, DEBUG, group_buffer);
         glPopMatrix();
     }
 }

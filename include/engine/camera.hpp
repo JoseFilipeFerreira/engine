@@ -7,16 +7,16 @@ class Camera {
   private:
     Point _pl;
     Point _center;
-    bool _has_axis;
 
   public:
     Camera()
-        : _pl(Point(10, 10, 10)), _center(Point(0, 0, 0)), _has_axis(false) {}
+        : _pl(Point(10, 10, 10)), _center(Point(0, 0, 0)) {}
+
     template<typename T> auto with (T func) -> void {
-        func(_pl, _center, _has_axis);
+        func(_pl, _center);
     };
     void react_key(unsigned char, int, int);
-    void place_camera(bool) const;
+    void place_camera() const;
 };
 
 #endif // CAMERA_H

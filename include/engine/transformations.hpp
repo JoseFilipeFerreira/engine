@@ -32,7 +32,7 @@ class Scale {
 
   public:
     Scale(float x, float y, float z): _x(x), _y(y), _z(z) {}
-    void apply(float elapsed) const { glScalef(_x, _y, _z); }
+    void apply(bool, float elapsed) const { glScalef(_x, _y, _z); }
 };
 
 class Translate {
@@ -41,7 +41,7 @@ class Translate {
 
   public:
     Translate(float x, float y, float z): _x(x), _y(y), _z(z) {}
-    void apply(float elapsed) const { glTranslatef(_x, _y, _z); }
+    void apply(bool, float elapsed) const { glTranslatef(_x, _y, _z); }
 };
 
 class CatmullRon {
@@ -52,7 +52,7 @@ class CatmullRon {
   public:
     CatmullRon(float time, std::vector<Point> points)
         : _time(time), _points(points) {}
-    void apply(float);
+    void apply(bool, float);
     auto get_location(float) const -> std::pair<Point,Vector>;
     void draw_curve() const;
 };
@@ -64,7 +64,7 @@ class Rotate {
   public:
     Rotate(float ang, float x, float y, float z, float time)
         : _ang(ang), _x(x), _y(y), _z(z), _time(time) {}
-    void apply(float elapsed) const {
+    void apply(bool, float elapsed) const {
         float total_ang = _ang + elapsed * (_time ? 360.0f / _time : 0);
         glRotatef(total_ang, _x, _y, _z);
     }
@@ -80,13 +80,13 @@ class Transform {
     Transform(CatmullRon t): _t(t){};
     Transform(Rotate t): _t(t){};
 
-    void apply(float elapsed) const {
+    void apply(bool draw, float elapsed) const {
         std::visit(
             overloaded{
-                [&](Scale t) { t.apply(elapsed); },
-                [&](Translate t) { t.apply(elapsed); },
-                [&](CatmullRon t) { t.apply(elapsed); },
-                [&](Rotate t) { t.apply(elapsed); },
+                [&](Scale t) { t.apply(draw, elapsed); },
+                [&](Translate t) { t.apply(draw, elapsed); },
+                [&](CatmullRon t) { t.apply(draw, elapsed); },
+                [&](Rotate t) { t.apply(draw, elapsed); },
             },
             _t);
     }

@@ -1,0 +1,14 @@
+\begin{lstlisting}
+u64 indices[4];
+indices[0] = (index + point_count - 1) % point_count;
+indices[1] = (indices[0] + 1) % point_count;
+indices[2] = (indices[1] + 1) % point_count;
+indices[3] = (indices[2] + 1) % point_count;
+
+return get_catmull_rom_point(
+    t,
+    _points[indices[0]],
+    _points[indices[1]],
+    _points[indices[2]],
+    _points[indices[3]]);
+\end{lstlisting}

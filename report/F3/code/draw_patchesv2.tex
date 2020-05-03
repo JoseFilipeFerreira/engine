@@ -1,0 +1,25 @@
+\begin{lstlisting}
+for (i64 p = 0; p < _n_patches; p++) {
+    for (i64 ui = 0; ui < _tesselation_level; ui++) {
+        const float uf = ui * delta;
+        const float next_uf = (ui + 1) * delta;
+        for (i64 vi = 0; vi < _tesselation_level; vi++) {
+            const float vf = vi * delta;
+            const float next_vf = (vi + 1) * delta;
+
+            auto p0 = patch_generator(p, uf, vf);
+            auto p1 = patch_generator(p, uf, next_vf);
+            auto p2 = patch_generator(p, next_uf, vf);
+            auto p3 = patch_generator(p, next_uf, next_vf);
+
+            coords.push_back(p3);
+            coords.push_back(p2);
+            coords.push_back(p1);
+
+            coords.push_back(p2);
+            coords.push_back(p0);
+            coords.push_back(p1);
+        }
+    }
+}
+\end{lstlisting}

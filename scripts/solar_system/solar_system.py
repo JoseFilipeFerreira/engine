@@ -156,7 +156,7 @@ for p in get_planets():
 draw_asteroid_belt("Asteroid belt", 200 , SCALE + 7.5 , SCALE + 8.5  , 0.01, "#808080")
 draw_asteroid_belt("Kuiper Belt"  , 1000, SCALE + 100, SCALE + 103, 0.05, "#808080")
 
-draw_comet("Halley's commet", 0.02, 76, 0.976, 0.587 * (SCALE + 2.5), 35.3 * (SCALE + 2.5), "#808080")
+draw_comet("Halley's commet", 0.01, 76, 0.976, 0.587 * (SCALE + 2.5), 35.3 * (SCALE + 2.5), "#808080")
 
 print('    </group>')
 print('</scene>')

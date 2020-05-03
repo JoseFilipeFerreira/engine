@@ -45,6 +45,10 @@ auto VectorSpherical::add_radius(float x) const -> VectorSpherical {
     return VectorSpherical(_radius + x, _inclination, _azimuth);
 }
 
+auto VectorSpherical::normalize() const -> VectorSpherical {
+    return VectorSpherical(1, _inclination, _azimuth);
+}
+
 auto VectorSpherical::add_inclination(float x) const -> VectorSpherical {
     return VectorSpherical(
         _radius, normalize_angle(_inclination + x), _azimuth);
@@ -61,6 +65,13 @@ VectorSpherical::VectorSpherical(Vector const& p)
     : _radius(sqrt(p.x() * p.x() + p.y() * p.y() + p.z() * p.z())),
       _inclination(_radius == 0 ? 0 : std::acos(p.y() / _radius)),
       _azimuth(std::atan2(p.x(), p.z())) {}
+
+VectorSpherical::VectorSpherical(Point const& p0, Point const& p1) {
+    auto v = VectorSpherical(Vector(p0, p1));
+    _radius = v.radius();
+    _inclination = v.inclination();
+    _azimuth = v.azimuth();
+}
 
 std::string VectorSpherical::to_string() const {
     std::ostringstream sstream;

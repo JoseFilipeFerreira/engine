@@ -108,6 +108,7 @@ void renderScene() {
     std::stringstream title;
     title.precision(2);
     title << "CG-Engine ";
+    title << camera;
     if (DEBUG) {
         title << "| DEBUG ";
         title << "| TIME SCALE: " << TIME_SCALE << " ";

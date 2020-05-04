@@ -1,0 +1,20 @@
+\begin{lstlisting}
+std::vector<Point> patch_control_points;
+for (auto const& index : _index_patches[patch]) {
+    patch_control_points.push_back(_control_points[index]);
+}
+
+std::vector<Point> new_patch_points;
+for (auto i = patch_control_points.cbegin();
+     i != patch_control_points.cend();
+     i += 4) {
+    new_patch_points.push_back(bezier_point(u, i[0], i[1], i[2], i[3]));
+}
+
+return bezier_point(
+    v,
+    new_patch_points[0],
+    new_patch_points[1],
+    new_patch_points[2],
+    new_patch_points[3]);
+\end{lstlisting}

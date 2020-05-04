@@ -1,0 +1,19 @@
+\begin{lstlisting}
+float x, y, z;
+std::vector<float> vec;
+auto file = std::ifstream(fileName);
+while (file >> x >> y >> z) {
+    vec.push_back(x);
+    vec.push_back(y);
+    vec.push_back(z);
+}
+_n_vertices = vec.size();
+
+glGenBuffers(1, _buffers);
+glBindBuffer(GL_ARRAY_BUFFER, _buffers[0]);
+glBufferData(
+    GL_ARRAY_BUFFER,
+    sizeof(float) * _n_vertices,
+    vec.data(),
+    GL_STATIC_DRAW);
+\end{lstlisting}

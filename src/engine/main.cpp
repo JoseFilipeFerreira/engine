@@ -106,7 +106,7 @@ void renderScene() {
 
     // update window tittle
     std::stringstream title;
-    title.precision(2);
+    title.precision(3);
     title << "CG-Engine ";
     title << camera;
     title << "| TIME SCALE: " << TIME_SCALE << "x ";

@@ -109,14 +109,10 @@ void renderScene() {
     title.precision(2);
     title << "CG-Engine ";
     title << camera;
-    if (DEBUG) {
-        title << "| DEBUG ";
-        title << "| TIME SCALE: " << TIME_SCALE << " ";
-        title << "| FPS: " << fps << " ";
-    }
-    if (PAUSE) {
-        title << "| PAUSED ";
-    }
+    title << "| TIME SCALE: " << TIME_SCALE << "x ";
+    title << "| FPS: " << fps << " ";
+    if (PAUSE) title << "| PAUSED ";
+    if (DEBUG) title << "| DEBUG ";
 
     glutSetWindowTitle(title.str().data());
 

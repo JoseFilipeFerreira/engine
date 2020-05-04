@@ -154,7 +154,7 @@ transformações, a cor que foi definida nesse nodo (ou, se nenhuma foi definida
 a cor do nodo pai) e um vetor de Group filhos.\\
 A novidade é que passou a conter um vetor de uma classe denominada de
 \textit{Object}. Esta classe apenas contém o nome do modelo
-(\textit{\_file\_name} e a cor do modelos \textit{\_colour}.\\
+(\textit{\_file\_name}) e a cor do modelos (\textit{\_colour}).\\
 Assim, quando se está a ler o \textit{XML} e é encontrado um modelo, é colocado
 nesse nodo uma instância da classe \textit{Object} e é carregado o ficheiro
 correspondente ao modelo para um \textit{GroupBuffer} (gb) passado por
@@ -174,8 +174,8 @@ Para fazer com que a rotação suporte tempo foi adicionado um campo à classe
 \textit{Rotate} que representa quanto tempo demora a completar uma
 rotação(\textit{\_time}). Por defeito, para ser uma rotação estática basta
 colocar o tempo a 0.\\
-Assim, para calcular o ângulo de uma rotação não estática fazemos a conta
-\textit{\_ang + elapsed * 360/\_time}).\\
+Assim, para calcular o ângulo de uma rotação não estática fazemos a conta:
+\textit{\_ang + elapsed * 360/\_time}.\\
 Assim, uma rotação estática e não estática pode ser calculada com o seguinte
 código.
 
@@ -320,6 +320,8 @@ p                & toggle pausa                                              \\ 
 g                & toggle modo de debug (eixos e caminhos de transformações) \\ \hline
 \end{tabular}
 \end{table}
+
+\pagebreak
 Para implementar a pausa calculamos o tempo entre cada frame. Assim, só se
 incrementa um \textit{static u64 elapsed} caso não se esteja em pausa.\\
 Para suportar acelerar e abrandar o tempo basta definir um \textit{TIME\_SCALE}

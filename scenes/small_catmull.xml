@@ -1,9 +1,0 @@
-<scene> 
-    <translate time="10">
-         <point X="1" Z="1"/>
-         <point X="1" Z="10"/>
-         <point X="10" Z="10"/>
-         <point X="10" Z="1"/>
-     </translate>
-    <model colour="#FF0000" file="models/box.3d" /> 
-</scene>

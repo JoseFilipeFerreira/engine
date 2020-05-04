@@ -23,6 +23,7 @@ linkcolor=black}
 \usepackage{tikz,fullpage}
 \usepackage{pgfgantt}
 \usepackage{amssymb}
+\usepackage{multirow}
 \usepackage{mwe}
 \usetikzlibrary{arrows,%
                 petri,%
@@ -99,10 +100,13 @@ terceira.\\
 Ao longo desta fase dividimos o trabalho em 4 partes:\\
 Primeiro convertemos todos os modelos no \textit{engine} para \textit{VBO}s. Em
 seguida melhoramos o parser de \textit{XML} desenvolvido na fase anterior de
-forma a suportar uma sintaxe mais abrangente. Acrescentamos ainda ao
-\textit{generator} a capacidade de processar ficheiros contendo \textit{patches
-de Bezier}. Finalmente criamos mais \textit{scenes} e melhoramos as já
-existentes de forma a fazer uso das novas funcionalidades do \textit{engine}.\\
+forma a suportar uma sintaxe mais abrangente. Também melhoramos algumas
+funcionalidades do \textit{engine} de forma a o tornar mais \textit{user
+friendly}.\\
+Acrescentamos ainda ao \textit{generator} a capacidade de processar ficheiros
+contendo \textit{patches de Bezier}.\\
+Finalmente criamos mais \textit{scenes} e melhoramos as já existentes de forma a
+fazer uso das novas funcionalidades do \textit{engine}.\\
 Ao longo deste relatório irá ser explicado a metodologia e raciocínio usados
 para a realização desta fase.\\
 
@@ -291,17 +295,31 @@ Depois acrescentamos à estrutura recursiva que reflete o XML (\textit{Group}) u
 vetor de \textit{Objects} que representam os Terrenos carregados nesse nodo.
 
 \section{Keybinds}
-\begin{itemize}
-    \item \textit{wasd}: mover camera
-    \item \textit{hjkl}: orbitar camera
-    \item \textit{p}: toggle pausa
-    \item \textit{[ ]}: abrandar/acelerar tempo
-    \item \textit{g}: toggle debug mode
-        \subitem toggle eixos
-        \subitem toggle fps counter (no nome da janela)
-        \subitem toggle mostrar TIME\_SCALE (no nome da janela)
-        \subitem toggle caminhos de transformação
-\end{itemize}
+Keybinds relacionadas com camera:
+\begin{table}[H]
+\begin{tabular}{|c|c|c|l|}
+\hline
+\multirow{2}{*}{\textbf{modo de camera}} & \multirow{2}{*}{\textbf{keybind}} & \multicolumn{2}{c|}{\textbf{keybinds contextuais}} \\ \cline{3-4} 
+                       &                    & \textbf{keybind} & \multicolumn{1}{c|}{\textbf{descrição}} \\ \hline
+\multirow{3}{*}{Orbit} & \multirow{3}{*}{1} & hjkl             & orbitar um dado ponto                   \\ \cline{3-4} 
+                       &                    & wasd             & mover o ponto no plano xOz              \\ \cline{3-4} 
+                       &                    & r                & reset ponto para a origem               \\ \hline
+\multirow{3}{*}{FPV}   & \multirow{3}{*}{2} & hjkl             & olhar em redor                          \\ \cline{3-4} 
+                       &                    & wasd             & mover a camera                          \\ \cline{3-4} 
+                       &                    & r                & reset camera                            \\ \hline
+\end{tabular}
+\end{table}
+Outras keybinds:
+
+\begin{table}[H]
+\begin{tabular}{|c|l|}
+\hline
+\textbf{keybind} & \multicolumn{1}{c|}{\textbf{descrição}}                   \\ \hline
+p                & toggle pausa                                              \\ \hline
+{[} {]}          & abrandar/acelerar tempo                                   \\ \hline
+g                & toggle modo de debug (eixos e caminhos de transformações) \\ \hline
+\end{tabular}
+\end{table}
 Para implementar a pausa calculamos o tempo entre cada frame. Assim, só se
 incrementa um \textit{static u64 elapsed} caso não se esteja em pausa.\\
 Para suportar acelerar e abrandar o tempo basta definir um \textit{TIME\_SCALE}
@@ -316,6 +334,28 @@ auto delta = frame_delta();
 if (!PAUSE)
     elapsed += delta * TIME_SCALE;
 \end{lstlisting}
+
+\section{Window Title}
+De forma a facilmente apresentar a informação ao utilizador decidimos usar o
+titulo da janela.\\
+Assim temos uma barra normal que mostra o modo atual da camera, o
+\textit{TIME\_SCALE} atual e o número de \textit{frames per second} que se estão
+a obter. Também indica se se está em debug mode ou parado.\\
+\begin{figure}[H]
+    \centering 
+    \includegraphics[width=0.8\textwidth]{images/normal_bar.png}
+    \caption{barra em estado normal}
+\end{figure}
+\begin{figure}[H]
+    \centering 
+    \includegraphics[width=0.8\textwidth]{images/paused_bar.png}
+    \caption{barra paused}
+\end{figure}
+\begin{figure}[H]
+    \centering 
+    \includegraphics[width=0.8\textwidth]{images/debug_bar.png}
+    \caption{barra em modo de debug}
+\end{figure}
 
 \chapter{Generator}
 Neste módulo foram definidas nas fases anterior 6 primitivas:

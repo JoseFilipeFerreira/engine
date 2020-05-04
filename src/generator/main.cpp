@@ -27,8 +27,8 @@ static auto const help_string =
 template<typename T>
 void file_writer(T v, std::string const& filename) {
     auto f = std::ofstream(filename);
-    for(Point p: v.draw())
-        f << p.to_string() << "\n";
+    for(auto const& p: v.draw())
+        f << p << "\n";
 }
 
 int main(int argc, char** argv) {

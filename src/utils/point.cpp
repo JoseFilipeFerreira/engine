@@ -73,12 +73,6 @@ VectorSpherical::VectorSpherical(Point const& p0, Point const& p1) {
     _azimuth = v.azimuth();
 }
 
-std::string VectorSpherical::to_string() const {
-    std::ostringstream sstream;
-    sstream << _radius << ' ' << _inclination << ' ' << _azimuth;
-    return sstream.str();
-}
-
 Point::Point(float x, float y, float z): _x(x), _y(y), _z(z) {}
 
 auto Point::add_x(float v) const -> Point {
@@ -115,14 +109,22 @@ auto PointSpherical::add_azimuth(float x) const -> PointSpherical {
     return PointSpherical(_radius, _inclination, normalize_angle(_azimuth + x));
 }
 
-std::string PointSpherical::to_string() const {
-    std::ostringstream sstream;
-    sstream << _radius << ' ' << _inclination << ' ' << _azimuth;
-    return sstream.str();
+auto operator<<(std::ostream& oss, VectorSpherical const& vs) -> std::ostream& {
+    oss << vs._radius << ' ' << vs._inclination << ' ' << vs._azimuth;
+    return oss;
 }
 
-std::string Point::to_string() const {
-    std::ostringstream sstream;
-    sstream << _x << ' ' << _y << ' ' << _z;
-    return sstream.str();
+auto operator<<(std::ostream& oss, PointSpherical const& ps) -> std::ostream& {
+    oss << ps._radius << ' ' << ps._inclination << ' ' << ps._azimuth;
+    return oss;
+}
+
+auto operator<<(std::ostream& oss, Point const& p) -> std::ostream& {
+    oss << p._x << ' ' << p._y << ' ' << p._z;
+    return oss;
+}
+
+auto operator<<(std::ostream& oss, Vector const& v) -> std::ostream& {
+    oss << v._x << ' ' << v._y << ' ' << v._z;
+    return oss;
 }

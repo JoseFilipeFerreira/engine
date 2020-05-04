@@ -17,7 +17,7 @@ class Vector {
     Vector(Point const&, Point const&);
     Vector(Point const&);
     Vector(VectorSpherical const&);
-    std::string to_string() const;
+    auto friend operator<<(std::ostream&, Vector const&) -> std::ostream&;
     auto constexpr x() const noexcept -> float { return _x; }
     auto constexpr y() const noexcept -> float { return _y; }
     auto constexpr z() const noexcept -> float { return _z; }
@@ -44,7 +44,7 @@ class VectorSpherical {
     VectorSpherical(float, float, float);
     VectorSpherical(Vector const&);
     VectorSpherical(Point const&, Point const&);
-    std::string to_string() const;
+    auto friend operator<<(std::ostream&, VectorSpherical const&) -> std::ostream&;
     auto constexpr radius() const noexcept -> float { return _radius; }
     auto constexpr inclination() const noexcept -> float {
         return _inclination;
@@ -69,7 +69,7 @@ class Point {
   public:
     Point(float, float, float);
     Point(PointSpherical const&);
-    std::string to_string() const;
+    auto friend operator<<(std::ostream&, Point const&) -> std::ostream&;
     auto constexpr x() const noexcept -> float { return _x; }
     auto constexpr y() const noexcept -> float { return _y; }
     auto constexpr z() const noexcept -> float { return _z; }
@@ -92,7 +92,7 @@ class PointSpherical {
   public:
     PointSpherical(float, float, float);
     PointSpherical(Point const&);
-    std::string to_string() const;
+    auto friend operator<<(std::ostream&, PointSpherical const&) -> std::ostream&;
     auto constexpr radius() const noexcept -> float { return _radius; }
     auto constexpr inclination() const noexcept -> float {
         return _inclination;

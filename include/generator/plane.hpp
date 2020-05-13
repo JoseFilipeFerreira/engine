@@ -1,6 +1,7 @@
 #ifndef PLANE_H
 #define PLANE_H
 #include "utils/point.hpp"
+#include "utils/modelPoint.hpp"
 
 #include <vector>
 
@@ -10,7 +11,7 @@ class Plane {
 
   public:
     Plane(int argc, char** args);
-    std::vector<Point> draw() const;
+    std::vector<ModelPoint> draw() const;
 };
 
 #endif // PLANE_H

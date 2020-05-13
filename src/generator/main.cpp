@@ -9,7 +9,6 @@
 #include "generator/patches.hpp"
 
 #include<string>
-#include<ostream>
 #include<iostream>
 #include<fstream>
 

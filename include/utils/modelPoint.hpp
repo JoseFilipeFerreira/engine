@@ -15,6 +15,15 @@ class ModelPoint {
     ModelPoint(Point const& p, Vector const& v, float x, float y)
         : _points(p), _vector(v), _x(x), _y(y){};
 
+    ModelPoint(PointSpherical const& ps, VectorSpherical const& vs, float x, float y)
+        : _points(Point(ps)), _vector(Vector(vs)), _x(x), _y(y){};
+
+    ModelPoint(Point const& ps, VectorSpherical const& vs, float x, float y)
+        : _points(ps), _vector(Vector(vs)), _x(x), _y(y){};
+
+    ModelPoint(PointSpherical const& ps, Vector const& vs, float x, float y)
+        : _points(Point(ps)), _vector(vs), _x(x), _y(y){};
+
     auto friend operator<<(std::ostream& oss, ModelPoint const& mp) -> std::ostream& {
         oss << mp._points << ' ';
         oss << mp._vector << ' ';

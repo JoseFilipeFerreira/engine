@@ -1,6 +1,6 @@
 #ifndef CONE_H
 #define CONE_H
-#include "utils/point.hpp"
+#include "utils/modelPoint.hpp"
 #include "utils/types.hpp"
 
 #include <vector>
@@ -14,7 +14,7 @@ class Cone {
 
   public:
     Cone(int argc, char** argv);
-    std::vector<Point> draw() const;
+    std::vector<ModelPoint> draw() const;
 };
 
 #endif // PLANE_H

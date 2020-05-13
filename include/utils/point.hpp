@@ -76,6 +76,7 @@ class Point {
     auto add_x(float) const -> Point;
     auto add_y(float) const -> Point;
     auto add_z(float) const -> Point;
+    auto normalized_vector() const -> Vector;
     auto operator+(Vector const& p) const -> Point {
         return Point(_x + p.x(), _y + p.y(), _z + p.z());
     }
@@ -101,6 +102,7 @@ class PointSpherical {
     auto add_radius(float) const -> PointSpherical;
     auto add_inclination(float) const -> PointSpherical;
     auto add_azimuth(float) const -> PointSpherical;
+    auto normalized_vector() const -> VectorSpherical;
     auto operator+(Vector const& v) const -> PointSpherical {
         return PointSpherical(Point(*this) + v);
     }

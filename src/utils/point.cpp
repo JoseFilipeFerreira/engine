@@ -4,8 +4,8 @@
 #include <sstream>
 
 float normalize_angle(float a) {
-    if (a < -M_PI) return normalize_angle(a + 2 * M_PI);
-    if (a > M_PI) return normalize_angle(a - 2 * M_PI);
+    if (a < -M_PI) return normalize_angle(a + 2.0f * M_PI);
+    if (a > M_PI) return normalize_angle(a - 2.0f * M_PI);
     return a;
 }
 
@@ -107,6 +107,14 @@ auto PointSpherical::add_inclination(float x) const -> PointSpherical {
 }
 auto PointSpherical::add_azimuth(float x) const -> PointSpherical {
     return PointSpherical(_radius, _inclination, normalize_angle(_azimuth + x));
+}
+
+auto Point::normalized_vector() const -> Vector {
+    return Vector(_x, _y, _z).normalize();
+}
+
+auto PointSpherical::normalized_vector() const -> VectorSpherical {
+    return VectorSpherical(1, _inclination, _azimuth);
 }
 
 auto operator<<(std::ostream& oss, VectorSpherical const& vs) -> std::ostream& {

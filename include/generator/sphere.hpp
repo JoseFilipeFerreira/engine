@@ -1,6 +1,6 @@
 #ifndef SPHERE_H
 #define SPHERE_H
-#include "utils/point.hpp"
+#include "utils/modelPoint.hpp"
 #include "utils/types.hpp"
 
 #include <vector>
@@ -13,7 +13,7 @@ class Sphere {
 
   public:
     Sphere(int argc, char** argv);
-    std::vector<Point> draw() const;
+    std::vector<ModelPoint> draw() const;
 };
 
 #endif // PLANE_H

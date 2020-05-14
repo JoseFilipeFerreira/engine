@@ -35,15 +35,15 @@ std::vector<ModelPoint> Sphere::draw() const {
 
             if (stack != 0) {
                 // 1st triangle
-                coords.emplace_back(p3, v3, next_t_x, next_t_y);
-                coords.emplace_back(p0, v0, curr_t_x, curr_t_y);
                 coords.emplace_back(p2, v2, next_t_x, curr_t_y);
+                coords.emplace_back(p0, v0, curr_t_x, curr_t_y);
+                coords.emplace_back(p3, v3, next_t_x, next_t_y);
             }
             if (stack != _stacks - 1) {
                 // 2nd triangle
-                coords.emplace_back(p1, v1, curr_t_x, next_t_y);
-                coords.emplace_back(p0, v0, curr_t_x, curr_t_y);
                 coords.emplace_back(p3, v3, next_t_x, next_t_y);
+                coords.emplace_back(p0, v0, curr_t_x, curr_t_y);
+                coords.emplace_back(p1, v1, curr_t_x, next_t_y);
             }
         }
     }

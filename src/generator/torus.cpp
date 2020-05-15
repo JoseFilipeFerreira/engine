@@ -44,14 +44,14 @@ std::vector<ModelPoint> Torus::draw() const {
             float top_t_x = static_cast<float>(stack + 1) / _stacks;
 
             // 1st triangle
-            coords.emplace_back(p1, top.normalize(), top_t_x, 0);
-            coords.emplace_back(p2, n_base.normalize(), base_t_x, 1);
-            coords.emplace_back(p0, base.normalize(), base_t_x, 0);
+            coords.emplace_back(p1, top.normalize(), top_t_x, curr_t_y);
+            coords.emplace_back(p2, n_base.normalize(), base_t_x, next_t_y);
+            coords.emplace_back(p0, base.normalize(), base_t_x, curr_t_y);
 
             // 2nd triangle
-            coords.emplace_back(p1, top.normalize(), top_t_x, 0);
-            coords.emplace_back(p3, n_top.normalize(), top_t_x, 1);
-            coords.emplace_back(p2, n_base.normalize(), base_t_x, 1);
+            coords.emplace_back(p1, top.normalize(), top_t_x, curr_t_y);
+            coords.emplace_back(p3, n_top.normalize(), top_t_x, next_t_y);
+            coords.emplace_back(p2, n_base.normalize(), base_t_x, next_t_y);
         }
     }
 

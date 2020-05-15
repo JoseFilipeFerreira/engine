@@ -1,6 +1,6 @@
 #ifndef CYLINDER_H
 #define CYLINDER_H
-#include "utils/point.hpp"
+#include "utils/modelPoint.hpp"
 #include "utils/types.hpp"
 
 #include <vector>
@@ -14,7 +14,7 @@ class Cylinder {
 
   public:
     Cylinder(int argc, char** argv);
-    std::vector<Point> draw() const;
+    std::vector<ModelPoint> draw() const;
 };
 
 #endif

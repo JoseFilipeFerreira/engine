@@ -21,6 +21,9 @@ class Vector {
     auto constexpr x() const noexcept -> float { return _x; }
     auto constexpr y() const noexcept -> float { return _y; }
     auto constexpr z() const noexcept -> float { return _z; }
+    auto mirror_x() const -> Vector { return Vector(-1 * _x, _y, _z); }
+    auto mirror_y() const -> Vector { return Vector(_x, -1 * _y, _z); }
+    auto mirror_z() const -> Vector { return Vector(_x, _y, -1 * _z); }
     auto normalize() const -> Vector;
     auto cross(Vector) const -> Vector;
     auto hadamard(Vector const&) const -> Vector;
@@ -44,7 +47,8 @@ class VectorSpherical {
     VectorSpherical(float, float, float);
     VectorSpherical(Vector const&);
     VectorSpherical(Point const&, Point const&);
-    auto friend operator<<(std::ostream&, VectorSpherical const&) -> std::ostream&;
+    auto friend operator<<(std::ostream&, VectorSpherical const&)
+        -> std::ostream&;
     auto constexpr radius() const noexcept -> float { return _radius; }
     auto constexpr inclination() const noexcept -> float {
         return _inclination;
@@ -93,7 +97,8 @@ class PointSpherical {
   public:
     PointSpherical(float, float, float);
     PointSpherical(Point const&);
-    auto friend operator<<(std::ostream&, PointSpherical const&) -> std::ostream&;
+    auto friend operator<<(std::ostream&, PointSpherical const&)
+        -> std::ostream&;
     auto constexpr radius() const noexcept -> float { return _radius; }
     auto constexpr inclination() const noexcept -> float {
         return _inclination;

@@ -29,9 +29,8 @@ std::vector<ModelPoint> Torus::draw() const {
 
         for (i32 stack = 0; stack < _stacks; stack++) {
             auto base = VectorSpherical(
-                _ring_radius, a_stack * stack, center.azimuth());
-            auto n_base = VectorSpherical(
-                _ring_radius, a_stack * stack, n_center.azimuth());
+                _ring_radius, a_stack * stack + M_PI, center.azimuth());
+            auto n_base = base.add_azimuth(a_slice);
 
             auto top = base.add_inclination(a_stack);
             auto n_top = n_base.add_inclination(a_stack);

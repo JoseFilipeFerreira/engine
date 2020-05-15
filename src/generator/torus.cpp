@@ -28,8 +28,8 @@ std::vector<ModelPoint> Torus::draw() const {
         float next_t_y = static_cast<float>(slice + 1) / _slices;
 
         for (i32 stack = 0; stack < _stacks; stack++) {
-            auto base = VectorSpherical(
-                _ring_radius, a_stack * stack + M_PI, center.azimuth());
+            float offset = a_stack * stack + M_PI;
+            auto base = VectorSpherical(_ring_radius, offset, center.azimuth());
             auto n_base = base.add_azimuth(a_slice);
 
             auto top = base.add_inclination(a_stack);

@@ -5,9 +5,9 @@
 #include "utils/types.hpp"
 #include "utils/visitor.hpp"
 
-#include <vector>
+#include <array>
 #include <utility>
-
+#include <vector>
 
 #ifdef __APPLE__
 #    include <GLUT/glut.h>
@@ -21,9 +21,29 @@ class Colour {
     float _r, _g, _b, _a;
 
   public:
-    Colour(): _r(0), _g(0), _b(0), _a(1) {}
+    Colour(): _r(1), _g(1), _b(1), _a(1) {}
     Colour(float r, float g, float b, float a): _r(r), _g(g), _b(b), _a(a) {}
+    auto constexpr r() noexcept -> float { return _r; }
+    auto constexpr g() noexcept -> float { return _g; }
+    auto constexpr b() noexcept -> float { return _b; }
+    auto constexpr a() noexcept -> float { return _a; }
     void apply() const { glColor4f(_r, _g, _b, _a); }
+    void set_diffuse() const {
+        float a[] = {_r, _g, _b, _a};
+        glMaterialfv(GL_FRONT, GL_DIFFUSE, a);
+    }
+    void set_specular() const {
+        float a[] = {_r, _g, _b, _a};
+        glMaterialfv(GL_FRONT, GL_SPECULAR, a);
+    }
+    void set_emissive() const {
+        float a[] = {_r, _g, _b, _a};
+        glMaterialfv(GL_FRONT, GL_EMISSION, a);
+    }
+    void set_ambient() const {
+        float a[] = {_r, _g, _b, _a};
+        glMaterialfv(GL_FRONT, GL_AMBIENT, a);
+    }
 };
 
 class Scale {
@@ -53,7 +73,7 @@ class CatmullRon {
     CatmullRon(float time, std::vector<Point> points)
         : _time(time), _points(points) {}
     void apply(bool, float);
-    auto get_location(float) const -> std::pair<Point,Vector>;
+    auto get_location(float) const -> std::pair<Point, Vector>;
     void draw_curve() const;
 };
 

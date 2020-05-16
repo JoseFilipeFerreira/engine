@@ -1,95 +1,102 @@
 #include "engine/parser.hpp"
 
 #include "deps/tinyxml.hpp"
+#include "utils/colour.hpp"
 #include "utils/point.hpp"
 #include "utils/types.hpp"
 
-#include <stack>
 #include <stdexcept>
 
-GroupBuffer::GroupBuffer() {
-    _model_buffers = std::unordered_map<std::string, ModelBuffer>();
+void throw_fancy_error(TiXmlElement* elem, std::string const& error) {
+    std::stringstream ss;
+    ss << elem->Row() << ":" << elem->Column() << ": " << RED
+       << "error: " << RESET << error;
+    throw std::invalid_argument(ss.str());
+}
+void throw_fancy_error(
+    TiXmlElement* elem,
+    std::string const& error,
+    std::string const& attribute) {
+    std::stringstream ss;
+    ss << elem->Row() << ":" << elem->Column() << ": " << RED
+       << "error: " << RESET << error << " in Attribute: \"" << attribute
+       << "\"";
+
+    throw std::invalid_argument(ss.str());
 }
 
-void GroupBuffer::insert_model(std::string const& model_name) {
-    auto search = _model_buffers.find(model_name);
-    if (search == _model_buffers.end()) {
-        auto model = ModelBuffer(model_name);
-        _model_buffers.insert(std::make_pair(model_name, model));
-    }
-}
-
-void GroupBuffer::insert_terrain(
-    std::string const& terrain_name, i32 min_height, i32 max_height) {
-    auto search = _terrain_buffers.find(terrain_name);
-    if (search == _terrain_buffers.end()) {
-        auto terrain = TerrainBuffer(terrain_name, min_height, max_height);
-        _terrain_buffers.insert(std::make_pair(terrain_name, terrain));
-    }
-}
-
-void GroupBuffer::draw_model(std::string const& model_name) const {
-    auto search = _model_buffers.find(model_name);
-    if (search != _model_buffers.end())
-        (search->second).draw_model();
-    else
-        throw std::invalid_argument("Attempted to draw an unloaded model");
-}
-
-void GroupBuffer::draw_terrain(std::string const& terrain_name) const {
-    auto search = _terrain_buffers.find(terrain_name);
-    if (search != _terrain_buffers.end())
-        (search->second).draw_terrain();
-    else
-        throw std::invalid_argument("Attempted to draw an unloaded model");
-}
-
-Group::Group() {
-    transformations = std::vector<Transform>();
-    models = std::vector<Object>();
-    terrains = std::vector<Object>();
-    colour = Colour();
-    subgroups = std::vector<Group>();
-}
-
-auto parse_colour(TiXmlElement* elem, Colour colour) -> Colour {
-    if (elem->Attribute("colour")) {
+auto parse_colour(TiXmlElement* elem, std::string const& attribute)
+    -> std::optional<Colour> {
+    if (elem->Attribute(attribute)) {
         u32 r, g, b, a;
-        std::string_view s = elem->Attribute("colour");
+        std::string const s = *elem->Attribute(attribute);
         if (s.length() == 7) {
             std::sscanf(s.data(), "#%02x%02x%02x", &r, &g, &b);
             a = 255;
-        } else {
+
+        } else if (s.length() == 9) {
             std::sscanf(s.data(), "#%02x%02x%02x%02x", &r, &g, &b, &a);
+
+        } else {
+            throw_fancy_error(elem, "Invalid colour format", attribute);
         }
-        colour = Colour(r / 255.0f, g / 255.0f, b / 255.0f, a / 255.0f);
+        return Colour(r / 255.0f, g / 255.0f, b / 255.0f, a / 255.0f);
     }
-    return colour;
+    return std::nullopt;
+}
+
+auto update_colour(TiXmlElement* elem, Colour colour) -> Colour {
+    return parse_colour(elem, "colour").value_or(colour);
 }
 
 auto parse_points(TiXmlElement* root) -> std::vector<Point> {
     std::vector<Point> points;
-    for (TiXmlElement* elem = root->FirstChildElement(); elem != NULL;
+    for (auto elem = root->FirstChildElement(); elem != NULL;
          elem = elem->NextSiblingElement()) {
         std::string_view type = elem->Value();
         if (type == "point") {
             float x = std::stof(elem->Attribute("X") ?: "0");
             float y = std::stof(elem->Attribute("Y") ?: "0");
             float z = std::stof(elem->Attribute("Z") ?: "0");
-            points.push_back(Point(x, y, z));
+            points.emplace_back(x, y, z);
         }
     }
-
+    if (points.size() < 4)
+        throw_fancy_error(
+            root, "There need to be at least 4 points in a Catmull-Rom curve");
     return points;
 }
 
-Group Parser(TiXmlElement* root, Colour colour, GroupBuffer& gb) {
+Object parse_object(TiXmlElement* elem, Colour colour, GroupBuffer& gb) {
+    std::optional<std::string> tex;
+    if (elem->Attribute("texture")) {
+        tex = std::make_optional(elem->Attribute("texture"));
+        gb.insert_texture(tex.value());
+    }
+
+    auto diffuse = parse_colour(elem, "diff");
+    auto specular = parse_colour(elem, "spec");
+    auto emissive = parse_colour(elem, "emis");
+    auto ambient = parse_colour(elem, "ambi");
+
+    return Object(
+        elem->Attribute("file"),
+        tex,
+        colour,
+        diffuse,
+        specular,
+        emissive,
+        ambient);
+}
+
+auto recursive_parse(TiXmlElement* root, Colour colour, GroupBuffer& gb)
+    -> Group {
     std::vector<Transform> vTran;
     std::vector<Object> vMod;
     std::vector<Object> vTer;
     std::vector<Group> vGroup;
 
-    for (TiXmlElement* elem = root->FirstChildElement(); elem != NULL;
+    for (TiXmlElement* elem = root->FirstChildElement(); elem != nullptr;
          elem = elem->NextSiblingElement()) {
         std::string_view type = elem->Value();
 
@@ -97,9 +104,6 @@ Group Parser(TiXmlElement* root, Colour colour, GroupBuffer& gb) {
             if (elem->Attribute("time")) {
                 float const time = std::stof(elem->Attribute("time") ?: "0");
                 auto point_vec = parse_points(elem);
-                if (point_vec.size() < 4)
-                    throw std::invalid_argument(
-                        "There need to be at least 4 points in a Catmull-Ron curve");
                 vTran.push_back(CatmullRon(time, point_vec));
             } else {
                 float x = std::stof(elem->Attribute("X") ?: "0");
@@ -114,24 +118,32 @@ Group Parser(TiXmlElement* root, Colour colour, GroupBuffer& gb) {
             float z = std::stof(elem->Attribute("axisZ") ?: "0");
             float time = std::stof(elem->Attribute("time") ?: "0");
             vTran.push_back(Rotate(ang, x, y, z, time));
+
         } else if (type == "scale") {
             float x = std::stof(elem->Attribute("X") ?: "1");
             float y = std::stof(elem->Attribute("Y") ?: "1");
             float z = std::stof(elem->Attribute("Z") ?: "1");
             vTran.push_back(Scale(x, y, z));
+
         } else if (type == "model") {
-            vMod.push_back(
-                Object(elem->Attribute("file"), parse_colour(elem, colour)));
-            gb.insert_model(elem->Attribute("file"));
+            auto m_obj = parse_object(elem, update_colour(elem, colour), gb);
+
+            gb.insert_model(m_obj.model_name());
+
+            vMod.push_back(m_obj);
+
         } else if (type == "terrain") {
+            auto t_obj = parse_object(elem, update_colour(elem, colour), gb);
+
             float min_height = std::stof(elem->Attribute("min") ?: "0");
             float max_height = std::stof(elem->Attribute("max") ?: "255");
-            vTer.push_back(
-                Object(elem->Attribute("file"), parse_colour(elem, colour)));
+            gb.insert_terrain(t_obj.model_name(), min_height, max_height);
 
-            gb.insert_terrain(elem->Attribute("file"), min_height, max_height);
+            vTer.push_back(t_obj);
+
         } else {
-            vGroup.push_back(Parser(elem, parse_colour(elem, colour), gb));
+            vGroup.push_back(
+                recursive_parse(elem, update_colour(elem, colour), gb));
         }
     }
     return Group(
@@ -142,7 +154,7 @@ Group Parser(TiXmlElement* root, Colour colour, GroupBuffer& gb) {
         std::move(vGroup));
 }
 
-Group::Group(const char* fileName, GroupBuffer& gb) {
+auto Parser(const char* fileName, GroupBuffer& gb) -> Group {
     TiXmlDocument doc(fileName);
     if (!doc.LoadFile()) {
         throw doc.ErrorDesc();
@@ -153,22 +165,5 @@ Group::Group(const char* fileName, GroupBuffer& gb) {
         throw "Failed to load file: No root element.";
     }
 
-    *this = Parser(doc.FirstChildElement(), Colour(), gb);
-}
-
-void Group::draw_group(float elapsed, bool DEBUG, GroupBuffer const& group_buffer) const {
-    for (auto const& t : transformations) t.apply(DEBUG, elapsed);
-    for (auto const& m : models) {
-        m.apply_colour();
-        group_buffer.draw_model(m.model_name());
-    }
-    for (auto const& t : terrains) {
-        t.apply_colour();
-        group_buffer.draw_terrain(t.model_name());
-    }
-    for (auto const& g : subgroups) {
-        glPushMatrix();
-        g.draw_group(elapsed, DEBUG, group_buffer);
-        glPopMatrix();
-    }
+    return recursive_parse(doc.FirstChildElement(), Colour(), gb);
 }

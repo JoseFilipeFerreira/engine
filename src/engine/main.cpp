@@ -156,17 +156,19 @@ int main(int argc, char** argv) {
     glutKeyboardFunc(react_key);
 
     glEnableClientState(GL_VERTEX_ARRAY);
+    glEnableClientState(GL_NORMAL_ARRAY);
+    glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 
     // Enable blending
-    glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glEnable(GL_BLEND);
 
     //  OpenGL settings
-    glEnable(GL_BLEND);
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_CULL_FACE);
     glEnable(GL_TEXTURE_2D);
     glEnable(GL_NORMALIZE);
+    // glEnable(GL_LIGHTING);
     // glPolygonMode(GL_FRONT, GL_LINE);
 
     glewInit();
@@ -181,11 +183,16 @@ int main(int argc, char** argv) {
     glutReshapeFunc(changeSize);
     glutKeyboardFunc(react_key);
 
-    auto sceneName = "scenes/config.xml";
-    if (argc > 1) sceneName = argv[1];
+    auto scene_name = "scenes/config.xml";
+    if (argc > 1) scene_name = argv[1];
 
-    group_buffer.insert_model("models/sphere.3d");
-    group = Group(sceneName, group_buffer);
+    try {
+        group = Parser(scene_name, group_buffer);
+    } catch (std::exception& e) {
+        std::cout << "Error while parsing: " << scene_name << "\n";
+        std::cout << e.what() << '\n';
+        return 1;
+    }
 
     // enter GLUT's main cycle
     glutMainLoop();

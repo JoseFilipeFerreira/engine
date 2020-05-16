@@ -34,22 +34,22 @@ void Camera::react_key_orbit(unsigned char key, int x, int y) {
             _pc = _pl + v.add_azimuth(0.1);
             break;
         case 'w':
-            t = VectorSpherical(0.1, M_PI / 2, v.azimuth() + M_PI);
+            t = VectorSpherical(0.1, M_PI_2, v.azimuth() + M_PI);
             _pc = _pc + t;
             _pl = _pl + t;
             break;
         case 's':
-            t = VectorSpherical(0.1, M_PI / 2, v.azimuth());
+            t = VectorSpherical(0.1, M_PI_2, v.azimuth());
             _pl = _pl + t;
             _pc = _pl + v;
             break;
         case 'a':
-            t = VectorSpherical(0.1, M_PI / 2, v.azimuth() - M_PI / 2);
+            t = VectorSpherical(0.1, M_PI_2, v.azimuth() - M_PI_2);
             _pl = _pl + t;
             _pc = _pl + v;
             break;
         case 'd':
-            t = VectorSpherical(0.1, M_PI / 2, v.azimuth() + M_PI / 2);
+            t = VectorSpherical(0.1, M_PI_2, v.azimuth() + M_PI_2);
             _pl = _pl + t;
             _pc = _pl + v;
             break;
@@ -92,7 +92,8 @@ void Camera::react_key_fpv(unsigned char key, int x, int y) {
             _pl = _pc + vc;
             break;
         case 'd':
-            _pc = _pc + vc.cross(Vector(0, 1, 0)).normalize() * 0.05;;
+            _pc = _pc + vc.cross(Vector(0, 1, 0)).normalize() * 0.05;
+            ;
             _pl = _pc + vc;
             break;
     }

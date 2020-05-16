@@ -1,0 +1,38 @@
+<scene>
+    <group colour="#AA" >
+        <translate X="5" />
+        <model file="models/sphere.3d" texture="textures/8k_mercury.jpg" />
+        <group>
+            <translate X="5" />
+            <model file="models/sphere.3d" texture="textures/8k_venus_surface.jpg" />
+            <group>
+                <translate X="5" />
+                <model file="models/sphere.3d" texture="textures/8k_earth_daymap.jpg" />
+                <group>
+                    <translate X="5" />
+                    <model file="models/sphere.3d" texture="textures/8k_mars.jpg" />
+                    <group>
+                        <translate X="5" />
+                        <model file="models/sphere.3d" texture="textures/8k_jupiter.jpg" />
+                        <group>
+                            <translate X="5" />
+                            <model file="models/sphere.3d" texture="textures/8k_saturn.jpg" />
+                            <group>
+                                <translate X="5" />
+                                <model file="models/sphere.3d" texture="textures/2k_uranus.jpg" />
+                                <group>
+                                    <translate X="5" />
+                                    <model file="models/sphere.3d" texture="textures/2k_neptune.jpg" />
+                                    <group>
+                                        <translate X="5" />
+                                        <model file="models/sphere.3d" texture="textures/8k_moon.jpg" />
+                                    </group>
+                                </group>
+                            </group>
+                        </group>
+                    </group>
+                </group>
+            </group>
+        </group>
+    </group>
+</scene>

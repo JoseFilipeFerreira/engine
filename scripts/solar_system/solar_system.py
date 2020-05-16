@@ -50,12 +50,13 @@ def generate_moons(planet_name, planet_radius, rotation_time, colour):
     return moons
 
 class Astro:
-    def __init__(self, name, distance, colour, radius=None, has_ring=False, orbit_time=0, rotation_time=0):
+    def __init__(self, name, distance, colour, radius=None, has_ring=False, orbit_time=0, rotation_time=0, texture=None):
         self.name = name
         if not radius:
             self.radius = astro_radius(name)
         else:
             self.radius = radius
+        self.texture = texture
         self.orbit_time=orbit_time
         self.rotation_time=rotation_time
         self.distance = distance
@@ -64,12 +65,11 @@ class Astro:
         self.moons = generate_moons(name, self.radius, rotation_time, "#808080")
 
     def print_ring(self, curr_radius=SCALE, indent=7):
-        new_colour = colour_variant(self.colour, 15)
         print(' ' * indent, f'<!-- {self.name}\'s ring -->')
-        print(' ' * indent, f'<group colour="{new_colour}">')
+        print(' ' * indent, f'<group>')
         print(' ' * indent, f'    <scale X="1.5" Z="1.5" Y="0.01" />')
         print(' ' * indent, '     <models>')
-        print(' ' * indent, '         <model file="models/torus.3d"/>')
+        print(' ' * indent, '         <model colour="#FFFFFF" file="models/torus.3d" texture="textures/8k_saturn_ring_alpha.jpg"/>')
         print(' ' * indent, '     </models>')
         print(' ' * indent, '</group>')
 
@@ -79,14 +79,17 @@ class Astro:
         curr_translate = self.distance / curr_radius
         curr_scale = self.radius / curr_radius
         print(' ' * indent, f'<!-- {self.name} -->')
-        print(' ' * indent, f'<group colour="{self.colour}">')
+        print(' ' * indent, f'<group>')
         print(' ' * indent, f'    <rotate axisX="0" axisY="1" axisZ="0" angle="{rng_r}" time={self.orbit_time} />')
         print(' ' * indent, f'    <translate X="0" Y="0" Z="{curr_translate}" />')
         print(' ' * indent, f'    <group>')
         print(' ' * indent, f'        <rotate axisX="0" axisY="1" axisZ="0" time={self.rotation_time} />')
         print(' ' * indent, f'        <scale X="{curr_scale}" Y="{curr_scale}" Z="{curr_scale}" />')
         print(' ' * indent, f'        <models>')
-        print(' ' * indent, f'            <model file="models/sphere.3d"/>')
+        if self.texture:
+            print(' ' * indent, f'            <model file="models/sphere.3d" colour="#FFFFFF" texture="{self.texture}" />')
+        else:
+            print(' ' * indent, f'            <model file="models/sphere.3d" colour="{self.colour}" />')
         print(' ' * indent, f'        </models>')
         if self.has_ring:
             self.print_ring(self.radius, indent+8)
@@ -141,14 +144,15 @@ def get_planets():
                     row["color"],
                     has_ring=str_to_bool(row["has ring"]),
                     orbit_time=float(row["orbit time (days)"])/40,
-                    rotation_time=float(row["rotation time (minutes)"])/80)
+                    rotation_time=float(row["rotation time (minutes)"])/80,
+                    texture=row["texture file"])
 
 print('<scene>')
 print('    <!--Sun-->')
 print('    <group colour="#FFFF00">')
 print(f'        <scale X="{SCALE}" Y="{SCALE}" Z="{SCALE}" />')
 print('        <models>')
-print('            <model file="models/sphere.3d"/>')
+print('            <model file="models/sphere.3d" texture="textures/8k_sun.jpg" />')
 print('        </models>')
 for p in get_planets():
     p.print_astro()

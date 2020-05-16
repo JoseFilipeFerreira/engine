@@ -2,8 +2,6 @@
 
 #include "utils/point.hpp"
 
-#include <stdexcept>
-
 Box::Box(int argc, char** argv) {
     _x = std::stof(argv[0]);
     _y = std::stof(argv[1]);
@@ -13,66 +11,77 @@ Box::Box(int argc, char** argv) {
     else
         _slices = std::stoi(argv[3]) + 1;
 }
+void Box::draw_face(
+    std::vector<ModelPoint>& coords,
+    Point org,
+    Point tex_org,
+    Vector base,
+    Vector top) const {
+    auto normal = base.cross(top).normalize();
 
-std::vector<Point> Box::draw() const {
-    std::vector<Point> coords;
+    for (i32 i = 0; i < _slices; i++) {
+        float xt = static_cast<float>(i) / (_slices * 3);
+        float n_xt = static_cast<float>(i + 1) / (_slices * 3);
+
+        for (i32 j = 0; j < _slices; j++) {
+            float yt = static_cast<float>(j) / (_slices * 2);
+            float n_yt = static_cast<float>(j + 1) / (_slices * 2);
+
+            auto p0 = org + base * i + top * j;
+            auto p1 = org + base * i + top * (j + 1);
+            auto p2 = org + base * (i + 1) + top * (j + 1);
+            auto p3 = org + base * (i + 1) + top * j;
+
+            // 1st triangle
+            coords.emplace_back(p0, normal, tex_org.x() + xt, tex_org.y() - yt);
+            coords.emplace_back(p2, normal, tex_org.x() + n_xt, tex_org.y() - n_yt);
+            coords.emplace_back(p1, normal, tex_org.x() + xt, tex_org.y() - n_yt);
+            // 2nd triangle
+            coords.emplace_back(p0, normal, tex_org.x() + xt, tex_org.y() - yt);
+            coords.emplace_back(p3, normal, tex_org.x() + n_xt, tex_org.y() - yt);
+            coords.emplace_back(p2, normal, tex_org.x() + n_xt, tex_org.y() - n_yt);
+        }
+    }
+}
+
+std::vector<ModelPoint> Box::draw() const {
+    std::vector<ModelPoint> coords;
 
     float stepx = _x / _slices;
     float stepy = _y / _slices;
     float stepz = _z / _slices;
 
-    auto xy = Vector(stepx, stepy,     0);
-    auto yz = Vector(0    , stepy, stepz);
-    auto xz = Vector(stepx,     0, stepz);
+    auto x = Vector(stepx, 0, 0);
+    auto y = Vector(0, stepy, 0);
+    auto z = Vector(0, 0, stepz);
+    auto mx = x.mirror_x();
+    auto my = y.mirror_y();
+    auto mz = z.mirror_z();
 
-    auto front  = Point(-_x/2, -_y/2,  _z/2);
-    auto back   = Point( _x/2,  _y/2, -_z/2);
+    auto top = Point(_x / 2, _y / 2, _z / 2);
+    auto right = top.mirror_y();
+    auto front = right.mirror_x();
+    auto back = right.mirror_z();
+    auto left = front.mirror_z();
 
-    for(i32 i = 0; i < _slices; i++) {
-        for(i32 j = 0; j < _slices; j++) {
-            //front
-            coords.push_back(front + xy.hadamard(i  , j  , 0));
-            coords.push_back(front + xy.hadamard(i+1, j  , 0));
-            coords.push_back(front + xy.hadamard(i+1, j+1, 0));
-            coords.push_back(front + xy.hadamard(i  , j  , 0));
-            coords.push_back(front + xy.hadamard(i+1, j+1, 0));
-            coords.push_back(front + xy.hadamard(i  , j+1, 0));
-            //back
-            coords.push_back(back + xy.hadamard(-i-1, -j-1, 0));
-            coords.push_back(back + xy.hadamard(-i-1, -j  , 0));
-            coords.push_back(back + xy.hadamard(-i  , -j  , 0));
-            coords.push_back(back + xy.hadamard(-i  , -j-1, 0));
-            coords.push_back(back + xy.hadamard(-i-1, -j-1, 0));
-            coords.push_back(back + xy.hadamard(-i  , -j  , 0));
-            //left
-            coords.push_back(front + yz.hadamard(0, i  , -j  ));
-            coords.push_back(front + yz.hadamard(0, i+1, -j  ));
-            coords.push_back(front + yz.hadamard(0, i+1, -j-1));
-            coords.push_back(front + yz.hadamard(0, i  , -j  ));
-            coords.push_back(front + yz.hadamard(0, i+1, -j-1));
-            coords.push_back(front + yz.hadamard(0, i  , -j-1));
-            //right
-            coords.push_back(back + yz.hadamard(0, -i-1, j+1));
-            coords.push_back(back + yz.hadamard(0, -i-1, j  ));
-            coords.push_back(back + yz.hadamard(0, -i  , j  ));
-            coords.push_back(back + yz.hadamard(0, -i  , j+1));
-            coords.push_back(back + yz.hadamard(0, -i-1, j+1));
-            coords.push_back(back + yz.hadamard(0, -i  , j  ));
-            //top
-            coords.push_back(back + xz.hadamard(-i  , 0,   j));
-            coords.push_back(back + xz.hadamard(-i-1, 0,   j));
-            coords.push_back(back + xz.hadamard(-i-1, 0, j+1));
-            coords.push_back(back + xz.hadamard(-i  , 0,   j));
-            coords.push_back(back + xz.hadamard(-i-1, 0, j+1));
-            coords.push_back(back + xz.hadamard(-i  , 0, j+1));
-            //bottom
-            coords.push_back(front + xz.hadamard(i+1, 0, -j-1));
-            coords.push_back(front + xz.hadamard(i+1, 0,   -j));
-            coords.push_back(front + xz.hadamard(i  , 0,   -j));
-            coords.push_back(front + xz.hadamard(i  , 0, -j-1));
-            coords.push_back(front + xz.hadamard(i+1, 0, -j-1));
-            coords.push_back(front + xz.hadamard(i  , 0,   -j));
-        }
-    }
+    auto t_left = Point(0, 0.5, 0);
+    auto t_right = Point(0, 1, 0);
+    auto t_top = Point(0.33, 0.5, 0);
+    auto t_bottom = Point(0.33, 1, 0);
+    auto t_front = Point(0.66, 0.5, 0);
+    auto t_back = Point(0.66, 1, 0);
+
+    // front
+    draw_face(coords, front, t_front, x, y);
+    // back
+    draw_face(coords, back, t_back, mx, y);
+    // left
+    draw_face(coords, left, t_left, z, y);
+    // right
+    draw_face(coords, right, t_right, mz, y);
+    // top
+    draw_face(coords, top, t_top, mz, mx);
+    // bottom
+    draw_face(coords, back, t_bottom, z, mx);
     return coords;
 }

@@ -154,9 +154,9 @@ Uranus,Trinculo,0.00031,9,1.5,25.4R,0.04
 Uranus,Francisco,0.00056,11,1.5,25.0R,0.04
 Uranus,Margaret,0.00042,10,1.5,25.2R,0.04
 Uranus,Ferdinand,0.00042,10,1.5,25.1R,0.04
-Uranus,Perdita,0.0012,13.3,23.6V,0.070
-Uranus,Mab,0.0006,12.3,24.6V,0.103
-Uranus,Cupid,0.0002,9.3,25.8V,0.070
+Uranus,Perdita,0.0012,13.3,1.3,23.6V,0.070
+Uranus,Mab,0.0006,12.3,1.3,24.6V,0.103
+Uranus,Cupid,0.0002,9.3,1.3,25.8V,0.070
 Neptune,Triton,1427.6,1353.4,2.059,13.54,0.719
 Neptune,Nereid,2.06,170,1.5,19.2R,0.155
 Neptune,Naiad,0.013,33.,1.3,23.91,0.072

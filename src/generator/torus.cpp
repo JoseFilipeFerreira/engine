@@ -28,10 +28,9 @@ std::vector<ModelPoint> Torus::draw() const {
         float next_t_y = static_cast<float>(slice + 1) / _slices;
 
         for (i32 stack = 0; stack < _stacks; stack++) {
-            auto base = VectorSpherical(
-                _ring_radius, a_stack * stack, center.azimuth());
-            auto n_base = VectorSpherical(
-                _ring_radius, a_stack * stack, n_center.azimuth());
+            float offset = a_stack * stack + M_PI;
+            auto base = VectorSpherical(_ring_radius, offset, center.azimuth());
+            auto n_base = base.add_azimuth(a_slice);
 
             auto top = base.add_inclination(a_stack);
             auto n_top = n_base.add_inclination(a_stack);
@@ -45,14 +44,14 @@ std::vector<ModelPoint> Torus::draw() const {
             float top_t_x = static_cast<float>(stack + 1) / _stacks;
 
             // 1st triangle
-            coords.emplace_back(p1, top.normalize(), top_t_x, 0);
-            coords.emplace_back(p2, n_base.normalize(), base_t_x, 1);
-            coords.emplace_back(p0, base.normalize(), base_t_x, 0);
+            coords.emplace_back(p1, top.normalize(), top_t_x, curr_t_y);
+            coords.emplace_back(p2, n_base.normalize(), base_t_x, next_t_y);
+            coords.emplace_back(p0, base.normalize(), base_t_x, curr_t_y);
 
             // 2nd triangle
-            coords.emplace_back(p1, top.normalize(), top_t_x, 0);
-            coords.emplace_back(p3, n_top.normalize(), top_t_x, 1);
-            coords.emplace_back(p2, n_base.normalize(), base_t_x, 1);
+            coords.emplace_back(p1, top.normalize(), top_t_x, curr_t_y);
+            coords.emplace_back(p3, n_top.normalize(), top_t_x, next_t_y);
+            coords.emplace_back(p2, n_base.normalize(), base_t_x, next_t_y);
         }
     }
 

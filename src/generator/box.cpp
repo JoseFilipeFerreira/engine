@@ -58,8 +58,9 @@ std::vector<ModelPoint> Box::draw() const {
     auto my = y.mirror_y();
     auto mz = z.mirror_z();
 
-    auto top = Point(_x / 2, _y / 2, _z / 2);
-    auto right = top.mirror_y();
+    auto corner = Point(_x / 2, _y / 2, _z / 2);
+    auto top = corner.mirror_x();
+    auto right = corner.mirror_y();
     auto front = right.mirror_x();
     auto back = right.mirror_z();
     auto left = front.mirror_z();
@@ -80,8 +81,8 @@ std::vector<ModelPoint> Box::draw() const {
     // right
     draw_face(coords, right, t_right, mz, y);
     // top
-    draw_face(coords, top, t_top, mz, mx);
+    draw_face(coords, top, t_top, x, mz);
     // bottom
-    draw_face(coords, back, t_bottom, z, mx);
+    draw_face(coords, right, t_bottom, mx, mz);
     return coords;
 }

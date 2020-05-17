@@ -45,6 +45,32 @@ auto parse_colour(TiXmlElement* elem, std::string const& attribute)
     return std::nullopt;
 }
 
+auto parse_float(TiXmlElement* elem, std::string const& attribute, float def)
+    -> float {
+    auto res = elem->Attribute(attribute);
+    if (res != nullptr) {
+        try {
+            return std::stof(*res);
+        } catch (const std::exception& e) {
+            throw_fancy_error(elem, "Invalid float value", attribute);
+        }
+    }
+
+    return def;
+}
+
+auto parse_point(TiXmlElement* elem, std::string const& prefix) -> Point {
+    float x = parse_float(elem, prefix + "X", 0);
+    float y = parse_float(elem, prefix + "Y", 0);
+    float z = parse_float(elem, prefix + "Z", 0);
+
+    return Point(x, y, z);
+}
+
+auto parse_vector(TiXmlElement* elem, std::string const& prefix) -> Vector {
+    return Vector(Point(0, 0, 0), parse_point(elem, prefix));
+}
+
 auto update_colour(TiXmlElement* elem, Colour colour) -> Colour {
     return parse_colour(elem, "colour").value_or(colour);
 }
@@ -55,10 +81,7 @@ auto parse_points(TiXmlElement* root) -> std::vector<Point> {
          elem = elem->NextSiblingElement()) {
         std::string_view type = elem->Value();
         if (type == "point") {
-            float x = std::stof(elem->Attribute("X") ?: "0");
-            float y = std::stof(elem->Attribute("Y") ?: "0");
-            float z = std::stof(elem->Attribute("Z") ?: "0");
-            points.emplace_back(x, y, z);
+            points.push_back(parse_point(elem, ""));
         }
     }
     if (points.size() < 4)
@@ -102,28 +125,19 @@ auto recursive_parse(TiXmlElement* root, Colour colour, GroupBuffer& gb)
 
         if (type == "translate") {
             if (elem->Attribute("time")) {
-                float const time = std::stof(elem->Attribute("time") ?: "0");
+                float time = parse_float(elem, "time", 0);
                 auto point_vec = parse_points(elem);
                 vTran.push_back(CatmullRon(time, point_vec));
             } else {
-                float x = std::stof(elem->Attribute("X") ?: "0");
-                float y = std::stof(elem->Attribute("Y") ?: "0");
-                float z = std::stof(elem->Attribute("Z") ?: "0");
-                vTran.push_back(Translate(x, y, z));
+                vTran.push_back(Translate(parse_vector(elem, "")));
             }
         } else if (type == "rotate") {
-            float ang = std::stof(elem->Attribute("angle") ?: "0");
-            float x = std::stof(elem->Attribute("axisX") ?: "0");
-            float y = std::stof(elem->Attribute("axisY") ?: "0");
-            float z = std::stof(elem->Attribute("axisZ") ?: "0");
-            float time = std::stof(elem->Attribute("time") ?: "0");
-            vTran.push_back(Rotate(ang, x, y, z, time));
+            float ang = parse_float(elem, "angle", 0);
+            float time = parse_float(elem, "time", 0);
+            vTran.push_back(Rotate(ang, parse_vector(elem, "axis"), time));
 
         } else if (type == "scale") {
-            float x = std::stof(elem->Attribute("X") ?: "1");
-            float y = std::stof(elem->Attribute("Y") ?: "1");
-            float z = std::stof(elem->Attribute("Z") ?: "1");
-            vTran.push_back(Scale(x, y, z));
+            vTran.push_back(Scale(parse_vector(elem, "")));
 
         } else if (type == "model") {
             auto m_obj = parse_object(elem, update_colour(elem, colour), gb);
@@ -135,8 +149,8 @@ auto recursive_parse(TiXmlElement* root, Colour colour, GroupBuffer& gb)
         } else if (type == "terrain") {
             auto t_obj = parse_object(elem, update_colour(elem, colour), gb);
 
-            float min_height = std::stof(elem->Attribute("min") ?: "0");
-            float max_height = std::stof(elem->Attribute("max") ?: "255");
+            float min_height = parse_float(elem, "min", 0);
+            float max_height = parse_float(elem, "max", 0);
             gb.insert_terrain(t_obj.model_name(), min_height, max_height);
 
             vTer.push_back(t_obj);

@@ -41,6 +41,7 @@ class Group {
         Colour c,
         std::vector<Group> g)
         : transformations(t), models(m), terrains(ter), colour(c), subgroups(g) {}
+    Group(std::vector<Group> g): subgroups(g) {}
     void draw_group(float, bool, GroupBuffer const&) const;
 };
 

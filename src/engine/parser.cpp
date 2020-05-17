@@ -59,16 +59,16 @@ auto parse_float(TiXmlElement* elem, std::string const& attribute, float def)
     return def;
 }
 
-auto parse_point(TiXmlElement* elem, std::string const& prefix) -> Point {
-    float x = parse_float(elem, prefix + "X", 0);
-    float y = parse_float(elem, prefix + "Y", 0);
-    float z = parse_float(elem, prefix + "Z", 0);
+auto parse_point(TiXmlElement* elem, std::string const& prefix, float def) -> Point {
+    float x = parse_float(elem, prefix + "X", def);
+    float y = parse_float(elem, prefix + "Y", def);
+    float z = parse_float(elem, prefix + "Z", def);
 
     return Point(x, y, z);
 }
 
-auto parse_vector(TiXmlElement* elem, std::string const& prefix) -> Vector {
-    return Vector(Point(0, 0, 0), parse_point(elem, prefix));
+auto parse_vector(TiXmlElement* elem, std::string const& prefix, float def) -> Vector {
+    return Vector(Point(0, 0, 0), parse_point(elem, prefix, def));
 }
 
 auto update_colour(TiXmlElement* elem, Colour colour) -> Colour {
@@ -81,7 +81,7 @@ auto parse_points(TiXmlElement* root) -> std::vector<Point> {
          elem = elem->NextSiblingElement()) {
         std::string_view type = elem->Value();
         if (type == "point") {
-            points.push_back(parse_point(elem, ""));
+            points.push_back(parse_point(elem, "", 0));
         }
     }
     if (points.size() < 4)
@@ -129,15 +129,15 @@ auto recursive_parse(TiXmlElement* root, Colour colour, GroupBuffer& gb)
                 auto point_vec = parse_points(elem);
                 vTran.push_back(CatmullRon(time, point_vec));
             } else {
-                vTran.push_back(Translate(parse_vector(elem, "")));
+                vTran.push_back(Translate(parse_vector(elem, "", 0)));
             }
         } else if (type == "rotate") {
             float ang = parse_float(elem, "angle", 0);
             float time = parse_float(elem, "time", 0);
-            vTran.push_back(Rotate(ang, parse_vector(elem, "axis"), time));
+            vTran.push_back(Rotate(ang, parse_vector(elem, "axis", 0), time));
 
         } else if (type == "scale") {
-            vTran.push_back(Scale(parse_vector(elem, "")));
+            vTran.push_back(Scale(parse_vector(elem, "", 1)));
 
         } else if (type == "model") {
             auto m_obj = parse_object(elem, update_colour(elem, colour), gb);

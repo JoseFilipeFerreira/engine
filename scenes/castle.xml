@@ -513,7 +513,7 @@
     <!-- terrain -->
     <group>
         <translate Y="-5"/>
-        <terrain file="terrains/terreno2.jpg" texture="textures/8k_sun.jpg" max="60"/> 
+        <terrain file="terrains/terreno2.jpg" texture="textures/relva.jpg" max="60"/> 
     </group>
     <group>
         <scale X="10" Z="10"/>

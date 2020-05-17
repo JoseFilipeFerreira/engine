@@ -183,16 +183,23 @@ int main(int argc, char** argv) {
     glutReshapeFunc(changeSize);
     glutKeyboardFunc(react_key);
 
-    auto scene_name = "scenes/config.xml";
-    if (argc > 1) scene_name = argv[1];
+    auto args = std::vector<const char*>(argv + 1, argv + argc);
 
-    try {
-        group = Parser(scene_name, group_buffer);
-    } catch (std::exception& e) {
-        std::cout << "Error while parsing: " << scene_name << "\n";
-        std::cout << e.what() << '\n';
-        return 1;
+    if (args.size() == 0) args.push_back("scenes/config.xml");
+
+    std::vector<Group> parsed_groups;
+
+    for (auto const& file : args) {
+        try {
+            parsed_groups.push_back(Parser(file, group_buffer));
+        } catch (std::exception& e) {
+            std::cout << "Error while parsing: " << file << "\n";
+            std::cout << e.what() << '\n';
+            return 1;
+        }
     }
+
+    group = Group(parsed_groups);
 
     // enter GLUT's main cycle
     glutMainLoop();

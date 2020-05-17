@@ -77,6 +77,9 @@ class Point {
     auto constexpr x() const noexcept -> float { return _x; }
     auto constexpr y() const noexcept -> float { return _y; }
     auto constexpr z() const noexcept -> float { return _z; }
+    auto mirror_x() const -> Point { return Point(-1 * _x, _y, _z); }
+    auto mirror_y() const -> Point { return Point(_x, -1 * _y, _z); }
+    auto mirror_z() const -> Point { return Point(_x, _y, -1 * _z); }
     auto add_x(float) const -> Point;
     auto add_y(float) const -> Point;
     auto add_z(float) const -> Point;

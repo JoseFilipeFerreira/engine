@@ -20,6 +20,8 @@ class TextureBuffer {
 class TerrainBuffer {
   private:
     GLuint _points[1];
+    GLuint _normals[1];
+    GLuint _texture[1];
     size_t _image_height, _image_width;
 
   public:

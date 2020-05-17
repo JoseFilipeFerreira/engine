@@ -43,6 +43,42 @@ TextureBuffer::TextureBuffer(std::string const& file_name) {
         texData);
 }
 
+auto compute_normal(
+    unsigned char const* imageData,
+    i32 image_height,
+    i32 min_height,
+    i32 max_height,
+    i32 h,
+    i32 w) -> Vector {
+    i32 new_interval = max_height - min_height;
+
+    float n_point_h =
+        imageData[image_height * (h + 1) + w] * new_interval / 255.0f +
+        min_height;
+
+    float n_point_w =
+        imageData[image_height * h + (w + 1)] * new_interval / 255.0f +
+        min_height;
+
+    float p_point_h =
+        imageData[image_height * (h - 1) + w] * new_interval / 255.0f +
+        min_height;
+
+    float p_point_w =
+        imageData[image_height * h + (w - 1)] * new_interval / 255.0f +
+        min_height;
+
+    auto p0 = Point(h, p_point_w, w - 1);
+    auto p1 = Point(h, n_point_w, w + 1);
+    auto p2 = Point(h - 1, p_point_h, w);
+    auto p3 = Point(h + 1, n_point_h, w);
+
+    auto v1 = Vector(p0, p1);
+    auto v2 = Vector(p2, p3);
+
+    return v1.cross(v2).normalize();
+}
+
 TerrainBuffer::TerrainBuffer(
     std::string const& fileName, i32 min_height, i32 max_height) {
     u32 t;
@@ -56,20 +92,45 @@ TerrainBuffer::TerrainBuffer(
     _image_height = ilGetInteger(IL_IMAGE_HEIGHT);
     imageData = ilGetData();
 
-    // 	Build the vertex arrays
-    std::vector<float> vec;
+    std::vector<float> point_vec;
+    std::vector<float> normal_vec;
+    std::vector<float> tex_vec;
+
     i32 new_interval = max_height - min_height;
     for (i32 h = 0; h < _image_height; h++) {
         for (i32 w = 0; w < _image_width; w++) {
-            float point = imageData[_image_height * h + w];
-            float n_point = imageData[_image_height * (h + 1) + w];
+            float point =
+                imageData[_image_height * h + w] * new_interval / 255.0f +
+                min_height;
+            float n_point =
+                imageData[_image_height * (h + 1) + w] * new_interval / 255.0f +
+                min_height;
 
-            vec.push_back(w - (_image_width / 2.0));                     // x1
-            vec.push_back(point * new_interval / 255.0f + min_height);   // y1
-            vec.push_back(h - (_image_height / 2.0));                    // z1
-            vec.push_back(w - (_image_width / 2.0));                     // x2
-            vec.push_back(n_point * new_interval / 255.0f + min_height); // y2
-            vec.push_back(h + 1.0 - (_image_height / 2.0));              // z2
+            tex_vec.push_back(h);
+            tex_vec.push_back(w);
+
+            point_vec.push_back(w - (_image_width / 2.0));
+            point_vec.push_back(point);
+            point_vec.push_back(h - (_image_height / 2.0));
+
+            auto normal = compute_normal(
+                imageData, _image_height, min_height, max_height, h, w);
+            normal_vec.push_back(normal.x());
+            normal_vec.push_back(normal.y());
+            normal_vec.push_back(normal.z());
+
+            tex_vec.push_back(h + 1);
+            tex_vec.push_back(w);
+
+            auto n_normal = compute_normal(
+                imageData, _image_height, min_height, max_height, h + 1, w);
+            normal_vec.push_back(n_normal.x());
+            normal_vec.push_back(n_normal.y());
+            normal_vec.push_back(n_normal.z());
+
+            point_vec.push_back(w - (_image_width / 2.0));
+            point_vec.push_back(n_point);
+            point_vec.push_back(h + 1.0 - (_image_height / 2.0));
         }
     }
 
@@ -77,14 +138,37 @@ TerrainBuffer::TerrainBuffer(
     glBindBuffer(GL_ARRAY_BUFFER, _points[0]);
     glBufferData(
         GL_ARRAY_BUFFER,
-        sizeof(float) * vec.size(),
-        vec.data(),
+        sizeof(float) * point_vec.size(),
+        point_vec.data(),
+        GL_STATIC_DRAW);
+
+    glGenBuffers(1, _normals);
+    glBindBuffer(GL_ARRAY_BUFFER, _normals[0]);
+    glBufferData(
+        GL_ARRAY_BUFFER,
+        sizeof(float) * normal_vec.size(),
+        normal_vec.data(),
+        GL_STATIC_DRAW);
+
+    glGenBuffers(1, _texture);
+    glBindBuffer(GL_ARRAY_BUFFER, _texture[0]);
+    glBufferData(
+        GL_ARRAY_BUFFER,
+        sizeof(float) * tex_vec.size(),
+        tex_vec.data(),
         GL_STATIC_DRAW);
 }
 
 void TerrainBuffer::draw_terrain() const {
     glBindBuffer(GL_ARRAY_BUFFER, _points[0]);
     glVertexPointer(3, GL_FLOAT, 0, 0);
+
+    glBindBuffer(GL_ARRAY_BUFFER, _normals[0]);
+    glNormalPointer(GL_FLOAT, 0, 0);
+
+    glBindBuffer(GL_ARRAY_BUFFER, _texture[0]);
+    glTexCoordPointer(2, GL_FLOAT, 0, 0);
+
     for (i32 i = 0; i < _image_height - 1; i++) {
         glDrawArrays(GL_TRIANGLE_STRIP, i * 2 * _image_width, _image_width * 2);
     }

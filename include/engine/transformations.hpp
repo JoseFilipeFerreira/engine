@@ -51,7 +51,7 @@ class Scale {
     float _x, _y, _z;
 
   public:
-    Scale(float x, float y, float z): _x(x), _y(y), _z(z) {}
+    Scale(Vector v): _x(v.x()), _y(v.y()), _z(v.z()) {}
     void apply(bool, float elapsed) const { glScalef(_x, _y, _z); }
 };
 
@@ -60,7 +60,7 @@ class Translate {
     float _x, _y, _z;
 
   public:
-    Translate(float x, float y, float z): _x(x), _y(y), _z(z) {}
+    Translate(Vector v): _x(v.x()), _y(v.y()), _z(v.z()) {}
     void apply(bool, float elapsed) const { glTranslatef(_x, _y, _z); }
 };
 
@@ -82,8 +82,8 @@ class Rotate {
     float _ang, _x, _y, _z, _time;
 
   public:
-    Rotate(float ang, float x, float y, float z, float time)
-        : _ang(ang), _x(x), _y(y), _z(z), _time(time) {}
+    Rotate(float ang, Vector v, float time)
+        : _ang(ang), _x(v.x()), _y(v.y()), _z(v.z()), _time(time) {}
     void apply(bool, float elapsed) const {
         float total_ang = _ang + elapsed * (_time ? 360.0f / _time : 0);
         glRotatef(total_ang, _x, _y, _z);

@@ -48,7 +48,7 @@ auto h(
     u64 i,
     u64 j,
     i32 min_height,
-    i32 max_height) -> float{
+    i32 max_height) -> float {
     i32 new_interval = max_height - min_height;
     return image_data[i * image_width + j] * new_interval / 255.0f + min_height;
 }
@@ -161,9 +161,10 @@ void TerrainBuffer::draw_terrain() const {
 
     for (i32 i = 1; i < _image_height - 2; i++) {
         glDrawArrays(
-            GL_TRIANGLE_STRIP, (_image_width - 2) * 2 * i, (_image_width - 2) * 2);
+            GL_TRIANGLE_STRIP,
+            (_image_width - 2) * 2 * i,
+            (_image_width - 2) * 2);
     }
-
 }
 
 ModelBuffer::ModelBuffer(std::string const& fileName) {

@@ -1,5 +1,4 @@
 #include "engine/camera.hpp"
-#include "engine/light.hpp"
 #include "engine/parser.hpp"
 #include "utils/types.hpp"
 

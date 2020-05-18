@@ -176,7 +176,6 @@ int main(int argc, char** argv) {
     glEnable(GL_TEXTURE_2D);
     glEnable(GL_NORMALIZE);
     glEnable(GL_LIGHTING);
-    // glPolygonMode(GL_FRONT, GL_LINE);
 
     glewInit();
 

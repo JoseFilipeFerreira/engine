@@ -77,6 +77,7 @@ Group::Group() {
 void Group::draw_group(
     float elapsed, bool DEBUG, GroupBuffer const& group_buffer) const {
     for (auto const& t : transformations) t.apply(DEBUG, elapsed);
+    for (auto const& l : lights) l.on();
     for (auto const& m : models) {
         m.apply_colour();
         m.set_material();
@@ -86,6 +87,7 @@ void Group::draw_group(
     }
     for (auto const& t : terrains) {
         t.apply_colour();
+        t.set_material();
         group_buffer.bind_texture(t.texture_name());
         group_buffer.draw_terrain(t.model_name());
         group_buffer.unbind_texture();

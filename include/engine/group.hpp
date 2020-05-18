@@ -2,6 +2,7 @@
 #define GROUP_H
 #include "engine/model.hpp"
 #include "utils/types.hpp"
+#include "engine/light.hpp"
 
 #include <unordered_map>
 #include <vector>
@@ -29,6 +30,7 @@ class Group {
     std::vector<Transform> transformations;
     std::vector<Object> models;
     std::vector<Object> terrains;
+    std::vector<Light> lights;
     Colour colour;
     std::vector<Group> subgroups;
 
@@ -38,9 +40,10 @@ class Group {
         std::vector<Transform> t,
         std::vector<Object> m,
         std::vector<Object> ter,
+        std::vector<Light> li,
         Colour c,
         std::vector<Group> g)
-        : transformations(t), models(m), terrains(ter), colour(c), subgroups(g) {}
+        : transformations(t), models(m), terrains(ter), lights(li), colour(c), subgroups(g) {}
     Group(std::vector<Group> g): subgroups(g) {}
     void draw_group(float, bool, GroupBuffer const&) const;
 };

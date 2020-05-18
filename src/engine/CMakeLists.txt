@@ -6,6 +6,7 @@ add_executable(engine
     camera.cpp
     parser.cpp
     transformations.cpp
+    light.cpp
     group.cpp
 )
 

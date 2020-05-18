@@ -1,4 +1,5 @@
 #include "engine/camera.hpp"
+#include "engine/light.hpp"
 #include "engine/parser.hpp"
 #include "utils/types.hpp"
 
@@ -14,12 +15,13 @@
 #endif
 
 // singletons
-Camera camera;
-Group group;
-GroupBuffer group_buffer;
+Camera CAMERA;
+Group GROUP;
+GroupBuffer GROUP_BUFFER;
 float TIME_SCALE = 1;
 bool DEBUG = false;
 bool PAUSE = false;
+bool LIGHT = true;
 
 void changeSize(int w, int h) {
     if (h == 0) h = 1;
@@ -75,12 +77,12 @@ void renderScene() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     // set the camera
-    camera.place_camera();
+    CAMERA.place_camera();
 
     if (DEBUG) {
         draw_axis();
         /*
-        camera.with([&](auto const& pl, auto const& center) {
+        CAMERA.with([&](auto const& pl, auto const& center) {
             glPushMatrix();
             glColor3f(0.0, 1.0, 0.0);
             glTranslatef(center.x(), center.y(), center.z());
@@ -90,7 +92,7 @@ void renderScene() {
         */
     }
 
-    group.draw_group(elapsed / 1000.0f, DEBUG, group_buffer);
+    GROUP.draw_group(elapsed / 1000.0f, DEBUG, GROUP_BUFFER);
 
     // calculate fps
     static u64 frame = 0;
@@ -108,9 +110,10 @@ void renderScene() {
     std::stringstream title;
     title.precision(3);
     title << "CG-Engine ";
-    title << camera;
+    title << CAMERA;
     title << "| TIME SCALE: " << TIME_SCALE << "x ";
     title << "| FPS: " << fps << " ";
+    title << "| LIGHT: " << ((LIGHT) ? "ON" : "OFF");
     if (PAUSE) title << "| PAUSED ";
     if (DEBUG) title << "| DEBUG ";
 
@@ -121,7 +124,7 @@ void renderScene() {
 }
 
 void react_key(unsigned char key, int x, int y) {
-    camera.react_key(key, x, y);
+    CAMERA.react_key(key, x, y);
 
     switch (key) {
         case 'g': // toggle debug mode
@@ -130,6 +133,13 @@ void react_key(unsigned char key, int x, int y) {
         case 'p': // toggle pause
             PAUSE = !PAUSE;
             break;
+        case '\\': // toogle lights
+            LIGHT = !LIGHT;
+            if (LIGHT)
+                glEnable(GL_LIGHTING);
+            else
+                glDisable(GL_LIGHTING);
+            break;
         case '[': // slowdown time
             if (TIME_SCALE - 0.1 > 0.01) TIME_SCALE -= 0.1;
             break;
@@ -137,8 +147,6 @@ void react_key(unsigned char key, int x, int y) {
             TIME_SCALE += 0.1;
             break;
     }
-
-    renderScene();
 }
 
 int main(int argc, char** argv) {
@@ -168,7 +176,7 @@ int main(int argc, char** argv) {
     glEnable(GL_CULL_FACE);
     glEnable(GL_TEXTURE_2D);
     glEnable(GL_NORMALIZE);
-    // glEnable(GL_LIGHTING);
+    glEnable(GL_LIGHTING);
     // glPolygonMode(GL_FRONT, GL_LINE);
 
     glewInit();
@@ -183,26 +191,27 @@ int main(int argc, char** argv) {
     glutReshapeFunc(changeSize);
     glutKeyboardFunc(react_key);
 
-    auto args = std::vector<const char*>(argv + 1, argv + argc);
+    {
+        auto args = std::vector<const char*>(argv + 1, argv + argc);
 
-    if (args.size() == 0) args.push_back("scenes/config.xml");
+        if (args.size() == 0) args.push_back("scenes/config.xml");
 
-    std::vector<Group> parsed_groups;
+        std::vector<Group> parsed_groups;
 
-    for (auto const& file : args) {
-        try {
-            parsed_groups.push_back(Parser(file, group_buffer));
-        } catch (std::exception& e) {
-            std::cout << "Error while parsing: " << file << "\n";
-            std::cout << e.what() << '\n';
-            return 1;
+        for (auto const& file : args) {
+            try {
+                parsed_groups.push_back(
+                    Parser::parse_group(file, GROUP_BUFFER));
+            } catch (std::exception& e) {
+                std::cout << "Error while parsing: " << file << '\n';
+                std::cout << e.what() << '\n';
+                return EXIT_FAILURE;
+            }
         }
-    }
 
-    group = Group(parsed_groups);
+        GROUP = Group(std::move(parsed_groups));
+    }
 
     // enter GLUT's main cycle
     glutMainLoop();
-
-    return 1;
 }

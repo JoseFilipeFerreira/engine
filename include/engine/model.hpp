@@ -47,20 +47,20 @@ class Object {
     std::string _file_name;
     std::optional<std::string> _texture_name;
     Colour _colour;
-    std::optional<Colour> _diffuse;
-    std::optional<Colour> _specular;
-    std::optional<Colour> _emissive;
-    std::optional<Colour> _ambient;
+    Colour _diffuse;
+    Colour _specular;
+    Colour _emissive;
+    Colour _ambient;
 
   public:
     Object(
         const char* file_name,
         std::optional<std::string> texture_name,
         Colour c,
-        std::optional<Colour> diff,
-        std::optional<Colour> spec,
-        std::optional<Colour> emiss,
-        std::optional<Colour> amb)
+        Colour diff,
+        Colour spec,
+        Colour emiss,
+        Colour amb)
         : _file_name(file_name),
           _texture_name(texture_name),
           _colour(c),

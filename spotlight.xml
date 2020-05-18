@@ -1,0 +1,37 @@
+<scene>
+    <group colour="#FF0000">
+        <lights>
+            <light type="SPOT" dirX="1" />
+        </lights>
+        <group>
+            <scale X="-1" Y="-1" Z="-1" />
+            <models>
+                <model file="models/sphere.3d" emis="#FFFFFF" />
+            </models>
+        </group>
+        <group>
+            <translate X="4" />
+            <models>
+                <model file="models/sphere.3d" diff="#FF0000" />
+            </models>
+        </group>
+        <group>
+            <translate X="-4" />
+            <models>
+                <model file="models/sphere.3d" diff="#00FF00"/>
+            </models>
+        </group>
+        <group>
+            <translate Z="4" />
+            <models>
+                <model file="models/sphere.3d" diff="#0000FF" />
+            </models>
+        </group>
+        <group>
+            <translate Z="-4" />
+            <models>
+                <model file="models/sphere.3d" diff="#FF00FF"/>
+            </models>
+        </group>
+    </group>
+</scene>

@@ -26,8 +26,6 @@ class Vector {
     auto mirror_z() const -> Vector { return Vector(_x, _y, -1 * _z); }
     auto normalize() const -> Vector;
     auto cross(Vector) const -> Vector;
-    auto hadamard(Vector const&) const -> Vector;
-    auto hadamard(float, float, float) const -> Vector;
     auto operator+(Vector const& v) const -> Vector {
         return Vector(_x + v.x(), _y + v.y(), _z + v.z());
     }

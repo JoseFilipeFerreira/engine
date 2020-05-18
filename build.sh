@@ -2,7 +2,7 @@
 build_dir=target
 debug_build=debug
 release_build=release
-mkdir $build_dir
+mkdir -p $build_dir
 cd $build_dir || exit 1
 if [ "$1" = "-g" ]
 then

@@ -13,14 +13,13 @@
 
 TextureBuffer::TextureBuffer(std::string const& file_name) {
     unsigned int t;
-    unsigned char* texData;
     ilGenImages(1, &t);
     ilBindImage(t);
     ilLoadImage((ILstring) file_name.c_str());
     _image_width = ilGetInteger(IL_IMAGE_WIDTH);
     _image_height = ilGetInteger(IL_IMAGE_HEIGHT);
     ilConvertImage(IL_RGBA, IL_UNSIGNED_BYTE);
-    texData = ilGetData();
+    u8 const* tex_data = ilGetData();
 
     glGenTextures(1, &_texture);
 
@@ -40,41 +39,38 @@ TextureBuffer::TextureBuffer(std::string const& file_name) {
         0,
         GL_RGBA,
         GL_UNSIGNED_BYTE,
-        texData);
+        tex_data);
+}
+
+auto h(
+    u8 const* image_data,
+    u64 image_width,
+    u64 i,
+    u64 j,
+    i32 min_height,
+    i32 max_height) -> float {
+    i32 new_interval = max_height - min_height;
+    return image_data[i * image_width + j] * new_interval / 255.0f + min_height;
 }
 
 auto compute_normal(
-    unsigned char const* imageData,
-    i32 image_height,
+    u8 const* image_data,
+    i32 image_width,
     i32 min_height,
     i32 max_height,
-    i32 h,
-    i32 w) -> Vector {
-    i32 new_interval = max_height - min_height;
+    i32 i,
+    i32 j) -> Vector {
+    auto p1 = Point(
+        i, h(image_data, image_width, i, j - 1, min_height, max_height), j - 1);
+    auto p2 = Point(
+        i, h(image_data, image_width, i, j + 1, min_height, max_height), j + 1);
+    auto p3 = Point(
+        i - 1, h(image_data, image_width, i - 1, j, min_height, max_height), j);
+    auto p4 = Point(
+        i + 1, h(image_data, image_width, i + 1, j, min_height, max_height), j);
 
-    float n_point_h =
-        imageData[image_height * (h + 1) + w] * new_interval / 255.0f +
-        min_height;
-
-    float n_point_w =
-        imageData[image_height * h + (w + 1)] * new_interval / 255.0f +
-        min_height;
-
-    float p_point_h =
-        imageData[image_height * (h - 1) + w] * new_interval / 255.0f +
-        min_height;
-
-    float p_point_w =
-        imageData[image_height * h + (w - 1)] * new_interval / 255.0f +
-        min_height;
-
-    auto p0 = Point(h, p_point_w, w - 1);
-    auto p1 = Point(h, n_point_w, w + 1);
-    auto p2 = Point(h - 1, p_point_h, w);
-    auto p3 = Point(h + 1, n_point_h, w);
-
-    auto v1 = Vector(p0, p1);
-    auto v2 = Vector(p2, p3);
+    auto v1 = Vector(p1, p2);
+    auto v2 = Vector(p3, p4);
 
     return v1.cross(v2).normalize();
 }
@@ -82,55 +78,49 @@ auto compute_normal(
 TerrainBuffer::TerrainBuffer(
     std::string const& fileName, i32 min_height, i32 max_height) {
     u32 t;
-    unsigned char* imageData;
-
     ilGenImages(1, &t);
     ilBindImage(t);
     ilLoadImage((ILstring) fileName.c_str());
     ilConvertImage(IL_LUMINANCE, IL_UNSIGNED_BYTE);
     _image_width = ilGetInteger(IL_IMAGE_WIDTH);
     _image_height = ilGetInteger(IL_IMAGE_HEIGHT);
-    imageData = ilGetData();
+    u8 const* image_data = ilGetData();
 
     std::vector<float> point_vec;
     std::vector<float> normal_vec;
     std::vector<float> tex_vec;
 
-    i32 new_interval = max_height - min_height;
-    for (i32 h = 0; h < _image_height; h++) {
-        for (i32 w = 0; w < _image_width; w++) {
-            float point =
-                imageData[_image_height * h + w] * new_interval / 255.0f +
-                min_height;
-            float n_point =
-                imageData[_image_height * (h + 1) + w] * new_interval / 255.0f +
-                min_height;
-
-            tex_vec.push_back(h);
-            tex_vec.push_back(w);
-
-            point_vec.push_back(w - (_image_width / 2.0));
-            point_vec.push_back(point);
-            point_vec.push_back(h - (_image_height / 2.0));
-
-            auto normal = compute_normal(
-                imageData, _image_height, min_height, max_height, h, w);
-            normal_vec.push_back(normal.x());
-            normal_vec.push_back(normal.y());
-            normal_vec.push_back(normal.z());
-
-            tex_vec.push_back(h + 1);
-            tex_vec.push_back(w);
-
+    for (i32 i = 1; i < _image_height - 2; i++) {
+        for (i32 j = 1; j < _image_width - 1; j++) {
+            // location (i+1, j)
             auto n_normal = compute_normal(
-                imageData, _image_height, min_height, max_height, h + 1, w);
+                image_data, _image_width, min_height, max_height, i + 1, j);
             normal_vec.push_back(n_normal.x());
             normal_vec.push_back(n_normal.y());
             normal_vec.push_back(n_normal.z());
 
-            point_vec.push_back(w - (_image_width / 2.0));
-            point_vec.push_back(n_point);
-            point_vec.push_back(h + 1.0 - (_image_height / 2.0));
+            tex_vec.push_back(i + 1);
+            tex_vec.push_back(j);
+
+            point_vec.push_back(i - _image_width * 0.5f + 1);
+            point_vec.push_back(
+                h(image_data, _image_width, i + 1, j, min_height, max_height));
+            point_vec.push_back(j - _image_height * 0.5f);
+
+            // location (i, j)
+            auto normal = compute_normal(
+                image_data, _image_width, min_height, max_height, i, j);
+            normal_vec.push_back(normal.x());
+            normal_vec.push_back(normal.y());
+            normal_vec.push_back(normal.z());
+
+            tex_vec.push_back(i);
+            tex_vec.push_back(j);
+
+            point_vec.push_back(i - _image_width * 0.5f);
+            point_vec.push_back(
+                h(image_data, _image_width, i, j, min_height, max_height));
+            point_vec.push_back(j - _image_height * 0.5f);
         }
     }
 
@@ -169,8 +159,11 @@ void TerrainBuffer::draw_terrain() const {
     glBindBuffer(GL_ARRAY_BUFFER, _texture[0]);
     glTexCoordPointer(2, GL_FLOAT, 0, 0);
 
-    for (i32 i = 0; i < _image_height - 1; i++) {
-        glDrawArrays(GL_TRIANGLE_STRIP, i * 2 * _image_width, _image_width * 2);
+    for (i32 i = 1; i < _image_height - 2; i++) {
+        glDrawArrays(
+            GL_TRIANGLE_STRIP,
+            (_image_width - 2) * 2 * i,
+            (_image_width - 2) * 2);
     }
 }
 
@@ -237,16 +230,8 @@ void ModelBuffer::draw_model() const {
 }
 
 void Object::set_material() const {
-    if (_diffuse.has_value()) {
-        _diffuse.value().set_diffuse();
-    }
-    if (_specular.has_value()) {
-        _specular.value().set_diffuse();
-    }
-    if (_emissive.has_value()) {
-        _emissive.value().set_diffuse();
-    }
-    if (_ambient.has_value()) {
-        _ambient.value().set_diffuse();
-    }
+    _diffuse.set_diffuse();
+    _specular.set_specular();
+    _emissive.set_emissive();
+    _ambient.set_ambient();
 }

@@ -1,522 +1,526 @@
 <scene>
+    <light type="DIRECTIONAL" dirX="1" dirY="1" />
+
     <!-- skybox -->
     <group>
         <scale X="-1000" Y="-1000" Z="-1000"/>
-        <model texture="textures/8k_stars_milky_way.jpg" file="models/box.3d" /> 
+        <model texture="textures/8k_stars_milky_way.jpg" file="models/sphere.3d" emis="#999999" /> 
     </group>
 
     <!-- castle -->
     <group>
-        <translate X="-3" Y="3.3" Z="2"/>
-        <rotate angle="-120" axisY="1"/>
-        <!-- body -->
+        <translate X="3" Y="3.3" Z="-4"/>
+        <rotate axisY="1" angle="-90" />
         <group>
-            <!-- top -->
+            <!-- body -->
             <group>
-                <translate Y="0.5"/>
-                <scale X="4" Y="0.4" Z="4"/>
-                <model texture="textures/cooble_texture.jpg" file="models/box.3d" /> 
-            </group>
-            <!-- floor -->
-            <group>
-                <translate Y="-1.2"/>
-                <scale X="4" Z="4"/>
-                <model texture="textures/cooble_texture.jpg" file="models/box.3d" /> 
-            </group>
-            <!-- walls -->
-            <group>
+                <!-- top -->
                 <group>
-                    <translate X="-1.75" Y="-0.2"/>
-                    <scale X="0.5" Z="4"/>
-                    <model texture="textures/cooble_texture.jpg" file="models/box.3d" /> 
+                    <translate Y="0.5"/>
+                    <scale X="4" Y="0.4" Z="4"/>
+                    <model texture="textures/cooble_texture.jpg" file="models/box.3d" emis="#999999"/> 
+                </group>
+                <!-- floor -->
+                <group>
+                    <translate Y="-1.2"/>
+                    <scale X="4" Z="4"/>
+                    <model texture="textures/cooble_texture.jpg" file="models/box.3d" emis="#999999" /> 
+                </group>
+                <!-- walls -->
+                <group>
+                    <group>
+                        <translate X="-1.75" Y="-0.2"/>
+                        <scale X="0.5" Z="4"/>
+                        <model texture="textures/cooble_texture.jpg" file="models/box.3d" emis="#999999" /> 
+                    </group>
+                    <group>
+                        <translate Z="1.75" Y="-0.2"/>
+                        <scale X="3" Z="0.5"/>
+                        <model texture="textures/cooble_texture.jpg" file="models/box.3d" emis="#999999" /> 
+                    </group>
+                    <group>
+                        <translate Z="-1.75" Y="-0.2"/>
+                        <scale X="3" Z="0.5"/>
+                        <model texture="textures/cooble_texture.jpg" file="models/box.3d" emis="#999999" /> 
+                    </group>
+                    <group>
+                        <translate X="1.75" Y="-0.2" Z="1.2"/>
+                        <scale X="0.5" Z="1.6"/>
+                        <model texture="textures/cooble_texture.jpg" file="models/box.3d" emis="#999999" /> 
+                    </group>
+                    <group>
+                        <translate X="1.75" Y="-0.2" Z="-1.2"/>
+                        <scale X="0.5" Z="1.6"/>
+                        <model texture="textures/cooble_texture.jpg" file="models/box.3d" emis="#999999" /> 
+                    </group>
+                </group>
+            </group>
+            <!-- draw bridge -->
+            <group>
+                <!-- floor -->
+                <group>
+                    <translate X="2.55" Y="-0.65"/>
+                    <scale X="1.1" Y="0.1"/>
+                    <model texture="textures/best_wood.jpg" file="models/box.3d" emis="#999999" /> 
                 </group>
                 <group>
-                    <translate Z="1.75" Y="-0.2"/>
-                    <scale X="3" Z="0.5"/>
-                    <model texture="textures/cooble_texture.jpg" file="models/box.3d" /> 
+                    <translate X="2.30" Y="-0.35" Z="0.5"/>
+                    <rotate angle="-45" axisZ="1"/>
+                    <scale Y="0.05" X="0.9" Z="0.04"/>
+                    <model texture="textures/best_wood.jpg" file="models/box.3d" emis="#999999" /> 
                 </group>
                 <group>
-                    <translate Z="-1.75" Y="-0.2"/>
-                    <scale X="3" Z="0.5"/>
-                    <model texture="textures/cooble_texture.jpg" file="models/box.3d" /> 
+                    <translate X="2.30" Y="-0.35" Z="-0.5"/>
+                    <rotate angle="-45" axisZ="1"/>
+                    <scale Y="0.05" X="0.9" Z="0.04"/>
+                    <model texture="textures/best_wood.jpg" file="models/box.3d" emis="#999999" /> 
+                </group>
+            </group>
+            <!-- torre 1 -->
+            <group>
+                <translate X="-1.5" Y="1.2" Z="-1.5"/>
+                <model texture="textures/cooble_texture.jpg" file="models/box.3d" emis="#999999" /> 
+                <!-- ameias -->
+                <group>
+                    <translate X="0.45" Y="0.55" Z="0.45"/>
+                    <scale X="0.1" Y="0.1" Z="0.1"/>
+                    <model texture="textures/cooble_texture.jpg" file="models/box.3d" emis="#999999" /> 
                 </group>
                 <group>
-                    <translate X="1.75" Y="-0.2" Z="1.2"/>
-                    <scale X="0.5" Z="1.6"/>
-                    <model texture="textures/cooble_texture.jpg" file="models/box.3d" /> 
+                    <translate X="0.27" Y="0.55" Z="0.45"/>
+                    <scale X="0.1" Y="0.1" Z="0.1"/>
+                    <model texture="textures/cooble_texture.jpg" file="models/box.3d" emis="#999999" /> 
                 </group>
                 <group>
-                    <translate X="1.75" Y="-0.2" Z="-1.2"/>
-                    <scale X="0.5" Z="1.6"/>
-                    <model texture="textures/cooble_texture.jpg" file="models/box.3d" /> 
+                    <translate X="0.09" Y="0.55" Z="0.45"/>
+                    <scale X="0.1" Y="0.1" Z="0.1"/>
+                    <model texture="textures/cooble_texture.jpg" file="models/box.3d" emis="#999999" /> 
+                </group>
+                <group>
+                    <translate X="-0.09" Y="0.55" Z="0.45"/>
+                    <scale X="0.1" Y="0.1" Z="0.1"/>
+                    <model texture="textures/cooble_texture.jpg" file="models/box.3d" emis="#999999" /> 
+                </group>
+                <group>
+                    <translate X="-0.27" Y="0.55" Z="0.45"/>
+                    <scale X="0.1" Y="0.1" Z="0.1"/>
+                    <model texture="textures/cooble_texture.jpg" file="models/box.3d" emis="#999999" /> 
+                </group>
+                <group>
+                    <translate X="-0.45" Y="0.55" Z="0.45"/>
+                    <scale X="0.1" Y="0.1" Z="0.1"/>
+                    <model texture="textures/cooble_texture.jpg" file="models/box.3d" emis="#999999" /> 
+                </group>
+
+                <group>
+                    <translate X="-0.45" Y="0.55" Z="0.27"/>
+                    <scale X="0.1" Y="0.1" Z="0.1"/>
+                    <model texture="textures/cooble_texture.jpg" file="models/box.3d" emis="#999999" /> 
+                </group>
+                <group>
+                    <translate X="-0.45" Y="0.55" Z="0.09"/>
+                    <scale X="0.1" Y="0.1" Z="0.1"/>
+                    <model texture="textures/cooble_texture.jpg" file="models/box.3d" emis="#999999" /> 
+                </group>
+                <group>
+                    <translate X="-0.45" Y="0.55" Z="-0.09"/>
+                    <scale X="0.1" Y="0.1" Z="0.1"/>
+                    <model texture="textures/cooble_texture.jpg" file="models/box.3d" emis="#999999" /> 
+                </group>
+                <group>
+                    <translate X="-0.45" Y="0.55" Z="-0.27"/>
+                    <scale X="0.1" Y="0.1" Z="0.1"/>
+                    <model texture="textures/cooble_texture.jpg" file="models/box.3d" emis="#999999" /> 
+                </group>
+                <group>
+                    <translate X="-0.45" Y="0.55" Z="-0.45"/>
+                    <scale X="0.1" Y="0.1" Z="0.1"/>
+                    <model texture="textures/cooble_texture.jpg" file="models/box.3d" emis="#999999" /> 
+                </group>
+
+                <group>
+                    <translate X="-0.27" Y="0.55" Z="-0.45"/>
+                    <scale X="0.1" Y="0.1" Z="0.1"/>
+                    <model texture="textures/cooble_texture.jpg" file="models/box.3d" emis="#999999" /> 
+                </group>
+                <group>
+                    <translate X="-0.09" Y="0.55" Z="-0.45"/>
+                    <scale X="0.1" Y="0.1" Z="0.1"/>
+                    <model texture="textures/cooble_texture.jpg" file="models/box.3d" emis="#999999" /> 
+                </group>
+                <group>
+                    <translate X="0.09" Y="0.55" Z="-0.45"/>
+                    <scale X="0.1" Y="0.1" Z="0.1"/>
+                    <model texture="textures/cooble_texture.jpg" file="models/box.3d" emis="#999999" /> 
+                </group>
+                <group>
+                    <translate X="0.27" Y="0.55" Z="-0.45"/>
+                    <scale X="0.1" Y="0.1" Z="0.1"/>
+                    <model texture="textures/cooble_texture.jpg" file="models/box.3d" emis="#999999" /> 
+                </group>
+                <group>
+                    <translate X="0.45" Y="0.55" Z="-0.45"/>
+                    <scale X="0.1" Y="0.1" Z="0.1"/>
+                    <model texture="textures/cooble_texture.jpg" file="models/box.3d" emis="#999999" /> 
+                </group>
+
+                <group>
+                    <translate X="0.45" Y="0.55" Z="-0.27"/>
+                    <scale X="0.1" Y="0.1" Z="0.1"/>
+                    <model texture="textures/cooble_texture.jpg" file="models/box.3d" emis="#999999" /> 
+                </group>
+                <group>
+                    <translate X="0.45" Y="0.55" Z="-0.09"/>
+                    <scale X="0.1" Y="0.1" Z="0.1"/>
+                    <model texture="textures/cooble_texture.jpg" file="models/box.3d" emis="#999999" /> 
+                </group>
+                <group>
+                    <translate X="0.45" Y="0.55" Z="0.09"/>
+                    <scale X="0.1" Y="0.1" Z="0.1"/>
+                    <model texture="textures/cooble_texture.jpg" file="models/box.3d" emis="#999999" /> 
+                </group>
+                <group>
+                    <translate X="0.45" Y="0.55" Z="0.27"/>
+                    <scale X="0.1" Y="0.1" Z="0.1"/>
+                    <model texture="textures/cooble_texture.jpg" file="models/box.3d" emis="#999999" /> 
                 </group>
             </group>
-        </group>
-        <!-- draw bridge -->
-        <group>
-            <!-- floor -->
+            <!-- torre 2 -->
             <group>
-                <translate X="2.55" Y="-0.65"/>
-                <scale X="1.1" Y="0.1"/>
-                <model texture="textures/best_wood.jpg" file="models/box.3d" /> 
-            </group>
-            <group>
-                <translate X="2.30" Y="-0.35" Z="0.5"/>
-                <rotate angle="-45" axisZ="1"/>
-                <scale Y="0.05" X="0.9" Z="0.04"/>
-                <model texture="textures/best_wood.jpg" file="models/box.3d" /> 
-            </group>
-            <group>
-                <translate X="2.30" Y="-0.35" Z="-0.5"/>
-                <rotate angle="-45" axisZ="1"/>
-                <scale Y="0.05" X="0.9" Z="0.04"/>
-                <model texture="textures/best_wood.jpg" file="models/box.3d" /> 
-            </group>
-        </group>
-        <!-- torre 1 -->
-        <group>
-            <translate X="-1.5" Y="1.2" Z="-1.5"/>
-            <model texture="textures/cooble_texture.jpg" file="models/box.3d" /> 
-            <!-- ameias -->
-            <group>
-                <translate X="0.45" Y="0.55" Z="0.45"/>
-                <scale X="0.1" Y="0.1" Z="0.1"/>
-                <model texture="textures/cooble_texture.jpg" file="models/box.3d" /> 
-            </group>
-            <group>
-                <translate X="0.27" Y="0.55" Z="0.45"/>
-                <scale X="0.1" Y="0.1" Z="0.1"/>
-                <model texture="textures/cooble_texture.jpg" file="models/box.3d" /> 
-            </group>
-            <group>
-                <translate X="0.09" Y="0.55" Z="0.45"/>
-                <scale X="0.1" Y="0.1" Z="0.1"/>
-                <model texture="textures/cooble_texture.jpg" file="models/box.3d" /> 
-            </group>
-            <group>
-                <translate X="-0.09" Y="0.55" Z="0.45"/>
-                <scale X="0.1" Y="0.1" Z="0.1"/>
-                <model texture="textures/cooble_texture.jpg" file="models/box.3d" /> 
-            </group>
-            <group>
-                <translate X="-0.27" Y="0.55" Z="0.45"/>
-                <scale X="0.1" Y="0.1" Z="0.1"/>
-                <model texture="textures/cooble_texture.jpg" file="models/box.3d" /> 
-            </group>
-            <group>
-                <translate X="-0.45" Y="0.55" Z="0.45"/>
-                <scale X="0.1" Y="0.1" Z="0.1"/>
-                <model texture="textures/cooble_texture.jpg" file="models/box.3d" /> 
-            </group>
+                <translate X="1.5" Y="1.2" Z="-1.5"/>
+                <model texture="textures/cooble_texture.jpg" file="models/box.3d" emis="#999999" /> 
+                <!-- ameias -->
+                <group>
+                    <translate X="0.45" Y="0.55" Z="0.45"/>
+                    <scale X="0.1" Y="0.1" Z="0.1"/>
+                    <model texture="textures/cooble_texture.jpg" file="models/box.3d" emis="#999999" /> 
+                </group>
+                <group>
+                    <translate X="0.27" Y="0.55" Z="0.45"/>
+                    <scale X="0.1" Y="0.1" Z="0.1"/>
+                    <model texture="textures/cooble_texture.jpg" file="models/box.3d" emis="#999999" /> 
+                </group>
+                <group>
+                    <translate X="0.09" Y="0.55" Z="0.45"/>
+                    <scale X="0.1" Y="0.1" Z="0.1"/>
+                    <model texture="textures/cooble_texture.jpg" file="models/box.3d" emis="#999999" /> 
+                </group>
+                <group>
+                    <translate X="-0.09" Y="0.55" Z="0.45"/>
+                    <scale X="0.1" Y="0.1" Z="0.1"/>
+                    <model texture="textures/cooble_texture.jpg" file="models/box.3d" emis="#999999" /> 
+                </group>
+                <group>
+                    <translate X="-0.27" Y="0.55" Z="0.45"/>
+                    <scale X="0.1" Y="0.1" Z="0.1"/>
+                    <model texture="textures/cooble_texture.jpg" file="models/box.3d" emis="#999999" /> 
+                </group>
+                <group>
+                    <translate X="-0.45" Y="0.55" Z="0.45"/>
+                    <scale X="0.1" Y="0.1" Z="0.1"/>
+                    <model texture="textures/cooble_texture.jpg" file="models/box.3d" emis="#999999" /> 
+                </group>
 
-            <group>
-                <translate X="-0.45" Y="0.55" Z="0.27"/>
-                <scale X="0.1" Y="0.1" Z="0.1"/>
-                <model texture="textures/cooble_texture.jpg" file="models/box.3d" /> 
-            </group>
-            <group>
-                <translate X="-0.45" Y="0.55" Z="0.09"/>
-                <scale X="0.1" Y="0.1" Z="0.1"/>
-                <model texture="textures/cooble_texture.jpg" file="models/box.3d" /> 
-            </group>
-            <group>
-                <translate X="-0.45" Y="0.55" Z="-0.09"/>
-                <scale X="0.1" Y="0.1" Z="0.1"/>
-                <model texture="textures/cooble_texture.jpg" file="models/box.3d" /> 
-            </group>
-            <group>
-                <translate X="-0.45" Y="0.55" Z="-0.27"/>
-                <scale X="0.1" Y="0.1" Z="0.1"/>
-                <model texture="textures/cooble_texture.jpg" file="models/box.3d" /> 
-            </group>
-            <group>
-                <translate X="-0.45" Y="0.55" Z="-0.45"/>
-                <scale X="0.1" Y="0.1" Z="0.1"/>
-                <model texture="textures/cooble_texture.jpg" file="models/box.3d" /> 
-            </group>
+                <group>
+                    <translate X="-0.45" Y="0.55" Z="0.27"/>
+                    <scale X="0.1" Y="0.1" Z="0.1"/>
+                    <model texture="textures/cooble_texture.jpg" file="models/box.3d" emis="#999999" /> 
+                </group>
+                <group>
+                    <translate X="-0.45" Y="0.55" Z="0.09"/>
+                    <scale X="0.1" Y="0.1" Z="0.1"/>
+                    <model texture="textures/cooble_texture.jpg" file="models/box.3d" emis="#999999" /> 
+                </group>
+                <group>
+                    <translate X="-0.45" Y="0.55" Z="-0.09"/>
+                    <scale X="0.1" Y="0.1" Z="0.1"/>
+                    <model texture="textures/cooble_texture.jpg" file="models/box.3d" emis="#999999" /> 
+                </group>
+                <group>
+                    <translate X="-0.45" Y="0.55" Z="-0.27"/>
+                    <scale X="0.1" Y="0.1" Z="0.1"/>
+                    <model texture="textures/cooble_texture.jpg" file="models/box.3d" emis="#999999" /> 
+                </group>
+                <group>
+                    <translate X="-0.45" Y="0.55" Z="-0.45"/>
+                    <scale X="0.1" Y="0.1" Z="0.1"/>
+                    <model texture="textures/cooble_texture.jpg" file="models/box.3d" emis="#999999" /> 
+                </group>
 
-            <group>
-                <translate X="-0.27" Y="0.55" Z="-0.45"/>
-                <scale X="0.1" Y="0.1" Z="0.1"/>
-                <model texture="textures/cooble_texture.jpg" file="models/box.3d" /> 
-            </group>
-            <group>
-                <translate X="-0.09" Y="0.55" Z="-0.45"/>
-                <scale X="0.1" Y="0.1" Z="0.1"/>
-                <model texture="textures/cooble_texture.jpg" file="models/box.3d" /> 
-            </group>
-            <group>
-                <translate X="0.09" Y="0.55" Z="-0.45"/>
-                <scale X="0.1" Y="0.1" Z="0.1"/>
-                <model texture="textures/cooble_texture.jpg" file="models/box.3d" /> 
-            </group>
-            <group>
-                <translate X="0.27" Y="0.55" Z="-0.45"/>
-                <scale X="0.1" Y="0.1" Z="0.1"/>
-                <model texture="textures/cooble_texture.jpg" file="models/box.3d" /> 
-            </group>
-            <group>
-                <translate X="0.45" Y="0.55" Z="-0.45"/>
-                <scale X="0.1" Y="0.1" Z="0.1"/>
-                <model texture="textures/cooble_texture.jpg" file="models/box.3d" /> 
-            </group>
+                <group>
+                    <translate X="-0.27" Y="0.55" Z="-0.45"/>
+                    <scale X="0.1" Y="0.1" Z="0.1"/>
+                    <model texture="textures/cooble_texture.jpg" file="models/box.3d" emis="#999999" /> 
+                </group>
+                <group>
+                    <translate X="-0.09" Y="0.55" Z="-0.45"/>
+                    <scale X="0.1" Y="0.1" Z="0.1"/>
+                    <model texture="textures/cooble_texture.jpg" file="models/box.3d" emis="#999999" /> 
+                </group>
+                <group>
+                    <translate X="0.09" Y="0.55" Z="-0.45"/>
+                    <scale X="0.1" Y="0.1" Z="0.1"/>
+                    <model texture="textures/cooble_texture.jpg" file="models/box.3d" emis="#999999" /> 
+                </group>
+                <group>
+                    <translate X="0.27" Y="0.55" Z="-0.45"/>
+                    <scale X="0.1" Y="0.1" Z="0.1"/>
+                    <model texture="textures/cooble_texture.jpg" file="models/box.3d" emis="#999999" /> 
+                </group>
+                <group>
+                    <translate X="0.45" Y="0.55" Z="-0.45"/>
+                    <scale X="0.1" Y="0.1" Z="0.1"/>
+                    <model texture="textures/cooble_texture.jpg" file="models/box.3d" emis="#999999" /> 
+                </group>
 
-            <group>
-                <translate X="0.45" Y="0.55" Z="-0.27"/>
-                <scale X="0.1" Y="0.1" Z="0.1"/>
-                <model texture="textures/cooble_texture.jpg" file="models/box.3d" /> 
+                <group>
+                    <translate X="0.45" Y="0.55" Z="-0.27"/>
+                    <scale X="0.1" Y="0.1" Z="0.1"/>
+                    <model texture="textures/cooble_texture.jpg" file="models/box.3d" emis="#999999" /> 
+                </group>
+                <group>
+                    <translate X="0.45" Y="0.55" Z="-0.09"/>
+                    <scale X="0.1" Y="0.1" Z="0.1"/>
+                    <model texture="textures/cooble_texture.jpg" file="models/box.3d" emis="#999999" /> 
+                </group>
+                <group>
+                    <translate X="0.45" Y="0.55" Z="0.09"/>
+                    <scale X="0.1" Y="0.1" Z="0.1"/>
+                    <model texture="textures/cooble_texture.jpg" file="models/box.3d" emis="#999999" /> 
+                </group>
+                <group>
+                    <translate X="0.45" Y="0.55" Z="0.27"/>
+                    <scale X="0.1" Y="0.1" Z="0.1"/>
+                    <model texture="textures/cooble_texture.jpg" file="models/box.3d" emis="#999999" /> 
+                </group>
             </group>
+            <!-- torre 3 -->
             <group>
-                <translate X="0.45" Y="0.55" Z="-0.09"/>
-                <scale X="0.1" Y="0.1" Z="0.1"/>
-                <model texture="textures/cooble_texture.jpg" file="models/box.3d" /> 
-            </group>
-            <group>
-                <translate X="0.45" Y="0.55" Z="0.09"/>
-                <scale X="0.1" Y="0.1" Z="0.1"/>
-                <model texture="textures/cooble_texture.jpg" file="models/box.3d" /> 
-            </group>
-            <group>
-                <translate X="0.45" Y="0.55" Z="0.27"/>
-                <scale X="0.1" Y="0.1" Z="0.1"/>
-                <model texture="textures/cooble_texture.jpg" file="models/box.3d" /> 
-            </group>
-        </group>
-        <!-- torre 2 -->
-        <group>
-            <translate X="1.5" Y="1.2" Z="-1.5"/>
-            <model texture="textures/cooble_texture.jpg" file="models/box.3d" /> 
-            <!-- ameias -->
-            <group>
-                <translate X="0.45" Y="0.55" Z="0.45"/>
-                <scale X="0.1" Y="0.1" Z="0.1"/>
-                <model texture="textures/cooble_texture.jpg" file="models/box.3d" /> 
-            </group>
-            <group>
-                <translate X="0.27" Y="0.55" Z="0.45"/>
-                <scale X="0.1" Y="0.1" Z="0.1"/>
-                <model texture="textures/cooble_texture.jpg" file="models/box.3d" /> 
-            </group>
-            <group>
-                <translate X="0.09" Y="0.55" Z="0.45"/>
-                <scale X="0.1" Y="0.1" Z="0.1"/>
-                <model texture="textures/cooble_texture.jpg" file="models/box.3d" /> 
-            </group>
-            <group>
-                <translate X="-0.09" Y="0.55" Z="0.45"/>
-                <scale X="0.1" Y="0.1" Z="0.1"/>
-                <model texture="textures/cooble_texture.jpg" file="models/box.3d" /> 
-            </group>
-            <group>
-                <translate X="-0.27" Y="0.55" Z="0.45"/>
-                <scale X="0.1" Y="0.1" Z="0.1"/>
-                <model texture="textures/cooble_texture.jpg" file="models/box.3d" /> 
-            </group>
-            <group>
-                <translate X="-0.45" Y="0.55" Z="0.45"/>
-                <scale X="0.1" Y="0.1" Z="0.1"/>
-                <model texture="textures/cooble_texture.jpg" file="models/box.3d" /> 
-            </group>
+                <translate X="-1.5" Y="1.2" Z="1.5"/>
+                <model texture="textures/cooble_texture.jpg" file="models/box.3d" emis="#999999" /> 
+                <!-- ameias -->
+                <group>
+                    <translate X="0.45" Y="0.55" Z="0.45"/>
+                    <scale X="0.1" Y="0.1" Z="0.1"/>
+                    <model texture="textures/cooble_texture.jpg" file="models/box.3d" emis="#999999" /> 
+                </group>
+                <group>
+                    <translate X="0.27" Y="0.55" Z="0.45"/>
+                    <scale X="0.1" Y="0.1" Z="0.1"/>
+                    <model texture="textures/cooble_texture.jpg" file="models/box.3d" emis="#999999" /> 
+                </group>
+                <group>
+                    <translate X="0.09" Y="0.55" Z="0.45"/>
+                    <scale X="0.1" Y="0.1" Z="0.1"/>
+                    <model texture="textures/cooble_texture.jpg" file="models/box.3d" emis="#999999" /> 
+                </group>
+                <group>
+                    <translate X="-0.09" Y="0.55" Z="0.45"/>
+                    <scale X="0.1" Y="0.1" Z="0.1"/>
+                    <model texture="textures/cooble_texture.jpg" file="models/box.3d" emis="#999999" /> 
+                </group>
+                <group>
+                    <translate X="-0.27" Y="0.55" Z="0.45"/>
+                    <scale X="0.1" Y="0.1" Z="0.1"/>
+                    <model texture="textures/cooble_texture.jpg" file="models/box.3d" emis="#999999" /> 
+                </group>
+                <group>
+                    <translate X="-0.45" Y="0.55" Z="0.45"/>
+                    <scale X="0.1" Y="0.1" Z="0.1"/>
+                    <model texture="textures/cooble_texture.jpg" file="models/box.3d" emis="#999999" /> 
+                </group>
 
-            <group>
-                <translate X="-0.45" Y="0.55" Z="0.27"/>
-                <scale X="0.1" Y="0.1" Z="0.1"/>
-                <model texture="textures/cooble_texture.jpg" file="models/box.3d" /> 
-            </group>
-            <group>
-                <translate X="-0.45" Y="0.55" Z="0.09"/>
-                <scale X="0.1" Y="0.1" Z="0.1"/>
-                <model texture="textures/cooble_texture.jpg" file="models/box.3d" /> 
-            </group>
-            <group>
-                <translate X="-0.45" Y="0.55" Z="-0.09"/>
-                <scale X="0.1" Y="0.1" Z="0.1"/>
-                <model texture="textures/cooble_texture.jpg" file="models/box.3d" /> 
-            </group>
-            <group>
-                <translate X="-0.45" Y="0.55" Z="-0.27"/>
-                <scale X="0.1" Y="0.1" Z="0.1"/>
-                <model texture="textures/cooble_texture.jpg" file="models/box.3d" /> 
-            </group>
-            <group>
-                <translate X="-0.45" Y="0.55" Z="-0.45"/>
-                <scale X="0.1" Y="0.1" Z="0.1"/>
-                <model texture="textures/cooble_texture.jpg" file="models/box.3d" /> 
-            </group>
+                <group>
+                    <translate X="-0.45" Y="0.55" Z="0.27"/>
+                    <scale X="0.1" Y="0.1" Z="0.1"/>
+                    <model texture="textures/cooble_texture.jpg" file="models/box.3d" emis="#999999" /> 
+                </group>
+                <group>
+                    <translate X="-0.45" Y="0.55" Z="0.09"/>
+                    <scale X="0.1" Y="0.1" Z="0.1"/>
+                    <model texture="textures/cooble_texture.jpg" file="models/box.3d" emis="#999999" /> 
+                </group>
+                <group>
+                    <translate X="-0.45" Y="0.55" Z="-0.09"/>
+                    <scale X="0.1" Y="0.1" Z="0.1"/>
+                    <model texture="textures/cooble_texture.jpg" file="models/box.3d" emis="#999999" /> 
+                </group>
+                <group>
+                    <translate X="-0.45" Y="0.55" Z="-0.27"/>
+                    <scale X="0.1" Y="0.1" Z="0.1"/>
+                    <model texture="textures/cooble_texture.jpg" file="models/box.3d" emis="#999999" /> 
+                </group>
+                <group>
+                    <translate X="-0.45" Y="0.55" Z="-0.45"/>
+                    <scale X="0.1" Y="0.1" Z="0.1"/>
+                    <model texture="textures/cooble_texture.jpg" file="models/box.3d" emis="#999999" /> 
+                </group>
 
-            <group>
-                <translate X="-0.27" Y="0.55" Z="-0.45"/>
-                <scale X="0.1" Y="0.1" Z="0.1"/>
-                <model texture="textures/cooble_texture.jpg" file="models/box.3d" /> 
-            </group>
-            <group>
-                <translate X="-0.09" Y="0.55" Z="-0.45"/>
-                <scale X="0.1" Y="0.1" Z="0.1"/>
-                <model texture="textures/cooble_texture.jpg" file="models/box.3d" /> 
-            </group>
-            <group>
-                <translate X="0.09" Y="0.55" Z="-0.45"/>
-                <scale X="0.1" Y="0.1" Z="0.1"/>
-                <model texture="textures/cooble_texture.jpg" file="models/box.3d" /> 
-            </group>
-            <group>
-                <translate X="0.27" Y="0.55" Z="-0.45"/>
-                <scale X="0.1" Y="0.1" Z="0.1"/>
-                <model texture="textures/cooble_texture.jpg" file="models/box.3d" /> 
-            </group>
-            <group>
-                <translate X="0.45" Y="0.55" Z="-0.45"/>
-                <scale X="0.1" Y="0.1" Z="0.1"/>
-                <model texture="textures/cooble_texture.jpg" file="models/box.3d" /> 
-            </group>
+                <group>
+                    <translate X="-0.27" Y="0.55" Z="-0.45"/>
+                    <scale X="0.1" Y="0.1" Z="0.1"/>
+                    <model texture="textures/cooble_texture.jpg" file="models/box.3d" emis="#999999" /> 
+                </group>
+                <group>
+                    <translate X="-0.09" Y="0.55" Z="-0.45"/>
+                    <scale X="0.1" Y="0.1" Z="0.1"/>
+                    <model texture="textures/cooble_texture.jpg" file="models/box.3d" emis="#999999" /> 
+                </group>
+                <group>
+                    <translate X="0.09" Y="0.55" Z="-0.45"/>
+                    <scale X="0.1" Y="0.1" Z="0.1"/>
+                    <model texture="textures/cooble_texture.jpg" file="models/box.3d" emis="#999999" /> 
+                </group>
+                <group>
+                    <translate X="0.27" Y="0.55" Z="-0.45"/>
+                    <scale X="0.1" Y="0.1" Z="0.1"/>
+                    <model texture="textures/cooble_texture.jpg" file="models/box.3d" emis="#999999" /> 
+                </group>
+                <group>
+                    <translate X="0.45" Y="0.55" Z="-0.45"/>
+                    <scale X="0.1" Y="0.1" Z="0.1"/>
+                    <model texture="textures/cooble_texture.jpg" file="models/box.3d" emis="#999999" /> 
+                </group>
 
-            <group>
-                <translate X="0.45" Y="0.55" Z="-0.27"/>
-                <scale X="0.1" Y="0.1" Z="0.1"/>
-                <model texture="textures/cooble_texture.jpg" file="models/box.3d" /> 
+                <group>
+                    <translate X="0.45" Y="0.55" Z="-0.27"/>
+                    <scale X="0.1" Y="0.1" Z="0.1"/>
+                    <model texture="textures/cooble_texture.jpg" file="models/box.3d" emis="#999999" /> 
+                </group>
+                <group>
+                    <translate X="0.45" Y="0.55" Z="-0.09"/>
+                    <scale X="0.1" Y="0.1" Z="0.1"/>
+                    <model texture="textures/cooble_texture.jpg" file="models/box.3d" emis="#999999" /> 
+                </group>
+                <group>
+                    <translate X="0.45" Y="0.55" Z="0.09"/>
+                    <scale X="0.1" Y="0.1" Z="0.1"/>
+                    <model texture="textures/cooble_texture.jpg" file="models/box.3d" emis="#999999" /> 
+                </group>
+                <group>
+                    <translate X="0.45" Y="0.55" Z="0.27"/>
+                    <scale X="0.1" Y="0.1" Z="0.1"/>
+                    <model texture="textures/cooble_texture.jpg" file="models/box.3d" emis="#999999" /> 
+                </group>
             </group>
+            <!-- torre 4 -->
             <group>
-                <translate X="0.45" Y="0.55" Z="-0.09"/>
-                <scale X="0.1" Y="0.1" Z="0.1"/>
-                <model texture="textures/cooble_texture.jpg" file="models/box.3d" /> 
-            </group>
-            <group>
-                <translate X="0.45" Y="0.55" Z="0.09"/>
-                <scale X="0.1" Y="0.1" Z="0.1"/>
-                <model texture="textures/cooble_texture.jpg" file="models/box.3d" /> 
-            </group>
-            <group>
-                <translate X="0.45" Y="0.55" Z="0.27"/>
-                <scale X="0.1" Y="0.1" Z="0.1"/>
-                <model texture="textures/cooble_texture.jpg" file="models/box.3d" /> 
-            </group>
-        </group>
-        <!-- torre 3 -->
-        <group>
-            <translate X="-1.5" Y="1.2" Z="1.5"/>
-            <model texture="textures/cooble_texture.jpg" file="models/box.3d" /> 
-            <!-- ameias -->
-            <group>
-                <translate X="0.45" Y="0.55" Z="0.45"/>
-                <scale X="0.1" Y="0.1" Z="0.1"/>
-                <model texture="textures/cooble_texture.jpg" file="models/box.3d" /> 
-            </group>
-            <group>
-                <translate X="0.27" Y="0.55" Z="0.45"/>
-                <scale X="0.1" Y="0.1" Z="0.1"/>
-                <model texture="textures/cooble_texture.jpg" file="models/box.3d" /> 
-            </group>
-            <group>
-                <translate X="0.09" Y="0.55" Z="0.45"/>
-                <scale X="0.1" Y="0.1" Z="0.1"/>
-                <model texture="textures/cooble_texture.jpg" file="models/box.3d" /> 
-            </group>
-            <group>
-                <translate X="-0.09" Y="0.55" Z="0.45"/>
-                <scale X="0.1" Y="0.1" Z="0.1"/>
-                <model texture="textures/cooble_texture.jpg" file="models/box.3d" /> 
-            </group>
-            <group>
-                <translate X="-0.27" Y="0.55" Z="0.45"/>
-                <scale X="0.1" Y="0.1" Z="0.1"/>
-                <model texture="textures/cooble_texture.jpg" file="models/box.3d" /> 
-            </group>
-            <group>
-                <translate X="-0.45" Y="0.55" Z="0.45"/>
-                <scale X="0.1" Y="0.1" Z="0.1"/>
-                <model texture="textures/cooble_texture.jpg" file="models/box.3d" /> 
-            </group>
+                <translate X="1.5" Y="1.2" Z="1.5"/>
+                <model texture="textures/cooble_texture.jpg" file="models/box.3d" emis="#999999" /> 
+                <!-- ameias -->
+                <group>
+                    <translate X="0.45" Y="0.55" Z="0.45"/>
+                    <scale X="0.1" Y="0.1" Z="0.1"/>
+                    <model texture="textures/cooble_texture.jpg" file="models/box.3d" emis="#999999" /> 
+                </group>
+                <group>
+                    <translate X="0.27" Y="0.55" Z="0.45"/>
+                    <scale X="0.1" Y="0.1" Z="0.1"/>
+                    <model texture="textures/cooble_texture.jpg" file="models/box.3d" emis="#999999" /> 
+                </group>
+                <group>
+                    <translate X="0.09" Y="0.55" Z="0.45"/>
+                    <scale X="0.1" Y="0.1" Z="0.1"/>
+                    <model texture="textures/cooble_texture.jpg" file="models/box.3d" emis="#999999" /> 
+                </group>
+                <group>
+                    <translate X="-0.09" Y="0.55" Z="0.45"/>
+                    <scale X="0.1" Y="0.1" Z="0.1"/>
+                    <model texture="textures/cooble_texture.jpg" file="models/box.3d" emis="#999999" /> 
+                </group>
+                <group>
+                    <translate X="-0.27" Y="0.55" Z="0.45"/>
+                    <scale X="0.1" Y="0.1" Z="0.1"/>
+                    <model texture="textures/cooble_texture.jpg" file="models/box.3d" emis="#999999" /> 
+                </group>
+                <group>
+                    <translate X="-0.45" Y="0.55" Z="0.45"/>
+                    <scale X="0.1" Y="0.1" Z="0.1"/>
+                    <model texture="textures/cooble_texture.jpg" file="models/box.3d" emis="#999999" /> 
+                </group>
 
-            <group>
-                <translate X="-0.45" Y="0.55" Z="0.27"/>
-                <scale X="0.1" Y="0.1" Z="0.1"/>
-                <model texture="textures/cooble_texture.jpg" file="models/box.3d" /> 
-            </group>
-            <group>
-                <translate X="-0.45" Y="0.55" Z="0.09"/>
-                <scale X="0.1" Y="0.1" Z="0.1"/>
-                <model texture="textures/cooble_texture.jpg" file="models/box.3d" /> 
-            </group>
-            <group>
-                <translate X="-0.45" Y="0.55" Z="-0.09"/>
-                <scale X="0.1" Y="0.1" Z="0.1"/>
-                <model texture="textures/cooble_texture.jpg" file="models/box.3d" /> 
-            </group>
-            <group>
-                <translate X="-0.45" Y="0.55" Z="-0.27"/>
-                <scale X="0.1" Y="0.1" Z="0.1"/>
-                <model texture="textures/cooble_texture.jpg" file="models/box.3d" /> 
-            </group>
-            <group>
-                <translate X="-0.45" Y="0.55" Z="-0.45"/>
-                <scale X="0.1" Y="0.1" Z="0.1"/>
-                <model texture="textures/cooble_texture.jpg" file="models/box.3d" /> 
-            </group>
+                <group>
+                    <translate X="-0.45" Y="0.55" Z="0.27"/>
+                    <scale X="0.1" Y="0.1" Z="0.1"/>
+                    <model texture="textures/cooble_texture.jpg" file="models/box.3d" emis="#999999" /> 
+                </group>
+                <group>
+                    <translate X="-0.45" Y="0.55" Z="0.09"/>
+                    <scale X="0.1" Y="0.1" Z="0.1"/>
+                    <model texture="textures/cooble_texture.jpg" file="models/box.3d" emis="#999999" /> 
+                </group>
+                <group>
+                    <translate X="-0.45" Y="0.55" Z="-0.09"/>
+                    <scale X="0.1" Y="0.1" Z="0.1"/>
+                    <model texture="textures/cooble_texture.jpg" file="models/box.3d" emis="#999999" /> 
+                </group>
+                <group>
+                    <translate X="-0.45" Y="0.55" Z="-0.27"/>
+                    <scale X="0.1" Y="0.1" Z="0.1"/>
+                    <model texture="textures/cooble_texture.jpg" file="models/box.3d" emis="#999999" /> 
+                </group>
+                <group>
+                    <translate X="-0.45" Y="0.55" Z="-0.45"/>
+                    <scale X="0.1" Y="0.1" Z="0.1"/>
+                    <model texture="textures/cooble_texture.jpg" file="models/box.3d" emis="#999999" /> 
+                </group>
 
-            <group>
-                <translate X="-0.27" Y="0.55" Z="-0.45"/>
-                <scale X="0.1" Y="0.1" Z="0.1"/>
-                <model texture="textures/cooble_texture.jpg" file="models/box.3d" /> 
-            </group>
-            <group>
-                <translate X="-0.09" Y="0.55" Z="-0.45"/>
-                <scale X="0.1" Y="0.1" Z="0.1"/>
-                <model texture="textures/cooble_texture.jpg" file="models/box.3d" /> 
-            </group>
-            <group>
-                <translate X="0.09" Y="0.55" Z="-0.45"/>
-                <scale X="0.1" Y="0.1" Z="0.1"/>
-                <model texture="textures/cooble_texture.jpg" file="models/box.3d" /> 
-            </group>
-            <group>
-                <translate X="0.27" Y="0.55" Z="-0.45"/>
-                <scale X="0.1" Y="0.1" Z="0.1"/>
-                <model texture="textures/cooble_texture.jpg" file="models/box.3d" /> 
-            </group>
-            <group>
-                <translate X="0.45" Y="0.55" Z="-0.45"/>
-                <scale X="0.1" Y="0.1" Z="0.1"/>
-                <model texture="textures/cooble_texture.jpg" file="models/box.3d" /> 
-            </group>
+                <group>
+                    <translate X="-0.27" Y="0.55" Z="-0.45"/>
+                    <scale X="0.1" Y="0.1" Z="0.1"/>
+                    <model texture="textures/cooble_texture.jpg" file="models/box.3d" emis="#999999" /> 
+                </group>
+                <group>
+                    <translate X="-0.09" Y="0.55" Z="-0.45"/>
+                    <scale X="0.1" Y="0.1" Z="0.1"/>
+                    <model texture="textures/cooble_texture.jpg" file="models/box.3d" emis="#999999" /> 
+                </group>
+                <group>
+                    <translate X="0.09" Y="0.55" Z="-0.45"/>
+                    <scale X="0.1" Y="0.1" Z="0.1"/>
+                    <model texture="textures/cooble_texture.jpg" file="models/box.3d" emis="#999999" /> 
+                </group>
+                <group>
+                    <translate X="0.27" Y="0.55" Z="-0.45"/>
+                    <scale X="0.1" Y="0.1" Z="0.1"/>
+                    <model texture="textures/cooble_texture.jpg" file="models/box.3d" emis="#999999" /> 
+                </group>
+                <group>
+                    <translate X="0.45" Y="0.55" Z="-0.45"/>
+                    <scale X="0.1" Y="0.1" Z="0.1"/>
+                    <model texture="textures/cooble_texture.jpg" file="models/box.3d" emis="#999999" /> 
+                </group>
 
-            <group>
-                <translate X="0.45" Y="0.55" Z="-0.27"/>
-                <scale X="0.1" Y="0.1" Z="0.1"/>
-                <model texture="textures/cooble_texture.jpg" file="models/box.3d" /> 
-            </group>
-            <group>
-                <translate X="0.45" Y="0.55" Z="-0.09"/>
-                <scale X="0.1" Y="0.1" Z="0.1"/>
-                <model texture="textures/cooble_texture.jpg" file="models/box.3d" /> 
-            </group>
-            <group>
-                <translate X="0.45" Y="0.55" Z="0.09"/>
-                <scale X="0.1" Y="0.1" Z="0.1"/>
-                <model texture="textures/cooble_texture.jpg" file="models/box.3d" /> 
-            </group>
-            <group>
-                <translate X="0.45" Y="0.55" Z="0.27"/>
-                <scale X="0.1" Y="0.1" Z="0.1"/>
-                <model texture="textures/cooble_texture.jpg" file="models/box.3d" /> 
-            </group>
-        </group>
-        <!-- torre 4 -->
-        <group>
-            <translate X="1.5" Y="1.2" Z="1.5"/>
-            <model texture="textures/cooble_texture.jpg" file="models/box.3d" /> 
-            <!-- ameias -->
-            <group>
-                <translate X="0.45" Y="0.55" Z="0.45"/>
-                <scale X="0.1" Y="0.1" Z="0.1"/>
-                <model texture="textures/cooble_texture.jpg" file="models/box.3d" /> 
-            </group>
-            <group>
-                <translate X="0.27" Y="0.55" Z="0.45"/>
-                <scale X="0.1" Y="0.1" Z="0.1"/>
-                <model texture="textures/cooble_texture.jpg" file="models/box.3d" /> 
-            </group>
-            <group>
-                <translate X="0.09" Y="0.55" Z="0.45"/>
-                <scale X="0.1" Y="0.1" Z="0.1"/>
-                <model texture="textures/cooble_texture.jpg" file="models/box.3d" /> 
-            </group>
-            <group>
-                <translate X="-0.09" Y="0.55" Z="0.45"/>
-                <scale X="0.1" Y="0.1" Z="0.1"/>
-                <model texture="textures/cooble_texture.jpg" file="models/box.3d" /> 
-            </group>
-            <group>
-                <translate X="-0.27" Y="0.55" Z="0.45"/>
-                <scale X="0.1" Y="0.1" Z="0.1"/>
-                <model texture="textures/cooble_texture.jpg" file="models/box.3d" /> 
-            </group>
-            <group>
-                <translate X="-0.45" Y="0.55" Z="0.45"/>
-                <scale X="0.1" Y="0.1" Z="0.1"/>
-                <model texture="textures/cooble_texture.jpg" file="models/box.3d" /> 
-            </group>
-
-            <group>
-                <translate X="-0.45" Y="0.55" Z="0.27"/>
-                <scale X="0.1" Y="0.1" Z="0.1"/>
-                <model texture="textures/cooble_texture.jpg" file="models/box.3d" /> 
-            </group>
-            <group>
-                <translate X="-0.45" Y="0.55" Z="0.09"/>
-                <scale X="0.1" Y="0.1" Z="0.1"/>
-                <model texture="textures/cooble_texture.jpg" file="models/box.3d" /> 
-            </group>
-            <group>
-                <translate X="-0.45" Y="0.55" Z="-0.09"/>
-                <scale X="0.1" Y="0.1" Z="0.1"/>
-                <model texture="textures/cooble_texture.jpg" file="models/box.3d" /> 
-            </group>
-            <group>
-                <translate X="-0.45" Y="0.55" Z="-0.27"/>
-                <scale X="0.1" Y="0.1" Z="0.1"/>
-                <model texture="textures/cooble_texture.jpg" file="models/box.3d" /> 
-            </group>
-            <group>
-                <translate X="-0.45" Y="0.55" Z="-0.45"/>
-                <scale X="0.1" Y="0.1" Z="0.1"/>
-                <model texture="textures/cooble_texture.jpg" file="models/box.3d" /> 
-            </group>
-
-            <group>
-                <translate X="-0.27" Y="0.55" Z="-0.45"/>
-                <scale X="0.1" Y="0.1" Z="0.1"/>
-                <model texture="textures/cooble_texture.jpg" file="models/box.3d" /> 
-            </group>
-            <group>
-                <translate X="-0.09" Y="0.55" Z="-0.45"/>
-                <scale X="0.1" Y="0.1" Z="0.1"/>
-                <model texture="textures/cooble_texture.jpg" file="models/box.3d" /> 
-            </group>
-            <group>
-                <translate X="0.09" Y="0.55" Z="-0.45"/>
-                <scale X="0.1" Y="0.1" Z="0.1"/>
-                <model texture="textures/cooble_texture.jpg" file="models/box.3d" /> 
-            </group>
-            <group>
-                <translate X="0.27" Y="0.55" Z="-0.45"/>
-                <scale X="0.1" Y="0.1" Z="0.1"/>
-                <model texture="textures/cooble_texture.jpg" file="models/box.3d" /> 
-            </group>
-            <group>
-                <translate X="0.45" Y="0.55" Z="-0.45"/>
-                <scale X="0.1" Y="0.1" Z="0.1"/>
-                <model texture="textures/cooble_texture.jpg" file="models/box.3d" /> 
-            </group>
-
-            <group>
-                <translate X="0.45" Y="0.55" Z="-0.27"/>
-                <scale X="0.1" Y="0.1" Z="0.1"/>
-                <model texture="textures/cooble_texture.jpg" file="models/box.3d" /> 
-            </group>
-            <group>
-                <translate X="0.45" Y="0.55" Z="-0.09"/>
-                <scale X="0.1" Y="0.1" Z="0.1"/>
-                <model texture="textures/cooble_texture.jpg" file="models/box.3d" /> 
-            </group>
-            <group>
-                <translate X="0.45" Y="0.55" Z="0.09"/>
-                <scale X="0.1" Y="0.1" Z="0.1"/>
-                <model texture="textures/cooble_texture.jpg" file="models/box.3d" /> 
-            </group>
-            <group>
-                <translate X="0.45" Y="0.55" Z="0.27"/>
-                <scale X="0.1" Y="0.1" Z="0.1"/>
-                <model texture="textures/cooble_texture.jpg" file="models/box.3d" /> 
+                <group>
+                    <translate X="0.45" Y="0.55" Z="-0.27"/>
+                    <scale X="0.1" Y="0.1" Z="0.1"/>
+                    <model texture="textures/cooble_texture.jpg" file="models/box.3d" emis="#999999" /> 
+                </group>
+                <group>
+                    <translate X="0.45" Y="0.55" Z="-0.09"/>
+                    <scale X="0.1" Y="0.1" Z="0.1"/>
+                    <model texture="textures/cooble_texture.jpg" file="models/box.3d" emis="#999999" /> 
+                </group>
+                <group>
+                    <translate X="0.45" Y="0.55" Z="0.09"/>
+                    <scale X="0.1" Y="0.1" Z="0.1"/>
+                    <model texture="textures/cooble_texture.jpg" file="models/box.3d" emis="#999999" /> 
+                </group>
+                <group>
+                    <translate X="0.45" Y="0.55" Z="0.27"/>
+                    <scale X="0.1" Y="0.1" Z="0.1"/>
+                    <model texture="textures/cooble_texture.jpg" file="models/box.3d" emis="#999999" /> 
+                </group>
             </group>
         </group>
     </group>
     <!-- terrain -->
     <group>
         <translate Y="-5"/>
-        <terrain file="terrains/terreno2.jpg" texture="textures/relva.jpg" max="60"/> 
+        <terrain file="terrains/terreno2.jpg" texture="textures/relva.jpg" max="60" emiss="#999999" /> 
     </group>
     <group>
         <scale X="10" Z="10"/>
-        <model file="models/plane.3d" colour="#0077be80"/> 
+        <model file="models/plane.3d" diff="#0077be80" spec="#0077be80"/> 
     </group>
 </scene>

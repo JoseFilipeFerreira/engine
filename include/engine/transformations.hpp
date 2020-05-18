@@ -23,10 +23,10 @@ class Colour {
   public:
     Colour(): _r(1), _g(1), _b(1), _a(1) {}
     Colour(float r, float g, float b, float a): _r(r), _g(g), _b(b), _a(a) {}
-    auto constexpr r() noexcept -> float { return _r; }
-    auto constexpr g() noexcept -> float { return _g; }
-    auto constexpr b() noexcept -> float { return _b; }
-    auto constexpr a() noexcept -> float { return _a; }
+    auto constexpr r() const noexcept -> float { return _r; }
+    auto constexpr g() const noexcept -> float { return _g; }
+    auto constexpr b() const noexcept -> float { return _b; }
+    auto constexpr a() const noexcept -> float { return _a; }
     void apply() const { glColor4f(_r, _g, _b, _a); }
     void set_diffuse() const {
         float a[] = {_r, _g, _b, _a};
@@ -43,6 +43,9 @@ class Colour {
     void set_ambient() const {
         float a[] = {_r, _g, _b, _a};
         glMaterialfv(GL_FRONT, GL_AMBIENT, a);
+    }
+    auto operator*(float s) const -> Colour {
+        return Colour(_r * s, _g * s, _b * s, _a *s);
     }
 };
 

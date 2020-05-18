@@ -33,14 +33,6 @@ auto Vector::cross(Vector v) const -> Vector {
         _x * v.y() - _y * v.z());
 }
 
-auto Vector::hadamard(Vector const& v) const -> Vector {
-    return Vector(_x * v.x(), _y * v.y(), _z * v.z());
-}
-
-auto Vector::hadamard(float x, float y, float z) const -> Vector {
-    return Vector(_x * x, _y * y, _z * z);
-}
-
 auto VectorSpherical::add_radius(float x) const -> VectorSpherical {
     return VectorSpherical(_radius + x, _inclination, _azimuth);
 }

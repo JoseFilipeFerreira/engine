@@ -1,5 +1,7 @@
 #include "generator/patches.hpp"
 
+#include "utils/slices.hpp"
+
 #include <fstream>
 #include <iostream>
 #include <stdexcept>
@@ -38,13 +40,16 @@ Patches::Patches(int argc, char** argv) {
 
 // bezier matrix
 static const float M[4][4] = {
-    {-1, +3, -3, +1}, {+3, -6, +3, +0}, {-3, +3, +0, +0}, {+1, +0, +0, +0}};
+    {-1.0f, +3.0f, -3.0f, +1.0f},
+    {+3.0f, -6.0f, +3.0f, +0.0f},
+    {-3.0f, +3.0f, +0.0f, +0.0f},
+    {+1.0f, +0.0f, +0.0f, +0.0f}};
 
 #define T(t) \
     { t *t *t, t *t, t, 1.0f }
 
 #define dT(t) \
-    { 3 * t *t, 2 * t, 1.0f, 0.0f }
+    { 3.0f * t *t, 2.0f * t, 1.0f, 0.0f }
 
 void mult_vec_matrix4(const float v[4], const float m[4][4], float res[4]) {
     for (i64 i = 0; i < 4; i++) {
@@ -55,22 +60,14 @@ void mult_vec_matrix4(const float v[4], const float m[4][4], float res[4]) {
     }
 }
 
-auto Patches::point_at(u64 patch, u64 index) const -> Point {
-    return _control_points[_index_patches[patch][index]];
-}
-
-auto Patches::tangent(u64 patch, const float u[4], const float v[4]) const
+auto tangent(
+    SliceMatrix<Vector, 4> const& vectors, const float u[4], const float v[4])
     -> Vector {
     float u_m[4];
     mult_vec_matrix4(u, M, u_m);
 
     float v_m[4];
     mult_vec_matrix4(v, M, v_m);
-
-    Vector vectors[4][4];
-    for (size_t i = 0; i < 4; i++)
-        for (size_t j = 0; j < 4; j++)
-            vectors[i][j] = point_at(patch, i * 4 + j);
 
     Vector ump[4];
     for (size_t i = 0; i < 4; i++) {
@@ -79,6 +76,7 @@ auto Patches::tangent(u64 patch, const float u[4], const float v[4]) const
             ump[i] = ump[i] + vectors[j][i] * u_m[j];
         }
     }
+
     Vector r;
     for (size_t i = 0; i < 4; i++) {
         r = r + ump[i] * v_m[i];
@@ -86,28 +84,25 @@ auto Patches::tangent(u64 patch, const float u[4], const float v[4]) const
     return r;
 }
 
-auto Patches::normal_generator(u64 patch, float du, float dv) const -> Vector {
+auto normal_generator(SliceMatrix<Vector, 4> const& vectors, float du, float dv)
+    -> Vector {
     const float u[4] = T(du);
     const float deriv_u[4] = dT(du);
     const float v[4] = T(dv);
     const float deriv_v[4] = dT(dv);
-    Vector tu = tangent(patch, deriv_u, v);
-    Vector tv = tangent(patch, u, deriv_v);
+    Vector tu = tangent(vectors, deriv_u, v);
+    Vector tv = tangent(vectors, u, deriv_v);
     return tv.cross(tu);
 }
 
-auto Patches::point_generator(u64 patch, float du, float dv) const -> Point {
+auto point_generator(SliceMatrix<Vector, 4> const& vectors, float du, float dv)
+    -> Point {
     const float u[4] = T(du);
     float u_m[4];
     mult_vec_matrix4(u, M, u_m);
     const float v[4] = T(dv);
     float v_m[4];
     mult_vec_matrix4(v, M, v_m);
-
-    Vector vectors[4][4];
-    for (size_t i = 0; i < 4; i++)
-        for (size_t j = 0; j < 4; j++)
-            vectors[i][j] = point_at(patch, i * 4 + j);
 
     Vector ump[4];
     for (size_t i = 0; i < 4; i++) {
@@ -126,7 +121,15 @@ auto Patches::point_generator(u64 patch, float du, float dv) const -> Point {
 
 auto Patches::patch_generator(u64 patch, float u, float v) const
     -> std::pair<Point, Vector> {
-    return {point_generator(patch, u, v), normal_generator(patch, u, v)};
+    std::vector<Vector> v_points;
+    for (auto const& index : _index_patches[patch])
+        v_points.push_back(_control_points[index]);
+
+    auto point_matrix = SliceMatrix<Vector, 4>{v_points};
+
+    return {
+        point_generator(point_matrix, u, v),
+        normal_generator(point_matrix, u, v)};
 }
 
 std::vector<ModelPoint> Patches::draw() const {

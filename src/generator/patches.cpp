@@ -70,28 +70,25 @@ auto tangent(
     mult_vec_matrix4(v, M, v_m);
 
     Vector ump[4];
-    for (size_t i = 0; i < 4; i++) {
-        ump[i] = Point();
-        for (size_t j = 0; j < 4; j++) {
+    for (size_t i = 0; i < 4; i++)
+        for (size_t j = 0; j < 4; j++)
             ump[i] = ump[i] + vectors[j][i] * u_m[j];
-        }
-    }
 
     Vector r;
-    for (size_t i = 0; i < 4; i++) {
+    for (size_t i = 0; i < 4; i++)
         r = r + ump[i] * v_m[i];
-    }
+
     return r;
 }
 
 auto normal_generator(SliceMatrix<Vector, 4> const& vectors, float du, float dv)
     -> Vector {
     const float u[4] = T(du);
-    const float deriv_u[4] = dT(du);
+    const float d_u[4] = dT(du);
     const float v[4] = T(dv);
-    const float deriv_v[4] = dT(dv);
-    Vector tu = tangent(vectors, deriv_u, v);
-    Vector tv = tangent(vectors, u, deriv_v);
+    const float d_v[4] = dT(dv);
+    Vector tu = tangent(vectors, d_u, v);
+    Vector tv = tangent(vectors, u, d_v);
     return tv.cross(tu);
 }
 
@@ -105,17 +102,14 @@ auto point_generator(SliceMatrix<Vector, 4> const& vectors, float du, float dv)
     mult_vec_matrix4(v, M, v_m);
 
     Vector ump[4];
-    for (size_t i = 0; i < 4; i++) {
-        ump[i] = Point(0, 0, 0);
-        for (size_t j = 0; j < 4; j++) {
+    for (size_t i = 0; i < 4; i++)
+        for (size_t j = 0; j < 4; j++)
             ump[i] = ump[i] + vectors[j][i] * u_m[j];
-        }
-    }
 
-    Point r = Point(0, 0, 0);
-    for (size_t i = 0; i < 4; i++) {
+    Point r;
+    for (size_t i = 0; i < 4; i++)
         r = r + ump[i] * v_m[i];
-    }
+
     return r;
 }
 

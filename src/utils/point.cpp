@@ -30,7 +30,7 @@ auto Vector::cross(Vector v) const -> Vector {
     return Vector(
         _y * v.z() - _z * v.y(),
         _z * v.x() - _x * v.z(),
-        _x * v.y() - _y * v.z());
+        _x * v.y() - _y * v.x());
 }
 
 auto VectorSpherical::add_radius(float x) const -> VectorSpherical {

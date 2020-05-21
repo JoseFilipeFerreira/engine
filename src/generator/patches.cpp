@@ -36,66 +36,97 @@ Patches::Patches(int argc, char** argv) {
     }
 }
 
-auto bezier_point(
-    float t, Point const p0, Point const p1, Point const p2, Point const p3)
-    -> std::pair<Point, Vector> {
-    // bezier matrix
-    const float m[4][4] = {
-        {-1.0f, +3.0f, -3.0f, +1.0f},
-        {+3.0f, -6.0f, +3.0f, +0.0f},
-        {-3.0f, +3.0f, +0.0f, +0.0f},
-        {+1.0f, +0.0f, +0.0f, +0.0f}};
+// bezier matrix
+static const float M[4][4] = {
+    {-1, +3, -3, +1}, {+3, -6, +3, +0}, {-3, +3, +0, +0}, {+1, +0, +0, +0}};
 
-    // point matrix
-    const float pm[4][3] = {
-        {p0.x(), p0.y(), p0.z()},
-        {p1.x(), p1.y(), p1.z()},
-        {p2.x(), p2.y(), p2.z()},
-        {p3.x(), p3.y(), p3.z()}};
+#define T(t) \
+    { t *t *t, t *t, t, 1.0f }
 
-    // a = m X pm
-    float a[4][3] = {0};
-    for (i32 i = 0; i < 4; i++)
-        for (i32 j = 0; j < 3; j++)
-            for (i32 k = 0; k < 4; k++) a[i][j] += m[i][k] * pm[k][j];
+#define dT(t) \
+    { 3 * t *t, 2 * t, 1.0f, 0.0f }
 
-    // pv = tv X a
-    const float tv[4] = {t * t * t, t * t, t, 1};
-    float pv[3] = {0};
-    for (i32 j = 0; j < 3; j++)
-        for (i32 k = 0; k < 4; k++) pv[j] += tv[k] * a[k][j];
+void mult_vec_matrix4(const float v[4], const float m[4][4], float res[4]) {
+    for (i64 i = 0; i < 4; i++) {
+        res[i] = 0;
+        for (i64 j = 0; j < 4; j++) {
+            res[i] += v[j] * m[i][j];
+        }
+    }
+}
 
-    // dv = tvd X a
-    const float tvd[4] = {3 * t * t, 2 * t, 1, 0};
-    float dv[3] = {0};
-    for (i32 j = 0; j < 3; j++)
-        for (i32 k = 0; k < 4; k++) dv[j] += tvd[k] * a[k][j];
+auto Patches::point_at(u64 patch, u64 index) const -> Point {
+    return _control_points[_index_patches[patch][index]];
+}
 
-    return {
-        Point(pv[0], pv[1], pv[2]), Vector(dv[0], dv[1], dv[2]).normalize()};
+auto Patches::tangent(u64 patch, const float u[4], const float v[4]) const
+    -> Vector {
+    float u_m[4];
+    mult_vec_matrix4(u, M, u_m);
+
+    float v_m[4];
+    mult_vec_matrix4(v, M, v_m);
+
+    Vector vectors[4][4];
+    for (size_t i = 0; i < 4; i++)
+        for (size_t j = 0; j < 4; j++)
+            vectors[i][j] = point_at(patch, i * 4 + j);
+
+    Vector ump[4];
+    for (size_t i = 0; i < 4; i++) {
+        ump[i] = Point();
+        for (size_t j = 0; j < 4; j++) {
+            ump[i] = ump[i] + vectors[j][i] * u_m[j];
+        }
+    }
+    Vector r;
+    for (size_t i = 0; i < 4; i++) {
+        r = r + ump[i] * v_m[i];
+    }
+    return r;
+}
+
+auto Patches::normal_generator(u64 patch, float du, float dv) const -> Vector {
+    const float u[4] = T(du);
+    const float deriv_u[4] = dT(du);
+    const float v[4] = T(dv);
+    const float deriv_v[4] = dT(dv);
+    Vector tu = tangent(patch, deriv_u, v);
+    Vector tv = tangent(patch, u, deriv_v);
+    return tv.cross(tu);
+}
+
+auto Patches::point_generator(u64 patch, float du, float dv) const -> Point {
+    const float u[4] = T(du);
+    float u_m[4];
+    mult_vec_matrix4(u, M, u_m);
+    const float v[4] = T(dv);
+    float v_m[4];
+    mult_vec_matrix4(v, M, v_m);
+
+    Vector vectors[4][4];
+    for (size_t i = 0; i < 4; i++)
+        for (size_t j = 0; j < 4; j++)
+            vectors[i][j] = point_at(patch, i * 4 + j);
+
+    Vector ump[4];
+    for (size_t i = 0; i < 4; i++) {
+        ump[i] = Point(0, 0, 0);
+        for (size_t j = 0; j < 4; j++) {
+            ump[i] = ump[i] + vectors[j][i] * u_m[j];
+        }
+    }
+
+    Point r = Point(0, 0, 0);
+    for (size_t i = 0; i < 4; i++) {
+        r = r + ump[i] * v_m[i];
+    }
+    return r;
 }
 
 auto Patches::patch_generator(u64 patch, float u, float v) const
     -> std::pair<Point, Vector> {
-    std::vector<Point> patch_control_points;
-    for (auto const& index : _index_patches[patch]) {
-        patch_control_points.push_back(_control_points[index]);
-    }
-
-    std::vector<Point> new_patch_points;
-    for (auto i = patch_control_points.cbegin();
-         i != patch_control_points.cend();
-         i += 4) {
-        auto p = bezier_point(u, i[0], i[1], i[2], i[3]);
-        new_patch_points.push_back(std::get<0>(p));
-    }
-
-    return bezier_point(
-        v,
-        new_patch_points[0],
-        new_patch_points[1],
-        new_patch_points[2],
-        new_patch_points[3]);
+    return {point_generator(patch, u, v), normal_generator(patch, u, v)};
 }
 
 std::vector<ModelPoint> Patches::draw() const {
@@ -127,13 +158,13 @@ std::vector<ModelPoint> Patches::draw() const {
                 auto p3 = ModelPoint(
                     patch_generator(p, next_uf, next_vf), next_t_x, next_t_y);
 
-                coords.push_back(p1);
-                coords.push_back(p2);
                 coords.push_back(p3);
-
-                coords.push_back(p1);
-                coords.push_back(p0);
                 coords.push_back(p2);
+                coords.push_back(p1);
+
+                coords.push_back(p2);
+                coords.push_back(p0);
+                coords.push_back(p1);
             }
         }
     }

@@ -1,11 +1,11 @@
 #ifndef PATCHES_H
 #define PATCHES_H
-#include "utils/point.hpp"
 #include "utils/modelPoint.hpp"
+#include "utils/point.hpp"
 #include "utils/types.hpp"
 
-#include <vector>
 #include <utility>
+#include <vector>
 
 class Patches {
   private:

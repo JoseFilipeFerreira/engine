@@ -5,7 +5,6 @@
 #include "utils/types.hpp"
 #include "utils/visitor.hpp"
 
-#include <array>
 #include <utility>
 #include <vector>
 

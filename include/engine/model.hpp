@@ -4,8 +4,8 @@
 #include "engine/transformations.hpp"
 #include "utils/types.hpp"
 
-#include <optional>
 #include <string>
+#include <optional>
 
 class TextureBuffer {
   private:

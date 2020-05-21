@@ -8,31 +8,26 @@
 #include <utility>
 #include <variant>
 
-#ifdef __APPLE__
-#    include <GLUT/glut.h>
-#else
-#    include <GL/glew.h>
-#    include <GL/glut.h>
-#endif
-
 class PointLight {
   private:
     Point _position;
     Colour _colour;
+    u64 _id;
 
   public:
-    PointLight(Point p, Colour c): _position(p), _colour(c){}
-    void on(GLenum) const;
+    PointLight(Point, Colour);
+    void on() const;
 };
 
 class DirectionalLight {
   private:
     Vector _direction;
     Colour _colour;
+    u64 _id;
 
   public:
-    DirectionalLight(Vector v, Colour c): _direction(v), _colour(c){}
-    void on(GLenum) const;
+    DirectionalLight(Vector, Colour);
+    void on() const;
 };
 
 class SpotLight {
@@ -40,11 +35,11 @@ class SpotLight {
     Point _position;
     Vector _direction;
     Colour _colour;
+    u64 _id;
 
   public:
-    SpotLight(Point p, Vector v, Colour c)
-        : _position(p), _direction(v), _colour(c) {}
-    void on(GLenum) const;
+    SpotLight(Point, Vector, Colour);
+    void on() const;
 };
 
 class Light {

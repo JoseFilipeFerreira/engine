@@ -13,7 +13,7 @@ class Vector {
     float _x, _y, _z;
 
   public:
-    Vector(): _x(0), _y(0), _z(0) {};
+    Vector(): _x(0), _y(0), _z(0){};
     Vector(float, float, float);
     Vector(Point const&, Point const&);
     Vector(Point const&);
@@ -70,7 +70,7 @@ class Point {
     float _x, _y, _z;
 
   public:
-    Point(): _x(0), _y(0), _z(0) {};
+    Point(): _x(0), _y(0), _z(0){};
     Point(float, float, float);
     Point(PointSpherical const&);
     auto friend operator<<(std::ostream&, Point const&) -> std::ostream&;

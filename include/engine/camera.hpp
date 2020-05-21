@@ -11,6 +11,9 @@ class Camera {
     Point _pl;
     CameraMode _camera_mode;
 
+    void react_key_orbit(unsigned char, int, int);
+    void react_key_fpv(unsigned char, int, int);
+
   public:
     Camera()
         : _pc(10, 10, 10), _pl(0, 0, 0), _camera_mode(CameraMode::Orbit) {}
@@ -19,8 +22,6 @@ class Camera {
         func(_pc, _pl);
     };
     void react_key(unsigned char, int, int);
-    void react_key_orbit(unsigned char, int, int);
-    void react_key_fpv(unsigned char, int, int);
     void place_camera() const;
     auto friend operator<<(std::ostream&, Camera const&) -> std::ostream&;
 };

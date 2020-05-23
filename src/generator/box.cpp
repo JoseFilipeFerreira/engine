@@ -32,14 +32,19 @@ void Box::draw_face(
             auto p2 = org + base * (i + 1) + top * (j + 1);
             auto p3 = org + base * (i + 1) + top * j;
 
+            auto mp0 = ModelPoint(p0, normal, tex_org.x() + xt, tex_org.y() - yt);
+            auto mp1 = ModelPoint(p1, normal, tex_org.x() + xt, tex_org.y() - n_yt);
+            auto mp2 = ModelPoint(p2, normal, tex_org.x() + n_xt, tex_org.y() - n_yt);
+            auto mp3 = ModelPoint(p3, normal, tex_org.x() + n_xt, tex_org.y() - yt);
+
             // 1st triangle
-            coords.emplace_back(p0, normal, tex_org.x() + xt, tex_org.y() - yt);
-            coords.emplace_back(p2, normal, tex_org.x() + n_xt, tex_org.y() - n_yt);
-            coords.emplace_back(p1, normal, tex_org.x() + xt, tex_org.y() - n_yt);
+            coords.push_back(mp0);
+            coords.emplace_back(mp2);
+            coords.emplace_back(mp1);
             // 2nd triangle
-            coords.emplace_back(p0, normal, tex_org.x() + xt, tex_org.y() - yt);
-            coords.emplace_back(p3, normal, tex_org.x() + n_xt, tex_org.y() - yt);
-            coords.emplace_back(p2, normal, tex_org.x() + n_xt, tex_org.y() - n_yt);
+            coords.push_back(mp0);
+            coords.emplace_back(mp3);
+            coords.emplace_back(mp2);
         }
     }
 }
@@ -65,12 +70,12 @@ std::vector<ModelPoint> Box::draw() const {
     auto back = right.mirror_z();
     auto left = front.mirror_z();
 
-    auto t_left = Point(0, 0.5, 0);
+    auto t_left = Point(0, 0.5f, 0);
     auto t_right = Point(0, 1, 0);
-    auto t_top = Point(0.33, 0.5, 0);
-    auto t_bottom = Point(0.33, 1, 0);
-    auto t_front = Point(0.66, 0.5, 0);
-    auto t_back = Point(0.66, 1, 0);
+    auto t_top = Point(1.0f / 3.0f, 0.5f, 0);
+    auto t_bottom = Point(1.0f / 3.0f, 1, 0);
+    auto t_front = Point(2.0f / 3.0f, 0.5f, 0);
+    auto t_back = Point(2.0f / 3.0f, 1, 0);
 
     // front
     draw_face(coords, front, t_front, x, y);

@@ -66,6 +66,20 @@ void GroupBuffer::draw_terrain(std::string const& terrain_name) const {
         throw std::invalid_argument("Attempted to draw an unloaded terrain");
 }
 
+auto GroupBuffer::bounding_box(std::string const& object_name) const
+    -> BoundingBox {
+    auto search_model = _model_buffers.find(object_name);
+    auto search_terrain = _terrain_buffers.find(object_name);
+
+    if (search_model != _model_buffers.end())
+        return (search_model->second).bounding_box();
+    else if (search_terrain != _terrain_buffers.end()) {
+        return (search_terrain->second).bounding_box();
+    } else
+        throw std::invalid_argument(
+            "Attempted to get an unloaded bounding box");
+}
+
 Group::Group() {
     transformations = std::vector<Transform>();
     models = std::vector<Object>();
@@ -79,18 +93,24 @@ void Group::draw_group(
     for (auto const& t : transformations) t.apply(DEBUG, elapsed);
     for (auto const& l : lights) l.on();
     for (auto const& m : models) {
-        m.apply_colour();
-        m.set_material();
-        group_buffer.bind_texture(m.texture_name());
-        group_buffer.draw_model(m.model_name());
-        group_buffer.unbind_texture();
+        if (m.bounding_box().is_visible()) {
+            m.apply_colour();
+            m.set_material();
+            if (DEBUG) m.bounding_box().draw();
+            group_buffer.bind_texture(m.texture_name());
+            group_buffer.draw_model(m.model_name());
+            group_buffer.unbind_texture();
+        }
     }
     for (auto const& t : terrains) {
-        t.apply_colour();
-        t.set_material();
-        group_buffer.bind_texture(t.texture_name());
-        group_buffer.draw_terrain(t.model_name());
-        group_buffer.unbind_texture();
+        if (t.bounding_box().is_visible()) {
+            t.apply_colour();
+            t.set_material();
+            if (DEBUG) t.bounding_box().draw();
+            group_buffer.bind_texture(t.texture_name());
+            group_buffer.draw_terrain(t.model_name());
+            group_buffer.unbind_texture();
+        }
     }
     for (auto const& g : subgroups) {
         glPushMatrix();

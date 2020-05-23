@@ -123,6 +123,8 @@ TerrainBuffer::TerrainBuffer(
             point_vec.push_back(j - _image_height * 0.5f);
         }
     }
+    
+    _bb = BoundingBox(point_vec);
 
     glGenBuffers(1, _points);
     glBindBuffer(GL_ARRAY_BUFFER, _points[0]);
@@ -169,6 +171,7 @@ void TerrainBuffer::draw_terrain() const {
 
 ModelBuffer::ModelBuffer(std::string const& fileName) {
     float px, py, pz, vx, vy, vz, tx, ty;
+
     std::vector<float> point_vec;
     std::vector<float> normal_vec;
     std::vector<float> texture_vec;
@@ -184,6 +187,9 @@ ModelBuffer::ModelBuffer(std::string const& fileName) {
         texture_vec.push_back(tx);
         texture_vec.push_back(ty);
     }
+
+    _bb = BoundingBox(point_vec);
+
     _n_points = point_vec.size();
     _n_normals = normal_vec.size();
     _n_textures = texture_vec.size();

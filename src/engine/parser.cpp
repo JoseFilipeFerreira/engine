@@ -118,7 +118,8 @@ auto parse_object(TiXmlElement const* elem, Colour colour, GroupBuffer& gb)
         diffuse,
         specular,
         emissive,
-        ambient);
+        ambient,
+        gb.bounding_box(elem->Attribute("file")));
 }
 
 auto parse_light(TiXmlElement const* elem) -> Light {
@@ -173,15 +174,16 @@ auto recursive_parse(TiXmlElement const* root, Colour colour, GroupBuffer& gb)
             vLight.push_back(parse_light(elem));
 
         } else if (type == "model") {
+            gb.insert_model(elem->Attribute("file"));
             auto m_obj = parse_object(elem, update_colour(elem, colour), gb);
-            gb.insert_model(m_obj.model_name());
             vMod.push_back(m_obj);
 
         } else if (type == "terrain") {
-            auto t_obj = parse_object(elem, update_colour(elem, colour), gb);
             float min_height = parse_float(elem, "min", 0);
             float max_height = parse_float(elem, "max", 255);
-            gb.insert_terrain(t_obj.model_name(), min_height, max_height);
+            gb.insert_terrain(elem->Attribute("file"), min_height, max_height);
+
+            auto t_obj = parse_object(elem, update_colour(elem, colour), gb);
             vTer.push_back(t_obj);
 
         } else {

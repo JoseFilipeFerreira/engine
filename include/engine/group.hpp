@@ -23,6 +23,7 @@ class GroupBuffer {
     void draw_terrain(std::string const&) const;
     void bind_texture(std::optional<std::string> const&) const;
     void unbind_texture() const;
+    auto bounding_box(std::string const&) const -> BoundingBox;
 };
 
 class Group {

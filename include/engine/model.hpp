@@ -49,7 +49,10 @@ class Object {
         _emissive.set_emissive();
         _ambient.set_ambient();
 
-        group_buffer.bind_texture(_texture_name);
+        if(_texture_name.has_value()){
+                group_buffer.bind_texture(_texture_name.value());
+        }
+
         if constexpr (is_model) {
             group_buffer.draw_model(_file_name);
         } else {

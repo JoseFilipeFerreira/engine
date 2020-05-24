@@ -39,7 +39,8 @@ auto GroupBuffer::insert_terrain(
     -> BoundingBox {
     auto search = _terrain_buffers.find(terrain_name);
     if (search == _terrain_buffers.end()) {
-        auto [terrain, bb] = TerrainBuffer::make(terrain_name, min_height, max_height);
+        auto [terrain, bb] =
+            TerrainBuffer::make(terrain_name, min_height, max_height);
         _terrain_buffers.insert(std::make_pair(terrain_name, terrain));
         _bounding_box.insert(std::make_pair(terrain_name, bb));
         return bb;
@@ -56,10 +57,8 @@ void GroupBuffer::insert_texture(std::string const& texture_name) {
     }
 }
 
-void GroupBuffer::bind_texture(
-    std::optional<std::string> const& texture_name) const {
-    if (!texture_name.has_value()) return;
-    auto search = _texture_buffers.find(texture_name.value());
+void GroupBuffer::bind_texture(std::string const& texture_name) const {
+    auto search = _texture_buffers.find(texture_name);
     if (search != _texture_buffers.end())
         (search->second).bind_texture();
     else
@@ -117,7 +116,7 @@ TextureBuffer::TextureBuffer(std::string const& file_name) {
         tex_data);
 }
 
-auto h(
+auto calc_height(
     u8 const* image_data,
     u64 image_width,
     u64 i,
@@ -136,13 +135,21 @@ auto compute_normal(
     i32 i,
     i32 j) -> Vector {
     auto p1 = Point(
-        i, h(image_data, image_width, i, j - 1, min_height, max_height), j - 1);
+        i,
+        calc_height(image_data, image_width, i, j - 1, min_height, max_height),
+        j - 1);
     auto p2 = Point(
-        i, h(image_data, image_width, i, j + 1, min_height, max_height), j + 1);
+        i,
+        calc_height(image_data, image_width, i, j + 1, min_height, max_height),
+        j + 1);
     auto p3 = Point(
-        i - 1, h(image_data, image_width, i - 1, j, min_height, max_height), j);
+        i - 1,
+        calc_height(image_data, image_width, i - 1, j, min_height, max_height),
+        j);
     auto p4 = Point(
-        i + 1, h(image_data, image_width, i + 1, j, min_height, max_height), j);
+        i + 1,
+        calc_height(image_data, image_width, i + 1, j, min_height, max_height),
+        j);
 
     auto v1 = Vector(p1, p2);
     auto v2 = Vector(p3, p4);
@@ -179,8 +186,8 @@ auto TerrainBuffer::make(
             tex_vec.push_back(j);
 
             point_vec.push_back(i - _image_width * 0.5f + 1);
-            point_vec.push_back(
-                h(image_data, _image_width, i + 1, j, min_height, max_height));
+            point_vec.push_back(calc_height(
+                image_data, _image_width, i + 1, j, min_height, max_height));
             point_vec.push_back(j - _image_height * 0.5f);
 
             // location (i, j)
@@ -194,8 +201,8 @@ auto TerrainBuffer::make(
             tex_vec.push_back(j);
 
             point_vec.push_back(i - _image_width * 0.5f);
-            point_vec.push_back(
-                h(image_data, _image_width, i, j, min_height, max_height));
+            point_vec.push_back(calc_height(
+                image_data, _image_width, i, j, min_height, max_height));
             point_vec.push_back(j - _image_height * 0.5f);
         }
     }

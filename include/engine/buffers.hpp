@@ -86,7 +86,7 @@ class GroupBuffer {
     void insert_texture(std::string const&);
     void draw_model(std::string const&) const;
     void draw_terrain(std::string const&) const;
-    void bind_texture(std::optional<std::string> const&) const;
+    void bind_texture(std::string const&) const;
     void unbind_texture() const;
 };
 

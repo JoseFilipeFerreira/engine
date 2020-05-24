@@ -82,11 +82,10 @@ auto build_rotation_matrix(Vector x, Vector y, Vector z) -> std::vector<float> {
 
 void CatmullRon::apply(bool draw, float elapsed) {
     if (draw) draw_curve();
-    auto point_dir = get_location(elapsed);
-    auto p = std::get<0>(point_dir);
-    glTranslatef(p.x(), p.y(), p.z());
+    auto [point, dir] = get_location(elapsed);
+    glTranslatef(point.x(), point.y(), point.z());
 
-    auto X = get<1>(point_dir).normalize();
+    auto X = dir.normalize();
     auto Z = X.cross(Vector(0, 1, 0)).normalize();
     auto Y = Z.cross(X).normalize();
 

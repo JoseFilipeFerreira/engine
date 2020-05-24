@@ -1,47 +1,15 @@
 #ifndef MODEL_H
 #define MODEL_H
 
+#include "engine/boundingBox.hpp"
+#include "engine/buffers.hpp"
 #include "engine/transformations.hpp"
 #include "utils/types.hpp"
 
-#include <string>
 #include <optional>
+#include <string>
 
-class TextureBuffer {
-  private:
-    unsigned int _texture;
-    size_t _image_height, _image_width;
-
-  public:
-    TextureBuffer(std::string const&);
-    void bind_texture() const { glBindTexture(GL_TEXTURE_2D, _texture); };
-};
-
-class TerrainBuffer {
-  private:
-    GLuint _points[1];
-    GLuint _normals[1];
-    GLuint _texture[1];
-    size_t _image_height, _image_width;
-
-  public:
-    TerrainBuffer(std::string const&, i32, i32);
-    void draw_terrain() const;
-};
-
-class ModelBuffer {
-  private:
-    GLuint _points[1];
-    GLuint _normals[1];
-    GLuint _texture[1];
-
-    size_t _n_points, _n_normals, _n_textures;
-
-  public:
-    ModelBuffer(std::string const&);
-    void draw_model() const;
-};
-
+template<bool is_model>
 class Object {
   private:
     std::string _file_name;
@@ -52,6 +20,8 @@ class Object {
     Colour _emissive;
     Colour _ambient;
 
+    BoundingBox _bb;
+
   public:
     Object(
         const char* file_name,
@@ -60,20 +30,40 @@ class Object {
         Colour diff,
         Colour spec,
         Colour emiss,
-        Colour amb)
+        Colour amb,
+        BoundingBox bb)
         : _file_name(file_name),
           _texture_name(texture_name),
           _colour(c),
           _diffuse(diff),
           _specular(spec),
           _emissive(emiss),
-          _ambient(amb){};
-    void apply_colour() const { _colour.apply(); };
-    void set_material() const;
-    auto model_name() const -> std::string const& { return _file_name; }
-    auto texture_name() const -> std::optional<std::string> const& {
-        return _texture_name;
+          _ambient(amb),
+          _bb(bb){};
+
+    void draw(GroupBuffer const& group_buffer, bool DEBUG) const {
+        _colour.apply();
+
+        _diffuse.set_diffuse();
+        _specular.set_specular();
+        _emissive.set_emissive();
+        _ambient.set_ambient();
+
+        if(_texture_name.has_value()){
+                group_buffer.bind_texture(_texture_name.value());
+        }
+
+        if constexpr (is_model) {
+            group_buffer.draw_model(_file_name);
+        } else {
+            group_buffer.draw_terrain(_file_name);
+        }
+        group_buffer.unbind_texture();
+
+        if (DEBUG) _bb.draw();
     }
+
+    auto is_visible() const -> bool { return _bb.is_visible(); }
 };
 
 #endif // MODEL_H

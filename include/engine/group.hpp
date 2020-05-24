@@ -1,36 +1,16 @@
 #ifndef GROUP_H
 #define GROUP_H
 #include "engine/model.hpp"
-#include "utils/types.hpp"
 #include "engine/light.hpp"
+#include "engine/buffers.hpp"
 
-#include <unordered_map>
 #include <vector>
-#include <optional>
-
-class GroupBuffer {
-  private:
-    std::unordered_map<std::string, ModelBuffer> _model_buffers;
-    std::unordered_map<std::string, TerrainBuffer> _terrain_buffers;
-    std::unordered_map<std::string, TextureBuffer> _texture_buffers;
-
-  public:
-    GroupBuffer();
-    void insert_model(std::string const&);
-    void insert_texture(std::string const&);
-    void insert_terrain(std::string const&, i32, i32);
-    void draw_model(std::string const&) const;
-    void draw_terrain(std::string const&) const;
-    void bind_texture(std::optional<std::string> const&) const;
-    void unbind_texture() const;
-    auto bounding_box(std::string const&) const -> BoundingBox;
-};
 
 class Group {
   private:
     std::vector<Transform> transformations;
-    std::vector<Object> models;
-    std::vector<Object> terrains;
+    std::vector<Object<true>> models;
+    std::vector<Object<false>> terrains;
     std::vector<Light> lights;
     Colour colour;
     std::vector<Group> subgroups;
@@ -39,8 +19,8 @@ class Group {
     Group();
     Group(
         std::vector<Transform> t,
-        std::vector<Object> m,
-        std::vector<Object> ter,
+        std::vector<Object<true>> m,
+        std::vector<Object<false>> ter,
         std::vector<Light> li,
         Colour c,
         std::vector<Group> g)

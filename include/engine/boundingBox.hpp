@@ -39,9 +39,9 @@ class BoundingBox {
                   << '\n';
     }
 
-    auto is_visible() -> bool { return true; }
+    auto is_visible() const -> bool { return true; }
 
-    void draw() {
+    void draw() const {
         glBegin(GL_LINES);
         glVertex3f(_minX, _minY, _minZ);
         glVertex3f(_minX, _minY, _maxZ);

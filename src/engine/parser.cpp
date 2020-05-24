@@ -98,8 +98,9 @@ auto parse_points(TiXmlElement const* root) -> std::vector<Point> {
     return points;
 }
 
-auto parse_object(TiXmlElement const* elem, Colour colour, GroupBuffer& gb)
-    -> Object {
+template<bool is_model>
+auto parse_object(TiXmlElement const* elem, Colour colour, GroupBuffer& gb, BoundingBox bb)
+    -> Object<is_model> {
     std::optional<std::string> tex;
     if (elem->Attribute("texture")) {
         tex = std::make_optional(elem->Attribute("texture"));
@@ -111,7 +112,7 @@ auto parse_object(TiXmlElement const* elem, Colour colour, GroupBuffer& gb)
     auto emissive = parse_colour(elem, "emis").value_or(Colour(0, 0, 0, 0));
     auto ambient = parse_colour(elem, "ambi").value_or(Colour(0, 0, 0, 0));
 
-    return Object(
+    return Object<is_model>(
         elem->Attribute("file"),
         tex,
         colour,
@@ -119,7 +120,7 @@ auto parse_object(TiXmlElement const* elem, Colour colour, GroupBuffer& gb)
         specular,
         emissive,
         ambient,
-        gb.bounding_box(elem->Attribute("file")));
+        bb);
 }
 
 auto parse_light(TiXmlElement const* elem) -> Light {
@@ -144,8 +145,8 @@ auto parse_light(TiXmlElement const* elem) -> Light {
 auto recursive_parse(TiXmlElement const* root, Colour colour, GroupBuffer& gb)
     -> Group {
     std::vector<Transform> vTran;
-    std::vector<Object> vMod;
-    std::vector<Object> vTer;
+    std::vector<Object<true>> vMod;
+    std::vector<Object<false>> vTer;
     std::vector<Group> vGroup;
     std::vector<Light> vLight;
 
@@ -174,16 +175,17 @@ auto recursive_parse(TiXmlElement const* root, Colour colour, GroupBuffer& gb)
             vLight.push_back(parse_light(elem));
 
         } else if (type == "model") {
-            gb.insert_model(elem->Attribute("file"));
-            auto m_obj = parse_object(elem, update_colour(elem, colour), gb);
+            auto bb = gb.insert_model(elem->Attribute("file"));
+
+            auto m_obj = parse_object<true>(elem, update_colour(elem, colour), gb, bb);
             vMod.push_back(m_obj);
 
         } else if (type == "terrain") {
             float min_height = parse_float(elem, "min", 0);
             float max_height = parse_float(elem, "max", 255);
-            gb.insert_terrain(elem->Attribute("file"), min_height, max_height);
+            auto bb = gb.insert_terrain(elem->Attribute("file"), min_height, max_height);
 
-            auto t_obj = parse_object(elem, update_colour(elem, colour), gb);
+            auto t_obj = parse_object<false>(elem, update_colour(elem, colour), gb, bb);
             vTer.push_back(t_obj);
 
         } else {

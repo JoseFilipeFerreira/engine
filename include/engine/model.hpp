@@ -2,52 +2,14 @@
 #define MODEL_H
 
 #include "engine/boundingBox.hpp"
+#include "engine/buffers.hpp"
 #include "engine/transformations.hpp"
 #include "utils/types.hpp"
 
 #include <optional>
 #include <string>
 
-class TextureBuffer {
-  private:
-    unsigned int _texture;
-    size_t _image_height, _image_width;
-
-  public:
-    TextureBuffer(std::string const&);
-    void bind_texture() const { glBindTexture(GL_TEXTURE_2D, _texture); };
-};
-
-class TerrainBuffer {
-  private:
-    GLuint _points[1];
-    GLuint _normals[1];
-    GLuint _texture[1];
-
-    size_t _image_height, _image_width;
-    BoundingBox _bb;
-
-  public:
-    TerrainBuffer(std::string const&, i32, i32);
-    void draw_terrain() const;
-    auto bounding_box() const -> BoundingBox { return _bb; }
-};
-
-class ModelBuffer {
-  private:
-    GLuint _points[1];
-    GLuint _normals[1];
-    GLuint _texture[1];
-
-    size_t _n_points, _n_normals, _n_textures;
-    BoundingBox _bb;
-
-  public:
-    ModelBuffer(std::string const&);
-    void draw_model() const;
-    auto bounding_box() const -> BoundingBox { return _bb; }
-};
-
+template<bool is_model>
 class Object {
   private:
     std::string _file_name;
@@ -79,15 +41,26 @@ class Object {
           _ambient(amb),
           _bb(bb){};
 
-    void draw(GroupBuffer const& gb, bool DEBUB) {}
+    void draw(GroupBuffer const& group_buffer, bool DEBUG) const {
+        _colour.apply();
 
-    void apply_colour() const { _colour.apply(); };
-    void set_material() const;
-    auto model_name() const -> std::string const& { return _file_name; }
-    auto texture_name() const -> std::optional<std::string> const& {
-        return _texture_name;
+        _diffuse.set_diffuse();
+        _specular.set_specular();
+        _emissive.set_emissive();
+        _ambient.set_ambient();
+
+        group_buffer.bind_texture(_texture_name);
+        if constexpr (is_model) {
+            group_buffer.draw_model(_file_name);
+        } else {
+            group_buffer.draw_terrain(_file_name);
+        }
+        group_buffer.unbind_texture();
+
+        if (DEBUG) _bb.draw();
     }
-    auto bounding_box() const -> BoundingBox { return _bb; }
+
+    auto is_visible() const -> bool { return _bb.is_visible(); }
 };
 
 #endif // MODEL_H

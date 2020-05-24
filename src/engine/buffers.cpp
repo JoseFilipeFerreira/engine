@@ -1,4 +1,6 @@
-#include "engine/model.hpp"
+#include "engine/buffers.hpp"
+
+#include "utils/types.hpp"
 
 #include <IL/il.h>
 #include <fstream>
@@ -10,6 +12,79 @@
 #    include <GL/glew.h>
 #    include <GL/glut.h>
 #endif
+
+#include <stdexcept>
+
+GroupBuffer::GroupBuffer() {
+    _model_buffers = std::unordered_map<std::string, ModelBuffer>();
+    _terrain_buffers = std::unordered_map<std::string, TerrainBuffer>();
+    _model_buffers = std::unordered_map<std::string, ModelBuffer>();
+    _bounding_box = std::unordered_map<std::string, BoundingBox>();
+}
+
+auto GroupBuffer::insert_model(std::string const& model_name) -> BoundingBox {
+    auto search = _model_buffers.find(model_name);
+    if (search == _model_buffers.end()) {
+        auto [model, bb] = ModelBuffer::make(model_name);
+        _model_buffers.insert(std::make_pair(model_name, model));
+        _bounding_box.insert(std::make_pair(model_name, bb));
+        return bb;
+    } else {
+        return _bounding_box[model_name];
+    }
+}
+
+auto GroupBuffer::insert_terrain(
+    std::string const& terrain_name, i32 min_height, i32 max_height)
+    -> BoundingBox {
+    auto search = _terrain_buffers.find(terrain_name);
+    if (search == _terrain_buffers.end()) {
+        auto [terrain, bb] = TerrainBuffer::make(terrain_name, min_height, max_height);
+        _terrain_buffers.insert(std::make_pair(terrain_name, terrain));
+        _bounding_box.insert(std::make_pair(terrain_name, bb));
+        return bb;
+    } else {
+        return _bounding_box[terrain_name];
+    }
+}
+
+void GroupBuffer::insert_texture(std::string const& texture_name) {
+    auto search = _texture_buffers.find(texture_name);
+    if (search == _texture_buffers.end()) {
+        auto texture = TextureBuffer(texture_name);
+        _texture_buffers.insert(std::make_pair(texture_name, texture));
+    }
+}
+
+void GroupBuffer::bind_texture(
+    std::optional<std::string> const& texture_name) const {
+    if (!texture_name.has_value()) return;
+    auto search = _texture_buffers.find(texture_name.value());
+    if (search != _texture_buffers.end())
+        (search->second).bind_texture();
+    else
+        throw std::invalid_argument("Attempted to bind an unloaded texture");
+}
+
+void GroupBuffer::unbind_texture() const {
+    glBindTexture(GL_TEXTURE_2D, 0);
+};
+
+void GroupBuffer::draw_model(std::string const& model_name) const {
+    auto search = _model_buffers.find(model_name);
+    if (search != _model_buffers.end())
+        (search->second).draw_model();
+    else
+        throw std::invalid_argument("Attempted to draw an unloaded model");
+}
+
+void GroupBuffer::draw_terrain(std::string const& terrain_name) const {
+    auto search = _terrain_buffers.find(terrain_name);
+    if (search != _terrain_buffers.end())
+        (search->second).draw_terrain();
+    else
+        throw std::invalid_argument("Attempted to draw an unloaded terrain");
+}
 
 TextureBuffer::TextureBuffer(std::string const& file_name) {
     unsigned int t;
@@ -75,15 +150,16 @@ auto compute_normal(
     return v1.cross(v2).normalize();
 }
 
-TerrainBuffer::TerrainBuffer(
-    std::string const& fileName, i32 min_height, i32 max_height) {
+auto TerrainBuffer::make(
+    std::string const& fileName, i32 min_height, i32 max_height)
+    -> std::pair<TerrainBuffer, BoundingBox> {
     u32 t;
     ilGenImages(1, &t);
     ilBindImage(t);
     ilLoadImage((ILstring) fileName.c_str());
     ilConvertImage(IL_LUMINANCE, IL_UNSIGNED_BYTE);
-    _image_width = ilGetInteger(IL_IMAGE_WIDTH);
-    _image_height = ilGetInteger(IL_IMAGE_HEIGHT);
+    size_t _image_width = ilGetInteger(IL_IMAGE_WIDTH);
+    size_t _image_height = ilGetInteger(IL_IMAGE_HEIGHT);
     u8 const* image_data = ilGetData();
 
     std::vector<float> point_vec;
@@ -123,42 +199,48 @@ TerrainBuffer::TerrainBuffer(
             point_vec.push_back(j - _image_height * 0.5f);
         }
     }
-    
-    _bb = BoundingBox(point_vec);
 
-    glGenBuffers(1, _points);
-    glBindBuffer(GL_ARRAY_BUFFER, _points[0]);
+    auto bb = BoundingBox(point_vec);
+
+    GLuint buffers[3];
+
+    glGenBuffers(3, buffers);
+
+    glBindBuffer(GL_ARRAY_BUFFER, buffers[0]);
     glBufferData(
         GL_ARRAY_BUFFER,
         sizeof(float) * point_vec.size(),
         point_vec.data(),
         GL_STATIC_DRAW);
 
-    glGenBuffers(1, _normals);
-    glBindBuffer(GL_ARRAY_BUFFER, _normals[0]);
+    glBindBuffer(GL_ARRAY_BUFFER, buffers[1]);
     glBufferData(
         GL_ARRAY_BUFFER,
         sizeof(float) * normal_vec.size(),
         normal_vec.data(),
         GL_STATIC_DRAW);
 
-    glGenBuffers(1, _texture);
-    glBindBuffer(GL_ARRAY_BUFFER, _texture[0]);
+    glBindBuffer(GL_ARRAY_BUFFER, buffers[2]);
     glBufferData(
         GL_ARRAY_BUFFER,
         sizeof(float) * tex_vec.size(),
         tex_vec.data(),
         GL_STATIC_DRAW);
+
+    return {
+        TerrainBuffer(
+            buffers[0], buffers[1], buffers[2], _image_height, _image_width),
+        bb};
 }
 
 void TerrainBuffer::draw_terrain() const {
-    glBindBuffer(GL_ARRAY_BUFFER, _points[0]);
+    glBindBuffer(GL_ARRAY_BUFFER, _points);
     glVertexPointer(3, GL_FLOAT, 0, 0);
 
-    glBindBuffer(GL_ARRAY_BUFFER, _normals[0]);
+    glBindBuffer(GL_ARRAY_BUFFER, _normals);
     glNormalPointer(GL_FLOAT, 0, 0);
 
-    glBindBuffer(GL_ARRAY_BUFFER, _texture[0]);
+    glBindBuffer(GL_ARRAY_BUFFER, _texture);
     glTexCoordPointer(2, GL_FLOAT, 0, 0);
 
     for (i32 i = 1; i < _image_height - 2; i++) {
@@ -169,7 +251,8 @@ void TerrainBuffer::draw_terrain() const {
     }
 }
 
-ModelBuffer::ModelBuffer(std::string const& fileName) {
+auto ModelBuffer::make(std::string const& fileName)
+    -> std::pair<ModelBuffer, BoundingBox> {
     float px, py, pz, vx, vy, vz, tx, ty;
 
     std::vector<float> point_vec;
@@ -188,56 +271,59 @@ ModelBuffer::ModelBuffer(std::string const& fileName) {
         texture_vec.push_back(ty);
     }
 
-    _bb = BoundingBox(point_vec);
+    auto bb = BoundingBox(point_vec);
 
-    _n_points = point_vec.size();
-    _n_normals = normal_vec.size();
-    _n_textures = texture_vec.size();
+    auto n_points = point_vec.size();
+    auto n_normals = normal_vec.size();
+    auto n_textures = texture_vec.size();
 
     // load points
-    glGenBuffers(1, _points);
-    glBindBuffer(GL_ARRAY_BUFFER, _points[0]);
+    GLuint buffers[3];
+    glGenBuffers(3, buffers);
+
+    glBindBuffer(GL_ARRAY_BUFFER, buffers[0]);
     glBufferData(
         GL_ARRAY_BUFFER,
-        sizeof(float) * _n_points,
+        sizeof(float) * n_points,
         point_vec.data(),
         GL_STATIC_DRAW);
 
     // load normals
-    glGenBuffers(1, _normals);
-    glBindBuffer(GL_ARRAY_BUFFER, _normals[0]);
+    glBindBuffer(GL_ARRAY_BUFFER, buffers[1]);
     glBufferData(
         GL_ARRAY_BUFFER,
-        sizeof(float) * _n_normals,
+        sizeof(float) * n_normals,
         normal_vec.data(),
         GL_STATIC_DRAW);
 
     // load textures
-    glGenBuffers(1, _texture);
-    glBindBuffer(GL_ARRAY_BUFFER, _texture[0]);
+    glBindBuffer(GL_ARRAY_BUFFER, buffers[2]);
     glBufferData(
         GL_ARRAY_BUFFER,
-        sizeof(float) * _n_textures,
+        sizeof(float) * n_textures,
         texture_vec.data(),
         GL_STATIC_DRAW);
+
+    return {
+        ModelBuffer(
+            buffers[0],
+            buffers[1],
+            buffers[2],
+            n_points,
+            n_normals,
+            n_textures),
+        bb};
 }
 
 void ModelBuffer::draw_model() const {
-    glBindBuffer(GL_ARRAY_BUFFER, _points[0]);
+    glBindBuffer(GL_ARRAY_BUFFER, _points);
     glVertexPointer(3, GL_FLOAT, 0, 0);
 
-    glBindBuffer(GL_ARRAY_BUFFER, _normals[0]);
+    glBindBuffer(GL_ARRAY_BUFFER, _normals);
     glNormalPointer(GL_FLOAT, 0, 0);
 
-    glBindBuffer(GL_ARRAY_BUFFER, _texture[0]);
+    glBindBuffer(GL_ARRAY_BUFFER, _texture);
     glTexCoordPointer(2, GL_FLOAT, 0, 0);
 
     glDrawArrays(GL_TRIANGLES, 0, _n_points);
-}
-
-void Object::set_material() const {
-    _diffuse.set_diffuse();
-    _specular.set_specular();
-    _emissive.set_emissive();
-    _ambient.set_ambient();
 }

@@ -71,9 +71,9 @@ auto parse_colour(TiXmlElement const* elem, std::string const& attribute)
     // prefixR="1" prefixG="1" prefixB="1" prefixA="1"
     if (elem->Attribute(attribute + "R") || elem->Attribute(attribute + "G") ||
         elem->Attribute(attribute + "B") || elem->Attribute(attribute + "A")) {
-        float r = parse_float(elem, attribute + "R", 1);
-        float g = parse_float(elem, attribute + "G", 1);
-        float b = parse_float(elem, attribute + "B", 1);
+        float r = parse_float(elem, attribute + "R", 0);
+        float g = parse_float(elem, attribute + "G", 0);
+        float b = parse_float(elem, attribute + "B", 0);
         float a = parse_float(elem, attribute + "A", 1);
 
         if (r > 1 || r < 0)

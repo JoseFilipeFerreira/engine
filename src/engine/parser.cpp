@@ -30,26 +30,6 @@ throw_fancy_error(TiXmlElement const* elem, std::string_view const& error) {
     throw std::invalid_argument(ss.str());
 }
 
-auto parse_colour(TiXmlElement const* elem, std::string const& attribute)
-    -> std::optional<Colour> {
-    if (elem->Attribute(attribute)) {
-        u32 r, g, b, a;
-        std::string const& s = *elem->Attribute(attribute);
-        if (s.length() == 7) {
-            if (std::sscanf(s.data(), "#%02x%02x%02x", &r, &g, &b) != 3)
-                throw_fancy_error(elem, "Invalid colour format", attribute);
-            a = 255;
-        } else if (s.length() == 9) {
-            if (std::sscanf(s.data(), "#%02x%02x%02x%02x", &r, &g, &b, &a) != 4)
-                throw_fancy_error(elem, "Invalid colour format", attribute);
-        } else {
-            throw_fancy_error(elem, "Invalid colour format", attribute);
-        }
-        return Colour(r / 255.0f, g / 255.0f, b / 255.0f, a / 255.0f);
-    }
-    return std::nullopt;
-}
-
 auto parse_float(
     TiXmlElement const* elem, std::string const& attribute, float def)
     -> float {
@@ -63,6 +43,56 @@ auto parse_float(
     }
 
     return def;
+}
+
+auto parse_colour(TiXmlElement const* elem, std::string const& attribute)
+    -> std::optional<Colour> {
+    //#RRGGBB or #RRGGBBAA
+    if (elem->Attribute(attribute)) {
+        u32 r, g, b, a;
+        std::string const& s = *elem->Attribute(attribute);
+        switch (s.length()) {
+            case 7:
+                if (std::sscanf(s.data(), "#%02x%02x%02x", &r, &g, &b) != 3)
+                    throw_fancy_error(elem, "Invalid colour format", attribute);
+                a = 255;
+                break;
+            case 9:
+                if (std::sscanf(
+                        s.data(), "#%02x%02x%02x%02x", &r, &g, &b, &a) != 4)
+                    throw_fancy_error(elem, "Invalid colour format", attribute);
+                break;
+            default:
+                throw_fancy_error(elem, "Invalid colour format", attribute);
+        }
+        return Colour(r / 255.0f, g / 255.0f, b / 255.0f, a / 255.0f);
+    }
+
+    // prefixR="1" prefixG="1" prefixB="1" prefixA="1"
+    if (elem->Attribute(attribute + "R") || elem->Attribute(attribute + "G") ||
+        elem->Attribute(attribute + "B") || elem->Attribute(attribute + "A")) {
+        float r = parse_float(elem, attribute + "R", 0);
+        float g = parse_float(elem, attribute + "G", 0);
+        float b = parse_float(elem, attribute + "B", 0);
+        float a = parse_float(elem, attribute + "A", 1);
+
+        if (r > 1 || r < 0)
+            throw_fancy_error(
+                elem, "Colour value must be between 0 and 1", attribute + "R");
+        if (g > 1 || g < 0)
+            throw_fancy_error(
+                elem, "Colour value must be between 0 and 1", attribute + "G");
+        if (b > 1 || b < 0)
+            throw_fancy_error(
+                elem, "Colour value must be between 0 and 1", attribute + "B");
+        if (a > 1 || a < 0)
+            throw_fancy_error(
+                elem, "Colour value must be between 0 and 1", attribute + "A");
+
+        return Colour(r, g, b, a);
+    }
+
+    return std::nullopt;
 }
 
 auto parse_point(TiXmlElement const* elem, std::string const& prefix, float def)
@@ -99,7 +129,8 @@ auto parse_points(TiXmlElement const* root) -> std::vector<Point> {
 }
 
 template<typename T>
-auto parse_object(TiXmlElement const* elem, Colour colour, GroupBuffer& gb, BoundingBox bb)
+auto parse_object(
+    TiXmlElement const* elem, Colour colour, GroupBuffer& gb, BoundingBox bb)
     -> Object<T> {
     std::optional<std::string> tex;
     if (elem->Attribute("texture")) {
@@ -177,15 +208,18 @@ auto recursive_parse(TiXmlElement const* root, Colour colour, GroupBuffer& gb)
         } else if (type == "model") {
             auto bb = gb.insert_model(elem->Attribute("file"));
 
-            auto m_obj = parse_object<model_t>(elem, update_colour(elem, colour), gb, bb);
+            auto m_obj = parse_object<model_t>(
+                elem, update_colour(elem, colour), gb, bb);
             vMod.push_back(m_obj);
 
         } else if (type == "terrain") {
             float min_height = parse_float(elem, "min", 0);
             float max_height = parse_float(elem, "max", 255);
-            auto bb = gb.insert_terrain(elem->Attribute("file"), min_height, max_height);
+            auto bb = gb.insert_terrain(
+                elem->Attribute("file"), min_height, max_height);
 
-            auto t_obj = parse_object<terrain_t>(elem, update_colour(elem, colour), gb, bb);
+            auto t_obj = parse_object<terrain_t>(
+                elem, update_colour(elem, colour), gb, bb);
             vTer.push_back(t_obj);
 
         } else {

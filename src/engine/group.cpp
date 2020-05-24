@@ -5,8 +5,8 @@
 
 Group::Group() {
     transformations = std::vector<Transform>();
-    models = std::vector<Object<true>>();
-    terrains = std::vector<Object<false>>();
+    models = std::vector<Object<model_t>>();
+    terrains = std::vector<Object<terrain_t>>();
     colour = Colour();
     subgroups = std::vector<Group>();
 }

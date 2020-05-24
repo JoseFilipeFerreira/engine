@@ -8,9 +8,17 @@
 
 #include <optional>
 #include <string>
+#include <type_traits>
 
-template<bool is_model>
+struct model_t {};
+struct terrain_t {};
+
+template<typename T>
 class Object {
+    static_assert(
+        std::is_same_v<T, model_t> || std::is_same_v<T, terrain_t>,
+        "Expected T to be one of model_t or terrain_t");
+
   private:
     std::string _file_name;
     std::optional<std::string> _texture_name;
@@ -49,15 +57,16 @@ class Object {
         _emissive.set_emissive();
         _ambient.set_ambient();
 
-        if(_texture_name.has_value()){
-                group_buffer.bind_texture(_texture_name.value());
+        if (_texture_name.has_value()) {
+            group_buffer.bind_texture(_texture_name.value());
         }
 
-        if constexpr (is_model) {
+        if constexpr (std::is_same_v<T, model_t>) {
             group_buffer.draw_model(_file_name);
-        } else {
+        } else if constexpr (std::is_same_v<T, terrain_t>) {
             group_buffer.draw_terrain(_file_name);
         }
+
         group_buffer.unbind_texture();
 
         if (DEBUG) _bb.draw();

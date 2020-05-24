@@ -9,8 +9,8 @@
 class Group {
   private:
     std::vector<Transform> transformations;
-    std::vector<Object<true>> models;
-    std::vector<Object<false>> terrains;
+    std::vector<Object<model_t>> models;
+    std::vector<Object<terrain_t>> terrains;
     std::vector<Light> lights;
     Colour colour;
     std::vector<Group> subgroups;
@@ -19,8 +19,8 @@ class Group {
     Group();
     Group(
         std::vector<Transform> t,
-        std::vector<Object<true>> m,
-        std::vector<Object<false>> ter,
+        std::vector<Object<model_t>> m,
+        std::vector<Object<terrain_t>> ter,
         std::vector<Light> li,
         Colour c,
         std::vector<Group> g)

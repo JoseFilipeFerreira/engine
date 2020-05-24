@@ -1,9 +1,11 @@
 #include "engine/light.hpp"
 
+#include "utils/colour.hpp"
 #include "utils/types.hpp"
 
 #include <atomic>
-#include <iostream>
+#include <stdexcept>
+#include <sstream>
 
 #ifdef __APPLE__
 #    include <GLUT/glut.h>
@@ -26,6 +28,11 @@ auto gl_light(size_t number) -> GLenum {
 
 auto get_new_id() -> u64 {
     static std::atomic<u64> id = 0;
+    if (id == 8) {
+        std::stringstream ss;
+        ss << RED << "error: " << RESET << "More than 8 lights were defined";
+        throw std::invalid_argument(ss.str());
+    }
     return id++;
 }
 

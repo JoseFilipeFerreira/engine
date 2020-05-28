@@ -15,6 +15,6 @@
 
     <group>
         <rotate axisY="1" time="6" />
-        <model emis="#222222" file="models/sphere.3d" texture="textures/guy.jpg" diff="#FFFFFF"/>
+        <model emis="#222222" file="models/sphere.3d" texture="textures/basketball.png" diff="#FFFFFF"/>
     </group>
 </scene>

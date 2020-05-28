@@ -1,0 +1,15 @@
+<scene>
+    <group colour="#FF0000">
+        <translate Y="100" />
+        <light type="POINT"/>
+        <group>
+            <scale X="-1" Y="-1" Z="-1" />
+            <model file="models/sphere.3d" emis="#FFFFFF" />
+        </group>
+    </group>
+
+    <group>
+        <rotate axisY="1" time="6" />
+        <model emis="#222222" file="models/plane.3d" texture="textures/persian_carpet.jpg" diff="#FFFFFF"/>
+    </group>
+</scene>

@@ -1,0 +1,366 @@
+\documentclass[a4paper]{report}
+\usepackage[utf8]{inputenc}
+\usepackage[portuguese]{babel}
+\usepackage{hyperref}
+\usepackage{a4wide}
+\hypersetup{pdftitle={CG - Fase 4 - Grupo 7},
+pdfauthor={João Teixeira, José Ferreira, Miguel Solino},
+colorlinks=true,
+urlcolor=blue,
+linkcolor=black}
+\usepackage{subcaption}
+\usepackage[cache=false]{minted}
+\usepackage{listings}
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{appendix}
+\usepackage{tikz}
+\usepackage{authblk}
+\usepackage{bashful}
+\usepackage{verbatim}
+\usepackage{amsmath}
+\usepackage{tikz}
+\usepackage{tikz,fullpage}
+\usepackage{pgfgantt}
+\usepackage{amssymb}
+\usepackage{multirow}
+\usepackage{mwe}
+\usetikzlibrary{arrows,%
+                petri,%
+                topaths}%
+\usepackage{tkz-berge}
+\usetikzlibrary{positioning,automata,decorations.markings}
+\AfterEndEnvironment{figure}{\noindent\ignorespaces}
+\AfterEndEnvironment{table}{\noindent\ignorespaces}
+
+\definecolor{solarized@base03}{HTML}{002B36}
+\definecolor{solarized@base02}{HTML}{073642}
+\definecolor{solarized@base01}{HTML}{586e75}
+\definecolor{solarized@base00}{HTML}{657b83}
+\definecolor{solarized@base0}{HTML}{839496}
+\definecolor{solarized@base1}{HTML}{93a1a1}
+\definecolor{solarized@base2}{HTML}{EEE8D5}
+\definecolor{solarized@base3}{HTML}{FDF6E3}
+\definecolor{solarized@yellow}{HTML}{B58900}
+\definecolor{solarized@orange}{HTML}{CB4B16}
+\definecolor{solarized@red}{HTML}{DC322F}
+\definecolor{solarized@magenta}{HTML}{D33682}
+\definecolor{solarized@violet}{HTML}{6C71C4}
+\definecolor{solarized@blue}{HTML}{268BD2}
+\definecolor{solarized@cyan}{HTML}{2AA198}
+\definecolor{solarized@green}{HTML}{859900}
+
+\lstset{
+  language=Java,
+  upquote=true,
+  columns=fixed,
+  tabsize=4,
+  extendedchars=true,
+  breaklines=true,
+  numbers=left,
+  numbersep=5pt,
+  rulesepcolor=\color{solarized@base03},
+  numberstyle=\tiny\color{solarized@base01},
+  basicstyle=\footnotesize\ttfamily,
+  keywordstyle=\color{solarized@green},
+  stringstyle=\color{solarized@yellow}\ttfamily,
+  identifierstyle=\color{solarized@blue},
+  commentstyle=\color{solarized@base01},
+  emphstyle=\color{solarized@red}
+}
+
+\begin{document}
+
+\title{Computação Gráfica\\
+\large Fase 4 - Grupo 7}
+\author{José Ferreira (A83683) \and João Teixeira (A85504) \and Miguel Solino (A86435)}
+\date{\today}
+
+\begin{center}
+    \begin{minipage}{0.75\linewidth}
+        \centering
+        \includegraphics[width=0.4\textwidth]{images/eng.jpeg}\par\vspace{1cm}
+        \vspace{1.5cm}
+        \href{https://www.uminho.pt/PT}
+        {\color{black}{\scshape\LARGE Universidade do Minho}} \par
+        \vspace{1cm}
+        \href{https://www.di.uminho.pt/}
+        {\color{black}{\scshape\Large Departamento de Informática}} \par
+        \vspace{1.5cm}
+        \maketitle
+    \end{minipage}
+\end{center}
+
+\tableofcontents
+
+\chapter{Introdução}
+Este trabalho foi desenvolvido no âmbito da unidade curricular de computação
+gráfica e está dividido em várias fases de entrega distintas sendo que esta é a
+terceira.\\
+O projeto foi dividido em 4 entragas faseadas sendo que esta é a última. Ao
+longo deste relatório iremos descrever a metodologia e as soluções criadas para
+solucionar todos os critérios propostos assim como descrever as funcionalidades
+extra implementadas.\\
+Primeiro adicionamos a todas as primitivas desenvolvidas anteriormente as
+coordenadas de textura e as normais. Em seguida modificamos o engine para
+conseguir ler os ficheiros gerados.\\
+Em seguida adicionamos a possibilidade de definir as propriedades de um obejto
+no \textit{XML}. Adicionamos ainda a possibilidade de definir luzes no
+\textit{XML}.\\
+Finalmente criamos mais \textit{scenes} e melhoramos as já existentes de forma a
+fazer uso das novas funcionalidades do \textit{engine}.\\
+
+\chapter{Generator}
+Para facilitar o cálculo dos novos pontos foi criada uma nova classe chamada
+\textit{ModelPoint}. Esta contém um \textit{Point} que representa as
+coordenadas do ponto no espaço, um \textit{Vector} que representa a normal do
+ponto e doi floats que representam as coordenadas da textura. Como métodos
+apenas foram definidos um conjunto de construtores que recebem os vários tipos
+de pontos e vetores e um \textit{toString} para facilitar a escrita dos pontos
+para um ficheiro.\\
+Assim, todas as primitivas desenvolvidas anteriormente foram alteradas:
+\begin{itemize}
+        \item Plano
+        \item Esfera
+        \item Torus
+        \item Cilindro
+        \item Cone
+        \item Caixa
+        \item Patches de Bezier
+\end{itemize}
+Todos os exmeplos apresentados ao longo deste capítulo têm o seu \textit{XML} na
+pasta \textit{scenes/report} com o nome [\textit{PRIMITIVA}]\textit{.xml}.
+
+\section{Plano}
+Para desenhar um plano com dois triângulos sabendo o lado do plano basta
+conseguir obter as coordenadas dos cantos do plano.\\
+A normal do plano é sempre a mesma em todos os pontos e aponta para cima.\\
+As coordenadas da textura são mapeadas diretamente.\\
+\begin{figure}[H]
+    \centering
+    \begin{minipage}{0.33\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{images/esquema_plano.png}
+        \caption{coord dos pontos}
+    \end{minipage}\hfill
+    \begin{minipage}{0.33\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{images/esquema_plano.png}
+        \caption{coord das normais}
+    \end{minipage}\hfill
+    \begin{minipage}{0.33\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{images/esquema_plano.png}
+        \caption{coord das texturas}
+    \end{minipage}\hfill
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \begin{minipage}{0.49\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{images/persian_carpet.jpg}
+        \caption{exemplo de textura}
+    \end{minipage}\hfill
+    \begin{minipage}{0.5\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{images/persian_carpet_rendered.png}
+        \caption{resultado da textura}
+    \end{minipage}\hfill
+\end{figure}
+
+\section{Esfera}
+Para desenhar a esfera é necessário saber o seu raio (\textit{\_radius}), o
+número de slices (\textit{\_slices}) e o número de stacks (\textit{\_stacks}).\\
+Fazendo uso do sistema de coordenadas esférica basta calcular qual é o azimute e
+qual é a inclinação de cada ponto (visto que o raio do pontos é igual ao raio da
+esfera).\\
+A normal de uma esfera num dado ponto é igual ao vetor normalizado do vetor que
+vai do centro da esfera a um dado ponto. Para agilizar esta conta foi criado um
+método na classe \textit{Point} que realiza estas contas
+(\textit{normalized\_vector}).\\
+Para facilitar estas contas são calculados dois valores, o angulo entre cada
+slice (\textit{a\_slice}) e o angulo entre cada stack (\textit{a\_stack}).\\
+As coordenadas de textura de uma esfera são semelhantes às de um mapa, sendo que
+para calcular as coordenadas de textura de uma esfera basta ver em que slice e
+em que stack está um dado ponto e dividir esses valores pelo número total de
+slices e de stacks respetivamente.
+
+\begin{lstlisting}
+float curr_t_x = slice / _slices;
+float curr_t_y = stack / _stacks;
+float next_t_x = (slice + 1) / _slices;
+float next_t_y = (stack + 1) / _stacks;
+\end{lstlisting}
+
+\begin{figure}[H]
+    \centering
+    \begin{minipage}{0.33\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{images/sphere_vetores.png}
+        \caption{coord dos pontos}
+    \end{minipage}\hfill
+    \begin{minipage}{0.33\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{images/sphere_vetores.png}
+        \caption{coord das normais}
+    \end{minipage}\hfill
+    \begin{minipage}{0.33\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{images/sphere_vetores.png}
+        \caption{coord das texturas}
+    \end{minipage}\hfill
+\end{figure}
+Para guardar os pontos calculados é criado um vetor de \textit{ModelPoint}
+chamado \textit{coords}.
+
+\input{code/esfera.tex}
+
+\begin{figure}[H]
+    \centering
+    \begin{minipage}{0.60\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{images/guy.jpg}
+        \caption{exemplo de textura}
+    \end{minipage}\hfill
+    \begin{minipage}{0.39\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{images/guy_rendered.png}
+        \caption{resultado da textura}
+    \end{minipage}\hfill
+\end{figure}
+
+\section{Torus}
+Para desenhar uma Torus é preciso saber o raio interior de uma torus, o raio
+exterior, o número de stacks(\textit{\_stacks} e o número de
+slices(\textit{\_slices}).\\
+Para facilitar os cálculos estes valores são internamente convertidos para o
+raio que vai do centro da torus ao centro do anel da torus (\textit{\_radius}) e
+o raio do anel propriamente dito (\textit{\_ring\_radius}).
+
+\begin{figure}[H]
+    \centering 
+    \includegraphics[width=0.5\textwidth]{images/torus_points.png}
+    \caption{Esquema dos pontos no plano}
+    \label{fig:scheme_torus}
+\end{figure}
+Primeiro é definido o ângulo entre cada slice e cada stack com:
+\begin{lstlisting}
+float a_slice = 2.0f * M_PI / _slices;
+float a_stack = 2.0f * M_PI / _stacks;
+\end{lstlisting}
+Para calcular as coordenadas de um ponto central da torus usamos coordenadas
+esféricas. O raio é igual ao \textit{\_radius} e a inclinação é igual a $\pi$/2.
+Logo, o único valor que varia é o azimute, que é igual a \textit{a\_slice} vezes
+o índice da slice do ponto.\\
+Com base nisto conseguimos calcular a coordenadas do ponto central de qualquer
+\textit{slice}. Para calcular os triangulos do torus vai ser necessário ter o
+ponto \textit{center} (que está na slice i) e o ponto \textit{n\_center} (que
+está na slice i + 1).\\
+Para calcular as coordenadas do ponto que está na superfície do torus precisamos
+de calcular um vetor que vai do ponto calculado anteriormente até á
+superfície. O raio deste vetor é fixo e é igual a \textit{\_ring\_radius} e o
+azimute deste vetor é igual ao \textit{a\_stack} vezes a stack atual mais $\pi$
+(para começar de baixo e assim corrigir as texturas). Logo, o único valor que
+varia é a insclinação, que é igual a \textit{a\_stack} vezes o indice da stack
+atual. Este vetor calculado se for normalizado com recurso ao método
+\textit{normalize} é a normal do ponto.\\
+Somando para um dado ponto no centro do torus ao vetor correspondente obtemos o
+ponto na superfície.\\
+A maneira como calculamos as texturas do torus é semelhante à que usamos na
+esfera  mas rodada 90º. Assim fica mais fácil criar e editar as texturas.\\
+\begin{lstlisting}
+float curr_t_x = stack / _stacks;
+float curr_t_y = slice / _slices;
+float next_t_x = (stack + 1) / _stacks;
+float next_t_y = (slice + 1) / _slices;
+\end{lstlisting}
+Assim, para calcular os \textit{ModelPoint} e criar um vetor (\textit{coords})
+com estes utilizamos o seguinte código.
+
+\input{code/torus.tex}
+
+\begin{figure}[H]
+    \centering
+    \begin{minipage}{0.40\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{images/donut.jpg}
+        \caption{exemplo de textura}
+    \end{minipage}\hfill
+    \begin{minipage}{0.59\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{images/donut_rendered.png}
+        \caption{resultado da textura}
+    \end{minipage}\hfill
+\end{figure}
+
+\section{Cilindro}
+
+\begin{figure}[H]
+    \centering
+    \begin{minipage}{0.40\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{images/cylinder_texture.jpg}
+        \caption{exemplo de textura}
+    \end{minipage}\hfill
+    \begin{minipage}{0.59\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{images/cylinder_rendered.png}
+        \caption{resultado da textura}
+    \end{minipage}\hfill
+\end{figure}
+
+\section{Cone}
+\begin{figure}[H]
+    \centering
+    \begin{minipage}{0.40\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{images/donut.jpg}
+        \caption{exemplo de textura}
+    \end{minipage}\hfill
+    \begin{minipage}{0.59\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{images/donut_rendered.png}
+        \caption{resultado da textura}
+    \end{minipage}\hfill
+\end{figure}
+
+\section{Caixa}
+\begin{figure}[H]
+    \centering
+    \begin{minipage}{0.39\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{images/test_cube.jpg}
+        \caption{exemplo de textura}
+    \end{minipage}\hfill
+    \begin{minipage}{0.59\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{images/test_cube_rendered.png}
+        \caption{resultado da textura}
+    \end{minipage}\hfill
+\end{figure}
+
+\section{Patches de Bezier}
+\begin{figure}[H]
+    \centering
+    \begin{minipage}{0.40\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{images/donut.jpg}
+        \caption{exemplo de textura}
+    \end{minipage}\hfill
+    \begin{minipage}{0.59\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{images/donut_rendered.png}
+        \caption{resultado da textura}
+    \end{minipage}\hfill
+\end{figure}
+
+\chapter{Conclusão}
+Com este trabalho prático podemos aplicar os conhecimentos leccionados até agora
+nas aulas da unidade curricular de computação gráfica permitindo assim
+aprofundar os nossos conhecimentos de openGl.\\
+Como trabalho futuro gostaríamos de acrescentar iluminação e texturas, melhorar
+as \textit{scenes} criadas até agora para usarem essas melhorias e acrescentar
+mais modos à camera.
+
+\end{document}

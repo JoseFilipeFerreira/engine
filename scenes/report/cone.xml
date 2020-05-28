@@ -1,0 +1,21 @@
+<scene>
+    <group colour="#FF0000">
+        <translate time="5" >
+            <point X="10" Y="-5"/>
+            <point X="10" Z="0.0001"/>
+            <point X="10" Y="5"/>
+            <point X="10" Z="0.0001"/>
+        </translate>
+        <light type="POINT"/>
+        <group>
+            <scale X="-1" Y="-1" Z="-1" />
+            <model file="models/sphere.3d" emis="#FFFFFF" />
+        </group>
+    </group>
+
+    <group>
+        <rotate axisY="1" time="6" />
+        <rotate axisX="1" angle="180" />
+        <model emis="#222222" file="models/cone.3d" texture="textures/corneto.jpg" diff="#FFFFFF"/>
+    </group>
+</scene>

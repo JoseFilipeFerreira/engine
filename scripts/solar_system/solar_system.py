@@ -47,7 +47,7 @@ def generate_moons(planet_name, planet_radius, rotation_time, colour):
             if(row["planet"] == planet_name):
                 dist = random.uniform(planet_radius*1.5, planet_radius*2.5)
                 n_orbit = random.uniform(rotation_time * 10, rotation_time * 20)
-                moons.append(Astro(row["name"], dist, colour, orbit_time=n_orbit))
+                moons.append(Astro(row["name"], dist, colour, orbit_time=n_orbit, texture="textures/8k_moon.jpg"))
     return moons
 
 class Astro:
@@ -133,7 +133,7 @@ def draw_comet(name, size, period, eccentricity, perihelion, aphelion, colour):
     print('            <rotate angle="-90" axisX="1" />')
     print(f'            <scale X="{size/SCALE}" Y="{size/SCALE}" Z="{size/SCALE}" />')
     print(f'            <translate Y="{-size/2}"/>')
-    print(f'            <model emis={EMISSIVIDADE} file="models/teapot.3d"/>')
+    print(f'            <model emis={EMISSIVIDADE} file="models/teapot.3d" texture="textures/flowery_patern.jpg" />')
     print('        </group>')
 
 def get_planets():

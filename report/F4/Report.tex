@@ -651,6 +651,28 @@ linha:
 \begin{lstlisting}
 <include file="lighting.xml">
 \end{lstlisting}
+Esta extensão foi usada em quase todos os exemplos ao longo deste relatório.
+Como o sistema de iluminação é igual para quase todos bastou definir uma scene
+onde está definida a iluminação e depois fazer \textit{include} onde foi
+necessário utilizar.
+
+\subsection{Object}
+Para definir um modelo ou um terreno usa-se a tag model e terrain
+respetivamente.\\
+Dentro desta tag definem-se o ficheiro a carregar com o atributo \textit{file},
+o ficheiro de textura a carregar com o atributo \textit{texture} e as
+propriedades definem-se com \textit{diff} para o difuso, \textit{spec} para
+specular, \textit{emis} para emissivo e \textit{ambi} para ambiente. Para ler as
+propriedades do objeto é usado o parser de cores. Assim, para definir a
+propriedade emissiva de um obejto, a linha:
+\begin{lstlisting}
+emisR="1" emisG="1" emisB="1"
+\end{lstlisting}
+é equivalente a:
+\begin{lstlisting}
+emis="#FFFFFF"
+\end{lstlisting}
+
 
 \subsection{Error Handling}
 Para facilitar a correção de erros dos ficheiros criamos mensagens de erro que
@@ -696,40 +718,38 @@ O ficheiro XML encontra-se em \textit{scenes/castle.xml}.
 
 \section{Solar System}
 Para facilitar desenhar o sistema solar decidimos criar um script em Python.\\
-De forma a criar um modelo relativamente realista do sistema solar decidimos
-seguir um conjunto de regras simples, criando várias escalas permite que seja
-criado um modelo relativamente realista do sistema solar mas ao mesmo tempo
-visualmente apelativo.\\
-
-\begin{itemize}
-        \item tamanho de planetas e luas está à escala entre planetas e luas
-        \item distancia dos planetas e cinturas de asteróides ao sol está à
-            escala
-        \item o tempo de órbita e o tempo de rotação estão à escala mas
-            acelerados por fatores diferentes
-\end{itemize}
-Os \textit{CSV} obtidos na fase anterior forma expandidos para também incluir
-informação sobre o tempo de rotação e o tempo de órbita de cada planeta. Também
-acrescentamos Ceres, o maior asteróide na cintura de asteróides.\\
-A informação acrescentada foi obtida na página de Wikipédia de cada planeta.\\
-Para calcular a orbita do cometa decidimos aproximá-la a uma elipse, visto que
-esta é a mais próxima possível que pode ser facilmente computada. A fórmula mais
-comum de uma elipse é:
-\[ \frac{x^2}{a^2} + \frac{y^2}{b^2} = 1 \]
-Assim, para calcular uma fórmula para a elipse de um cometa basta descobrir o a
-e o b. Os dados mais comuns que se encontram para a orbita de um cometa são a
-eccentricity, o perihelion e o aphelions. Assim podemos calcular os valores
-acima com.
-\[ a = \frac{aphelion + perihelion}{1 + eccentricity} \]
-\[ b = a * \sqrt{1 - eccentricity^2} \]
-Agora basta calcular os pontos e mover a posição da elipse calculada centrada na
-origem.\\
-À medida que o cometa se aproxima mais do sol mais depressa se desloca, e quanto
-mais se afasta mais devagar se desloca.\\
-Visto que podemos representar a órbita de qualquer asteróide decidimos utilizar
-os dados do Halley.\\
+Nesta fase melhoramos o script desenvolvido na fase anterior para tirar partido
+das alterações feitas ao \textit{engine}.\\
+Primeiro adicionamos ao \textit{CSV} obtidos na fase anterior  uma coluna a
+indicar qual é a textura de cada planeta.\\
+As texturas utilizadas para cada planeta é a que foi possível encontrar com mais
+resolução e variam entre 4k e 8k, sendo que a grande maioria está nesta
+última.\\
+Os anéis de Saturno passaram a ser semi-transparentes e por isso são desenhados
+em último lugar.
+Adicionamos ainda uma skybox com a textura da via láctea.\\
 O ficheiro gerado em XML encontra-se em \textit{scenes/solar.xml}.
 
+\begin{figure}[H]
+    \centering 
+    \includegraphics[width=\textwidth]{images/solar_system.png}  
+    \caption{Sistema solar}
+\end{figure}
+\begin{figure}[H]
+    \centering 
+    \includegraphics[width=\textwidth]{images/saturn_transparent.png}  
+    \caption{Anéis de Saturno transparentes}
+\end{figure}
+\begin{figure}[H]
+    \centering 
+    \includegraphics[width=\textwidth]{images/teapot_space.png}  
+    \caption{Cometa a usar \textit{patches de bezier}}
+\end{figure}
+\begin{figure}[H]
+    \centering 
+    \includegraphics[width=\textwidth]{images/solar_system_debug.png}  
+    \caption{Sistema solar em modo de debug com as luzes desligadas}
+\end{figure}
 
 \chapter{Conclusão}
 Com este trabalho prático podemos aplicar os conhecimentos leccionados até agora

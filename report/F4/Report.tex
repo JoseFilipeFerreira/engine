@@ -215,7 +215,7 @@ float next_t_y = (stack + 1) / _stacks;
     \end{minipage}\hfill
     \begin{minipage}{0.5\textwidth}
         \centering
-        \includegraphics[width=\textwidth]{images/sphere_vetores.png}
+        \includegraphics[width=\textwidth]{images/esfera_normal.png}
         \caption{coord das normais}
     \end{minipage}\hfill
 \end{figure}
@@ -432,6 +432,34 @@ for (i32 slice = 0; slice < _slices; slice++) {
 \end{figure}
 
 \section{Caixa}
+Para gerar uma caixa é necessário saber as 3 dimensões (\textit{\_x},
+\textit{\_y} e \textit{\_z})  e o número de
+divisões da caixa (\textit{\_slices}).\\
+Primeiro calculamos 3 vetores distintos. Cada um alinhado com um dos eixos no
+sentido positivo e com comprimento o tamanho de uma divisão da caixa.\\
+Em seguida calculamos mais 3 vetores com bases nestes três que têm exatamente o
+mesmo comprimento mas sentido inverso.\\
+Em seguida criamos um conjunto de 6 pontos que indicam as coordenadas onde
+começam cada textura.\\
+Para calcular cada face foi criada uma função auxiliar que recebe o ponto no
+espaço onde começa a face, as coordenadas da textura equivalentes a esse ponto e
+2 vetores dos calculados anteriormente de forma a que estejam alinhados com a
+aresta da face e que o seu \textit{cross product} seja normal à face.\\
+Tal como já foi referido basta fazer o cross product dos dois vetores para obter
+a normla de todos os pontos da face.\\
+Para obter um ponto (n, m) na face da caixa basta multiplicar por n um dos
+vetores e multiplicar por m o outro, e somar estes vetores ao ponto de origem da
+face.\\
+Da mesma forma, para calcular as coordenadas da textura de um ponto sabendo que
+ele está na posição (n, m) utilizamos a fórmula para obter o \textit{offset}
+relativamente ao ponto de origem passado como parâmetro. As multiplicações por 3 e
+por 2 servem para compensar o facto de só se usar 1/6 da área da textura para
+cada face.
+\begin{lstlisting}
+float xt = i / (_slices * 3);
+float yt = j / (_slices * 2);
+\end{lstlisting}
+
 \begin{figure}[H]
     \centering
     \begin{minipage}{0.39\textwidth}
@@ -447,6 +475,29 @@ for (i32 slice = 0; slice < _slices; slice++) {
 \end{figure}
 
 \section{Patches de Bezier}
+Para calcular um \textit{patch de bezier} basta indicar  o nome do ficheiro onde
+este se encontra e o nível de \textit{tesselation}.\\
+O parsing do ficheiro em questão não foi alterado para esta fase. A única parte
+que foi alterada foi a parte de desenhar.\\
+Desta forma, convertemos as fórmulas para patches de Bezier de forma a fazer uso
+da biblioteca de pontos definida para este trabalho.\\
+\begin{figure}[H]
+    \centering 
+    \includegraphics[width=0.4\textwidth]{images/formulas_patches.png}  
+    \caption{fórmulas para patches}
+\end{figure}
+A primeira cabula diretamente as coordenadas do ponto. As duas seguintes
+calculam as tangentes no ponto. Desta forma, para obter a normal no ponto é
+ainda preciso calcular o \textit{cross product} entre as duas tangentes e
+normalizar o resultado.\\
+As coordenadas de textura são mapeadas diretamente com base nas coordenadas do
+patch que se está a calcular. Assim, para um ponto (u, v) as coordenadas de
+textura são dadas por:
+\begin{lstlisting}
+float x = u / _tesselation_level;
+float y = v / _tesselation_level;
+\end{lstlisting}
+
 \begin{figure}[H]
     \centering
     \begin{minipage}{0.40\textwidth}

@@ -457,6 +457,10 @@ for (i32 slice = 0; slice < _slices; slice++) {
 \end{figure}
 
 \chapter{Engine}
+Para facilitar a escrita de scenes mais complexas foram criadas dois extras para
+o \textit{engine}. Primeiro é possível passar como argumento múltiplos
+ficheiros. Fazendo isto as várias \textit{scenes} serão desenhadas em simultâneo
+no ecrã.\\
 
 \section{Buffers}
 \subsection{Buffers de Textura}
@@ -568,6 +572,43 @@ Este parser é utilizado para a função que lê um ponto três vezes de forma a
 conseguir ler as coordenadas do ponto. Seguindo a mesma lógica a função para ler
 um vetor utiliza a função de ler um ponto.\\
 
+\subsection{Cor}
+Um outro exemplo destes parsers modulares é um parser para ler cor. Este parser
+suporta dois formatos distintos: O formato hex que é usado normalmente em design
+gráfico (\textit{\#RRGGBBAA} e \textit{\#RRGGBB}) e o formato proposto no
+enunciado. Visto que o primeiro é o mais usado nas nossas \textit{scenes} devido
+à facilidade de escrita o \textit{parser} dá prioridade de leitura a esse
+formato.
+
+\subsection{Include}
+Para facilitar ainda mais o processo de separar \textit{scenes} em vários
+ficheiros decidimos criar uma extensão do \textit{XML} chamada de
+\textit{include}. Com esta tag é possível incluir um ficheiro de \textit{XML}
+dentro de outro e quando for desenhado irá herdar as propriedades definidas
+anteriormente, nomeadamente a cor.\\
+Tal como acontecia previamente, o \textit{GroupBuffer} é partilhado entre os
+vários ficheiros. Desta forma mantém-se a premissa que um ficheiro apenas é
+carregado uma e uma só vez, independentemente de ser utilizado várias vezes.
+Assim, para incluir um ficheiro chamado \textit{lighting.xml} basta colocar a
+linha:
+
+\begin{lstlisting}
+<include file="lighting.xml">
+\end{lstlisting}
+
+\subsection{Error Handling}
+Para facilitar a correção de erros dos ficheiros criamos mensagens de erro que
+indicam o ficheiro, a linha e a coluna onde ocorreu o erro. Ainda acrescentamos
+uma descrição do erro e, quando relevante, a indicação do atributo.\\
+Assim, se ao ler o ficheiro \textit{solar.xml} ocorrer um erro de parsing num
+\textit{translate} porque o valor não representa um float o erro terá este
+aspeto:
+\begin{figure}[H]
+    \centering 
+    \includegraphics[width=\textwidth]{images/error_handling.png}  
+    \caption{Exemplo de erro do praser}
+\end{figure}
+
 \chapter{Scenes}
 \section{Terrain Generation}
 Tal como foi referido acima, a forma como são guardados os buffers garante que
@@ -585,14 +626,17 @@ O ficheiro gerado em XML encontra-se em \textit{scenes/not\_a\_game.xml}.
 \end{figure}
 
 \section{Castle in the lake}
-Para demonstrar a capacidade das cores terem um fator de transparência e de
-carregar imagens como terreno diretamente no XML criamos uma \textit{Scene}
-nova. Nesta desenhamos um castelo numa ilha no centro de um lago. O Terreno onde
-se assenta o castelo é desenhado com base num \textit{HeightMap} e a água é um
-plano com transparência.\\
-Como ainda não temos luz nem texturas decidimos colocar vários ângulos para
-facilitar a percepção da \textit{Scene} criada.\\
+Para demonstrar a capacidade das carregar imagens como terreno diretamente no
+XML criamos uma \textit{Scene} nova. Nesta desenhamos um castelo numa ilha no
+centro de um lago. O Terreno onde se assenta o castelo é desenhado com base num
+\textit{HeightMap}.\\
 O ficheiro XML encontra-se em \textit{scenes/castle.xml}.
+
+\begin{figure}[H]
+    \centering 
+    \includegraphics[width=\textwidth]{images/castle.png}  
+    \caption{render do \textit{XML} do castelo}
+\end{figure}
 
 \section{Solar System}
 Para facilitar desenhar o sistema solar decidimos criar um script em Python.\\

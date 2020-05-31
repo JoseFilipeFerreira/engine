@@ -33,10 +33,10 @@ class BoundingBox {
             _maxZ = std::max(_maxZ, vec[i + 2]);
         }
 
-        std::cout << "min: " << _minX << ' ' << _minY << ' ' << _minZ << ' '
-                  << '\n';
-        std::cout << "max: " << _maxX << ' ' << _maxY << ' ' << _maxZ << ' '
-                  << '\n';
+        /* std::cout << "min: " << _minX << ' ' << _minY << ' ' << _minZ << ' ' */
+        /*           << '\n'; */
+        /* std::cout << "max: " << _maxX << ' ' << _maxY << ' ' << _maxZ << ' ' */
+        /*           << '\n'; */
     }
 
     auto is_visible() const -> bool { return true; }

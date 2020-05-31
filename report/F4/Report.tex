@@ -749,6 +749,24 @@ g                & toggle modo de debug (eixos, \textit{bounding boxes} e caminh
 \end{tabular}
 \end{table}
 
+
+\section{Window Title}
+De forma a facilmente apresentar a informação ao utilizador decidimos usar o
+titulo da janela.\\
+Assim temos uma barra que mostra o modo atual da camera, o \textit{TIME\_SCALE}
+atual, o número de \textit{frames per second}, se as luzes estão ligadas. Também
+indica se se está em debug mode ou em pausa.\\
+\begin{figure}[H]
+    \centering 
+    \includegraphics[width=0.6\textwidth]{images/bar.png}  
+    \caption{barra em modo normal}
+\end{figure}
+\begin{figure}[H]
+    \centering 
+    \includegraphics[width=0.6\textwidth]{images/debug_bar.png}  
+    \caption{barra em modo debug}
+\end{figure}
+
 \chapter{Scenes}
 \section{Terrain Generation}
 Tal como foi referido acima, a forma como são guardados os buffers garante que

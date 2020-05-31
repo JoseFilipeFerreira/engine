@@ -97,7 +97,7 @@ linkcolor=black}
 Este trabalho foi desenvolvido no âmbito da unidade curricular de computação
 gráfica e está dividido em várias fases de entrega distintas sendo que esta é a
 terceira.\\
-O projeto foi dividido em 4 entragas faseadas sendo que esta é a última. Ao
+O projeto foi dividido em 4 entregas faseadas sendo que esta é a última. Ao
 longo deste relatório iremos descrever a metodologia e as soluções criadas para
 solucionar todos os critérios propostos assim como descrever as funcionalidades
 extra implementadas.\\
@@ -446,7 +446,7 @@ espaço onde começa a face, as coordenadas da textura equivalentes a esse ponto
 2 vetores dos calculados anteriormente de forma a que estejam alinhados com a
 aresta da face e que o seu \textit{cross product} seja normal à face.\\
 Tal como já foi referido basta fazer o cross product dos dois vetores para obter
-a normla de todos os pontos da face.\\
+a normal de todos os pontos da face.\\
 Para obter um ponto (n, m) na face da caixa basta multiplicar por n um dos
 vetores e multiplicar por m o outro, e somar estes vetores ao ponto de origem da
 face.\\
@@ -527,9 +527,9 @@ Para utilizar esta textura foi criado um método \textit{bind\_texture}.
 
 \subsection{Buffers de Modelos}
 De forma análoga, para guardar a informação de um Modelo foi criado uma classe
-denominda de \textit{ModelBuffer} que carrega um modelo com base no nome de um
+denominada de \textit{ModelBuffer} que carrega um modelo com base no nome de um
 ficheiro .3d definido com o \textit{Generator}. A função \textit{make} devolve
-um par com uma instancia de \textit{ModelBuffer} e uma \textit{Axis-Aligned
+um par com uma instância de \textit{ModelBuffer} e uma \textit{Axis-Aligned
 Bounding Box} que engloba o modelo carregado.\\
 Para desenhar o modelo foi criado o método \textit{draw\_model} que encapsula
 aplicar os 3 buffers no modelo.\\
@@ -712,7 +712,7 @@ Os \textit{CSV} obtidos na fase anterior forma expandidos para também incluir
 informação sobre o tempo de rotação e o tempo de órbita de cada planeta. Também
 acrescentamos Ceres, o maior asteróide na cintura de asteróides.\\
 A informação acrescentada foi obtida na página de Wikipédia de cada planeta.\\
-Para calcular a orbita do cometa decidimos aproxima-la a uma elipse, visto que
+Para calcular a orbita do cometa decidimos aproximá-la a uma elipse, visto que
 esta é a mais próxima possível que pode ser facilmente computada. A fórmula mais
 comum de uma elipse é:
 \[ \frac{x^2}{a^2} + \frac{y^2}{b^2} = 1 \]

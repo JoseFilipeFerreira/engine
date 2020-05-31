@@ -417,16 +417,47 @@ for (i32 slice = 0; slice < _slices; slice++) {
 \end{figure}
 
 \section{Cone}
+Para desenhar um cone é preciso saber o raio (\textit{\_radius}), a altura
+(\textit{\_height}), o número de slices (\textit{\_slices}) e o número de stacks
+(\textit{\_stacks}).\\
+Com base nisto podemos calcular o ponto do topo do cone (\textit{top\_point}) e
+o ângulo entre cada slice (\textit{a\_slice}).\\
+Qualquer ponto ao longo da aresta/2
+que se encontra com coordenadas esféricas. O raio da coordenada é o raio do
+cone, a inclinação é sempre $\pi$/2 e o único valor que varia é o azimute. Este
+varia com base na fórmula \textit{a\_slice * slice}, sendo que slice é o indice
+da slice do ponto. Com estes pontos é possível desenhar a base do cone, sendo
+que a normal é igual em todos e aponta para baixo.\\
+Para desenhar um ponto na lateral do cone numa determinada stack e numa
+determinada slice primeiro calculamos o ponto na aresta da base que partilha a
+mesma slice. Em seguida calculamos um vetor que vai da base do cone ao topo do
+cone e dividimos esse vetor pelo número total de stacks. Finalmente
+multiplicamos o vetor pelo índice da stack do ponto que queremos calcular e
+somamos o vetor obtido ao ponto na base.\\
+A normal em todos os pontos da face lateral do cone teem raio igual a 1 e o
+azimute é igual ao azimute do ponto. Para além disso partilham todos da mesma
+inclinação, que é dada pela fórmula \textit{atan(\_height / \_radius)} devido às
+propriedades de semelhança de triângulos que se podem observar no seguinte
+esquema:
+\begin{figure}[H]
+    \centering 
+    \includegraphics[width=0.4\textwidth]{images/semelhanca.png}  
+    \caption{fórmulas para patches}
+\end{figure}
+
+Para calcular as coordenadas de textura usamos o mesmo método usado nas
+coordenadas de textura da base e do topo do cilindro mas com as coordenadas
+centrais alteradas para a imagem das texturas.\\
 \begin{figure}[H]
     \centering
-    \begin{minipage}{0.40\textwidth}
+    \begin{minipage}{0.50\textwidth}
         \centering
         \includegraphics[width=\textwidth]{images/corneto.jpg}
         \caption{exemplo de textura}
     \end{minipage}\hfill
-    \begin{minipage}{0.59\textwidth}
+    \begin{minipage}{0.49\textwidth}
         \centering
-        \includegraphics[width=\textwidth]{images/donut_rendered.png}
+        \includegraphics[width=\textwidth]{images/corneto.png}
         \caption{resultado da textura}
     \end{minipage}\hfill
 \end{figure}
@@ -486,7 +517,7 @@ da biblioteca de pontos definida para este trabalho.\\
     \includegraphics[width=0.4\textwidth]{images/formulas_patches.png}  
     \caption{fórmulas para patches}
 \end{figure}
-A primeira cabula diretamente as coordenadas do ponto. As duas seguintes
+A primeira calcula diretamente as coordenadas do ponto. As duas seguintes
 calculam as tangentes no ponto. Desta forma, para obter a normal no ponto é
 ainda preciso calcular o \textit{cross product} entre as duas tangentes e
 normalizar o resultado.\\
@@ -592,28 +623,16 @@ propriedades do material, em seguida aplica-se a textura caso exista, depois
 desenha-se o modelo com base no valor do template e por fim retira-se a textura.
 Caso ainda se esteja em modo de \textit{debug}, desenha-se as \textit{bounding
 boxes} do objeto.
-\begin{lstlisting}
-_colour.apply();
 
-_diffuse.set_diffuse();
-_specular.set_specular();
-_emissive.set_emissive();
-_ambient.set_ambient();
-
-if (_texture_name.has_value()) {
-    group_buffer.bind_texture(_texture_name.value());
-}
-
-if constexpr (std::is_same_v<T, model_t>) {
-    group_buffer.draw_model(_file_name);
-} else if constexpr (std::is_same_v<T, terrain_t>) {
-    group_buffer.draw_terrain(_file_name);
-}
-
-group_buffer.unbind_texture();
-
-if (DEBUG) _bb.draw();
-\end{lstlisting}
+\section{Iluminação}
+Para guardar os diversos tipos de luz foi criada uma classe para cada um.\\
+A classe \textit{PointLight} guarda a localização da luz e a cor.\\
+A classe \textit{DirectionalLight} guarda a direção e a cor.\\
+A classe \textit{SpotLight} guarda a localização, direção e cor da luz.\\
+Quando uma nova luz é criada é ainda adicionado um identificador único a cada
+luz, o que permite saber se se excedem as 8 luzes em simultâneo. Caso isso
+acontece é atirado um erro.\\
+Cada classe possui ainda um método \textit{on} que permite ativar a luz.
 
 \section{Parsing de XML}
 Para facilitar a construção de um parser e eventual expansão do mesmo foram
@@ -639,7 +658,7 @@ formato.
 \subsection{Include}
 Para facilitar ainda mais o processo de separar \textit{scenes} em vários
 ficheiros decidimos criar uma extensão do \textit{XML} chamada de
-\textit{include}. Com esta tag é possível incluir um ficheiro de \textit{XML}
+\textit{include}. Com esta elemento é possível incluir um ficheiro de \textit{XML}
 dentro de outro e quando for desenhado irá herdar as propriedades definidas
 anteriormente, nomeadamente a cor.\\
 Tal como acontecia previamente, o \textit{GroupBuffer} é partilhado entre os
@@ -656,15 +675,31 @@ Como o sistema de iluminação é igual para quase todos bastou definir uma scen
 onde está definida a iluminação e depois fazer \textit{include} onde foi
 necessário utilizar.
 
+
+\subsection{Luz}
+Para definir uma luz utilizamos o elemento \textit{light}.\\
+A cor da luz é lida com base no parser de cor definido anteriormente com o
+prefixo colour e caso nenhuma cor seja definida o default é branco.\\
+Para indicar o tipo da luz é utilizado o atributo type. POINT é para luz
+pontual, DIRECTIONAL para luz direcional, SPOT para luz de foco.\\
+Para cada luz é ainda necessário indicar a posição e/ou a direção, que utilizam
+o prefixo pos e dir respetivamente. Por default, se estes não forem indicados,
+assumimos que são 0.\\
+Assim, para definir uma luz de foco com posição (0,1,0), direção (1,0,0) e cor
+\#909090 fazemos:
+\begin{lstlisting}
+<light type="SPOT" colour="#909090" posY="1" dirX="1" />
+\end{lstlisting}
+
 \subsection{Object}
-Para definir um modelo ou um terreno usa-se a tag model e terrain
+Para definir um modelo ou um terreno usa-se a elemento model e terrain
 respetivamente.\\
-Dentro desta tag definem-se o ficheiro a carregar com o atributo \textit{file},
+Dentro desta elemento definem-se o ficheiro a carregar com o atributo \textit{file},
 o ficheiro de textura a carregar com o atributo \textit{texture} e as
 propriedades definem-se com \textit{diff} para o difuso, \textit{spec} para
 specular, \textit{emis} para emissivo e \textit{ambi} para ambiente. Para ler as
 propriedades do objeto é usado o parser de cores. Assim, para definir a
-propriedade emissiva de um obejto, a linha:
+propriedade emissiva de um objeto, a linha:
 \begin{lstlisting}
 emisR="1" emisG="1" emisB="1"
 \end{lstlisting}
@@ -672,7 +707,6 @@ emisR="1" emisG="1" emisB="1"
 \begin{lstlisting}
 emis="#FFFFFF"
 \end{lstlisting}
-
 
 \subsection{Error Handling}
 Para facilitar a correção de erros dos ficheiros criamos mensagens de erro que
@@ -686,6 +720,34 @@ aspeto:
     \includegraphics[width=\textwidth]{images/error_handling.png}  
     \caption{Exemplo de erro do praser}
 \end{figure}
+
+\section{Keybinds}
+Keybinds relacionadas com camera:
+\begin{table}[H]
+\begin{tabular}{|c|c|c|l|}
+\hline
+\multirow{2}{*}{\textbf{modo de camera}} & \multirow{2}{*}{\textbf{keybind}} & \multicolumn{2}{c|}{\textbf{keybinds contextuais}} \\ \cline{3-4} 
+                       &                    & \textbf{keybind} & \multicolumn{1}{c|}{\textbf{descrição}} \\ \hline
+\multirow{3}{*}{Orbit} & \multirow{3}{*}{1} & hjkl             & orbitar um dado ponto                   \\ \cline{3-4} 
+                       &                    & wasd             & mover o ponto no plano xOz              \\ \cline{3-4} 
+                       &                    & r                & reset ponto para a origem               \\ \hline
+\multirow{3}{*}{FPV}   & \multirow{3}{*}{2} & hjkl             & olhar em redor                          \\ \cline{3-4} 
+                       &                    & wasd             & mover a camera                          \\ \cline{3-4} 
+                       &                    & r                & reset camera                            \\ \hline
+\end{tabular}
+\end{table}
+Outras keybinds:
+
+\begin{table}[H]
+\begin{tabular}{|c|l|}
+\hline
+\textbf{keybind} & \multicolumn{1}{c|}{\textbf{descrição}}                   \\ \hline
+p                & toggle pausa                                              \\ \hline
+{[} {]}          & abrandar/acelerar tempo                                   \\ \hline
+g                & toggle modo de debug (eixos, \textit{bounding boxes} e caminhos de transformações) \\ \hline
+\textbackslash   & toogle lights \\ \hline
+\end{tabular}
+\end{table}
 
 \chapter{Scenes}
 \section{Terrain Generation}

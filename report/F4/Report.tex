@@ -247,8 +247,8 @@ o raio do anel propriamente dito (\textit{\_ring\_radius}).
 
 \begin{figure}[H]
     \centering 
-    \includegraphics[width=0.5\textwidth]{images/torus_points.png}
-    \caption{Esquema dos pontos no plano}
+    \includegraphics[width=0.5\textwidth]{images/torus_conversion.png}
+    \caption{Esquema da conversão}
 \end{figure}
 Primeiro é definido o ângulo entre cada slice e cada stack com:
 
@@ -272,6 +272,11 @@ azimute deste vetor é igual ao \textit{a\_stack} vezes a stack atual mais $\pi$
 varia é a inclinação, que é igual a \textit{a\_stack} vezes o índice da stack
 atual. Este vetor calculado se for normalizado com recurso ao método
 \textit{normalize} é a normal do ponto.\\
+\begin{figure}[H]
+    \centering 
+    \includegraphics[width=0.5\textwidth]{images/torus_normal.png}
+    \caption{Esquema da conversão}
+\end{figure}
 Somando para um dado ponto no centro do torus ao vetor correspondente obtemos o
 ponto na superfície.\\
 A maneira como calculamos as texturas do torus é semelhante à que usamos na

@@ -1,0 +1,8 @@
+<scene>
+    <include file="scenes/report/lighting.xml" />
+
+    <group>
+        <rotate axisY="1" time="6" />
+        <model emis="#222222" file="models/box.3d" texture="textures/test_cube.jpg" diff="#FFFFFF"/>
+    </group>
+</scene>

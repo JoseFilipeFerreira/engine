@@ -1,0 +1,9 @@
+<scene>
+    <include file="scenes/report/lighting.xml" />
+
+    <group>
+        <rotate axisY="1" time="20" />
+        <rotate axisX="1" angle="-90" />
+        <model emis="#222222" file="models/teapot.3d" texture="textures/flowery_patern.jpg" diff="#FFFFFF"/>
+    </group>
+</scene>

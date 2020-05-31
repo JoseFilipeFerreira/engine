@@ -1,0 +1,28 @@
+\begin{lstlisting}
+for (i32 slice = 0; slice < _slices; slice++) {
+    for (i32 stack = 0; stack < _stacks; stack++) {
+        // vetores do centro do torus ate a superficie
+        float offset = a_stack * stack + M_PI;
+        auto base = VectorSpherical(_ring_radius, offset, center.azimuth());
+        auto n_base = base.add_azimuth(a_slice);
+        auto top = base.add_inclination(a_stack);
+        auto n_top = n_base.add_inclination(a_stack);
+
+        // pontos na superficie
+        auto p0 = center + base;
+        auto p1 = center + top;
+        auto p2 = n_center + n_base;
+        auto p3 = n_center + n_top;
+
+        // 1st triangle
+        coords.emplace_back(p1, top.normalize(), top_t_x, curr_t_y);
+        coords.emplace_back(p2, n_base.normalize(), base_t_x, next_t_y);
+        coords.emplace_back(p0, base.normalize(), base_t_x, curr_t_y);
+
+        // 2nd triangle
+        coords.emplace_back(p1, top.normalize(), top_t_x, curr_t_y);
+        coords.emplace_back(p3, n_top.normalize(), top_t_x, next_t_y);
+        coords.emplace_back(p2, n_base.normalize(), base_t_x, next_t_y);
+    }
+}
+\end{lstlisting}

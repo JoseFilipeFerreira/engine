@@ -1,18 +1,33 @@
 <scene> 
-    <translate time="10">
-         <point X="1" Z="10"/>
-         <point X="4" Z="11"/>
-         <point X="5" Z="7"/>
-         <point X="6" Z="6"/>
-         <point X="8" Z="5"/>
-         <point X="10" Z="3"/>
-         <point X="8" Z="1"/>
-         <point X="7" Z="2"/>
-         <point X="5" Z="4"/>
-         <point X="2" Z="4.5"/>
-         <point X="0" Z="6.5"/>
-         <point X="0.5" Z="8"/>
-     </translate>
-    <rotate angle="90" axisX="1"/>
-    <model colour="#FF0000" file="models/cone.3d" /> 
+    <group colour="#FF0000">
+        <translate time="5" >
+            <point X="10" Y="-5"/>
+            <point X="10" Z="0.0001"/>
+            <point X="10" Y="5"/>
+            <point X="10" Z="0.0001"/>
+        </translate>
+        <light type="POINT"/>
+        <group>
+            <scale X="-1" Y="-1" Z="-1" />
+            <model file="models/sphere.3d" emis="#FFFFFF" />
+        </group>
+    </group>
+    <group>
+        <translate time="10">
+             <point X="1" Z="10"/>
+             <point X="4" Z="11"/>
+             <point X="5" Z="7"/>
+             <point X="6" Z="6"/>
+             <point X="8" Z="5"/>
+             <point X="10" Z="3"/>
+             <point X="8" Z="1"/>
+             <point X="7" Z="2"/>
+             <point X="5" Z="4"/>
+             <point X="2" Z="4.5"/>
+             <point X="0" Z="6.5"/>
+             <point X="0.5" Z="8"/>
+         </translate>
+        <rotate angle="90" axisZ="1"/>
+        <model colour="#FF0000" emis="#808080" file="models/cone.3d" /> 
+    </group>
 </scene>

@@ -1,0 +1,8 @@
+<scene>
+    <include file="scenes/report/lighting.xml" />
+
+    <group>
+        <rotate axisY="1" time="6" />
+        <model emis="#222222" file="models/cylinder.3d" texture="textures/cylinder_texture.jpg" diff="#FFFFFF"/>
+    </group>
+</scene>

@@ -1,5 +1,9 @@
 <scene>
-    <group colour="#AA" >
+    <group>
+        <translate Z="-5" />
+        <include file="scenes/catmull.xml" />
+    </group>
+    <group colour="#FFFFFF" >
         <translate X="5" />
         <model file="models/sphere.3d" texture="textures/8k_mercury.jpg" />
         <group>

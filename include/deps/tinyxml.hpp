@@ -43,9 +43,9 @@ distribution.
 #    endif
 
 #    ifdef TIXML_USE_STL
-#        include <string>
 #        include <iostream>
 #        include <sstream>
+#        include <string>
 #        define TIXML_STRING std::string
 #    else
 #        include "tinystr.hpp"
@@ -1025,7 +1025,7 @@ class TiXmlAttributeSet {
   private:
     //*ME:	Because of hidden/disabled copy-construktor in TiXmlAttribute
     //(sentinel-element), *ME:	this class must be also use a hidden/disabled
-    //copy-constructor !!!
+    // copy-constructor !!!
     TiXmlAttributeSet(const TiXmlAttributeSet&); // not allowed
     void operator=(const TiXmlAttributeSet&); // not allowed (as TiXmlAttribute)
 

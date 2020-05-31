@@ -26,6 +26,12 @@
                     <scale X="4" Z="4"/>
                     <model texture="textures/cooble_texture.jpg" file="models/box.3d" emis="#999999" /> 
                 </group>
+                <!-- carpet -->
+                <group>
+                    <translate Y="-0.6"/>
+                    <scale X="0.03" Z="0.03"/>
+                    <model texture="textures/persian_carpet.jpg" file="models/plane.3d" emis="#999999" /> 
+                </group>
                 <!-- walls -->
                 <group>
                     <group>
@@ -520,7 +526,7 @@
         <terrain file="terrains/terreno2.jpg" texture="textures/relva.jpg" max="60" emiss="#999999" /> 
     </group>
     <group>
-        <scale X="10" Z="10"/>
-        <model file="models/plane.3d" diff="#0077be80" spec="#0077be80"/> 
+        <scale X="2" Z="2"/>
+        <model file="models/plane.3d" texture="textures/water_seamless.jpg" diff="#0077be80" spec="#0077be80"/> 
     </group>
 </scene>

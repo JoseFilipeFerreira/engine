@@ -47,7 +47,7 @@ class Cube:
 
 
 print("<scene>")
-print('    <light type="DIRECTIONAL" dirY="10" colour="#101010" />')
+print('    <light type="DIRECTIONAL" dirY="10" colour="#303030" />')
 print("    <group>")
 print(f'        <scale X="-{SIZE_X + SIZE_Z}" Y="-{SIZE_X + SIZE_Z}" Z="-{SIZE_X + SIZE_Z}"/>')
 print('        <model file="models/sphere.3d" texture="textures/8k_stars_milky_way.jpg" emis="#FFFFFF"/>')

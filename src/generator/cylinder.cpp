@@ -20,7 +20,7 @@ std::vector<ModelPoint> Cylinder::draw() const {
     auto step = top / _stacks;
 
     auto top_normal = Vector(0, 1, 0);
-    auto bottom_normal = Vector(0, -1, 0);
+    auto bottom_normal = top_normal.mirror_y();
     auto central = PointSpherical(0, 0, 0);
 
     auto b_center = Point(0.75, 0, 0.25);

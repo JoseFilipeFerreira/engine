@@ -1,0 +1,9 @@
+<scene>
+    <include file="scenes/report/lighting.xml" />
+
+    <group>
+        <rotate axisY="1" time="6" />
+        <rotate axisX="1" angle="180" />
+        <model emis="#222222" file="models/cone.3d" texture="textures/corneto.jpg" diff="#FFFFFF"/>
+    </group>
+</scene>

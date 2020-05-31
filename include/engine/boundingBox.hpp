@@ -32,16 +32,15 @@ class BoundingBox {
             _minZ = std::min(_minZ, vec[i + 2]);
             _maxZ = std::max(_maxZ, vec[i + 2]);
         }
-
-        /* std::cout << "min: " << _minX << ' ' << _minY << ' ' << _minZ << ' ' */
-        /*           << '\n'; */
-        /* std::cout << "max: " << _maxX << ' ' << _maxY << ' ' << _maxZ << ' ' */
-        /*           << '\n'; */
     }
 
     auto is_visible() const -> bool { return true; }
 
     void draw() const {
+        float cc[4];
+        glGetFloatv(GL_CURRENT_COLOR, cc);
+        glColor3f(1, 1, 1);
+
         glBegin(GL_LINES);
         glVertex3f(_minX, _minY, _minZ);
         glVertex3f(_minX, _minY, _maxZ);
@@ -79,6 +78,8 @@ class BoundingBox {
         glVertex3f(_maxX, _minY, _maxZ);
         glVertex3f(_maxX, _maxY, _maxZ);
         glEnd();
+
+        glColor4fv(cc);
     }
 };
 

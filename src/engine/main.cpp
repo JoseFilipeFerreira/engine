@@ -34,7 +34,7 @@ void changeSize(int w, int h) {
     glViewport(0, 0, w, h);
 
     // Set perspective
-    gluPerspective(45.0f, ratio, 1.0f, 1000.0f);
+    gluPerspective(45.0f, ratio, 0.01f, 1000.0f);
 
     glMatrixMode(GL_MODELVIEW);
 }
@@ -201,7 +201,6 @@ int main(int argc, char** argv) {
                 parsed_groups.push_back(
                     Parser::parse_group(file, GROUP_BUFFER));
             } catch (std::exception& e) {
-                std::cout << "Error while parsing: " << file << '\n';
                 std::cout << e.what() << '\n';
                 return EXIT_FAILURE;
             }

@@ -89,7 +89,7 @@ auto normal_generator(SliceMatrix<Vector, 4> const& vectors, float du, float dv)
     const float d_v[4] = dT(dv);
     Vector tu = tangent(vectors, d_u, v);
     Vector tv = tangent(vectors, u, d_v);
-    return tv.cross(tu);
+    return tv.cross(tu).normalize();
 }
 
 auto point_generator(SliceMatrix<Vector, 4> const& vectors, float du, float dv)

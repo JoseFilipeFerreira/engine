@@ -52,13 +52,9 @@ void Box::draw_face(
 std::vector<ModelPoint> Box::draw() const {
     std::vector<ModelPoint> coords;
 
-    float stepx = _x / _slices;
-    float stepy = _y / _slices;
-    float stepz = _z / _slices;
-
-    auto x = Vector(stepx, 0, 0);
-    auto y = Vector(0, stepy, 0);
-    auto z = Vector(0, 0, stepz);
+    auto x = Vector(_x / _slices, 0, 0);
+    auto y = Vector(0, _y / _slices, 0);
+    auto z = Vector(0, 0, _z / _slices);
     auto mx = x.mirror_x();
     auto my = y.mirror_y();
     auto mz = z.mirror_z();

@@ -20,7 +20,7 @@ std::vector<ModelPoint> Cone::draw() const {
     auto b_normal = Vector(0, -1, 0);
     auto central = PointSpherical(0, 0, 0);
 
-    auto normal_a = -std::tan(_height / _radius);
+    auto normal_a = std::atan(_height / _radius);
 
     for (i32 slice = 0; slice < _slices; slice++) {
         auto base = PointSpherical(_radius, M_PI_2, a_slice * slice);
